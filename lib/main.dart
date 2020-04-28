@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingkung/view/splash.dart';
+import 'package:lingkung/screens/onboarding.dart';
+// import 'package:lingkung/screens/splash.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       //home: MyHomePage(title: 'Lingkung'),
-      home: Splash(),
+      home: Onboarding(),
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => MyHomePage(title: 'Lingkung'),
       },
