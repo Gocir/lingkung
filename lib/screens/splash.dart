@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:lingkung/screens/onboarding.dart';
 
 class Splash extends StatefulWidget {
   
@@ -15,7 +15,9 @@ class _SplashState extends State<Splash> {
   }
 
   void navigationPage(){
-    Navigator.of(context).pushReplacementNamed('/home');
+    Navigator.pushReplacement(context,
+      MaterialPageRoute(builder: (context) => Onboarding()),
+    );
   }
 
   @override
@@ -27,30 +29,25 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
+      body: Column(
         children: <Widget>[
-          Column(
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Image.asset(
-                    'assets/images/logos.png',
-                  ),
-                ),
+          Flexible(
+            flex: 2,
+            child: Align(
+              alignment: Alignment(0, 0.75),
+              child: Image.asset(
+                'assets/images/logos.png',
               ),
-              Expanded(
-                flex: 2,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Image.asset(
-                    'assets/images/savearth.png',
-                  ),
-                ),
+            ),
+          ),
+          Flexible(
+            flex: 2,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.asset(
+                'assets/images/savearth.png',
               ),
-            ],
+            ),
           ),
         ],
       ),
