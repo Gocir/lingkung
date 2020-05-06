@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lingkung/screens/loginView.dart';
 import 'package:lingkung/screens/privacyPolicy.dart';
-import 'package:lingkung/screens/register.dart';
+import 'package:lingkung/screens/registerView.dart';
 import 'package:lingkung/screens/splash.dart';
 import 'package:lingkung/screens/termsOfService.dart';
 
