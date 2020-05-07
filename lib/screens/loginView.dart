@@ -72,9 +72,10 @@ class _LoginViewState extends State<LoginView> {
                         decoration: InputDecoration(
                           labelText: 'Nomor HP',
                           labelStyle: TextStyle(
+                            color: Colors.grey,
                             fontFamily: 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20.0
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
@@ -104,7 +105,6 @@ class _LoginViewState extends State<LoginView> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Poppins',
-                                  fontSize: 14.0
                                 ),
                               ),
                             ),
