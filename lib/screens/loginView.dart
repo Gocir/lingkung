@@ -35,78 +35,85 @@ class _LoginViewState extends State<LoginView> {
         ],
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
-            child: Column(
-              children: <Widget>[
-                Center(
-                  child: Image.asset(
-                    'assets/images/masuk.png'
+          Flexible(
+            flex: 1,
+            child: Container(
+              margin: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Flexible(
+                    flex: 2,
+                    child: Container(
+                      child: Image.asset(
+                        'assets/images/masuk.png'
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 16.0, top: 15.0, right: 16.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'Silakan masukkan Nomor HP-mu yang terdaftar',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Nomor HP',
-                    labelStyle: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.green
-                      )
-                    )
-                  ),
-                ),
-                SizedBox(height: 30.0),
-                Container(
-                  height: 45.0,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(20.0),
-                    shadowColor: Colors.grey,
-                    color: Colors.lightGreen,
-                    elevation: 5.0,
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Center(
-                        child: Text(
-                          'LANJUT',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Poppins',
-                            fontSize: 14.0
-                          ),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      child: Text(
+                        'Silakan masukkan Nomor HP-mu yang terdaftar',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.bold
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 16.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Nomor HP',
+                          labelStyle: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.green
+                            )
+                          )
+                        ),
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                      child: Container(
+                      height: 45.0,
+                      margin: EdgeInsets.only(top: 30.0, bottom: 16.0),
+                      child: Material(
+                        borderRadius: BorderRadius.circular(50.0),
+                        shadowColor: Colors.grey,
+                        color: Colors.lightGreen,
+                        elevation: 2.0,
+                        child: GestureDetector(
+                          onTap: () {},
+                            child: Center(
+                              child: Text(
+                                'LANJUT',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 14.0
+                                ),
+                              ),
+                            ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
