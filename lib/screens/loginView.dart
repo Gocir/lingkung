@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:lingkung/screens/helpLoginView.dart';
 
@@ -58,7 +59,7 @@ class _LoginViewState extends State<LoginView> {
                         'Silakan masukkan Nomor HP-mu yang terdaftar',
                         style: TextStyle(
                           fontFamily: 'Poppins',
-                          fontSize: 22.0,
+                          fontSize: 24.0,
                           fontWeight: FontWeight.bold
                         ),
                       ),
@@ -66,24 +67,46 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   Flexible(
                     flex: 1,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 16.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Nomor HP',
-                          labelStyle: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20.0
+                    child: Row(
+                      children: <Widget>[
+                        Flexible(
+                          flex: 1,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 16.0, right: 16.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30.0),
+                              color: Colors.grey[200],
+                            ),
+                            child: CountryCodePicker(
+                              initialSelection: 'ID',
+                              showCountryOnly: true,
+                              alignLeft: false,
+                            ),
                           ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.green
-                            )
-                          )
                         ),
-                      ),
+                        Flexible(
+                          flex: 2,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 16.0),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Nomor HP',
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.green
+                                  )
+                                )
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Flexible(
