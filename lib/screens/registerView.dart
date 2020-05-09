@@ -1,6 +1,6 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:lingkung/screens/helpRegisterView.dart';
+import 'package:lingkung/screens/helpRegisterList.dart';
 
 class RegisterView extends StatefulWidget {
   
@@ -24,7 +24,7 @@ class _RegisterViewState extends State<RegisterView> {
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => HelpRegisterView(),
+                  builder: (context) => HelpRegisterList(),
                 ));
               },
               child: Icon(
@@ -56,10 +56,10 @@ class _RegisterViewState extends State<RegisterView> {
                     flex: 1,
                     child: Container(
                       child: Text(
-                        'Lengkapi data dirimu dibawah ini',
+                        'Lengkapi data dirimu di bawah ini',
                         style: TextStyle(
                           fontFamily: 'Poppins',
-                          fontSize: 24.0,
+                          fontSize: 22.0,
                           fontWeight: FontWeight.bold
                         ),
                       ),
