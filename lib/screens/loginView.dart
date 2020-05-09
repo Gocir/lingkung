@@ -1,6 +1,6 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:lingkung/screens/helpLoginView.dart';
+import 'package:lingkung/screens/helpLoginList.dart';
 
 class LoginView extends StatefulWidget {
   
@@ -24,7 +24,7 @@ class _LoginViewState extends State<LoginView> {
             child: GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => HelpLoginView(),
+                  builder: (context) => HelpLoginList(),
                 ));
               },
               child: Icon(
@@ -59,7 +59,7 @@ class _LoginViewState extends State<LoginView> {
                         'Silakan masukkan Nomor HP-mu yang terdaftar',
                         style: TextStyle(
                           fontFamily: 'Poppins',
-                          fontSize: 24.0,
+                          fontSize: 22.0,
                           fontWeight: FontWeight.bold
                         ),
                       ),
