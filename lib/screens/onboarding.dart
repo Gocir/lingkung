@@ -224,7 +224,7 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:lingkung/main.dart';
+import 'package:lingkung/screens/authenticate/authenticate.dart';
 
 class Onboarding extends StatelessWidget {
 
@@ -309,7 +309,7 @@ class Onboarding extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => MyHomePage()),);
+              MaterialPageRoute(builder: (context) => Authenticate()),);
           },
         ),
         dotsDecorator: DotsDecorator(

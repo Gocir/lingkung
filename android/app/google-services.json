@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "441794980484",
-    "firebase_url": "https://authentication-lingkung.firebaseio.com",
-    "project_id": "authentication-lingkung",
-    "storage_bucket": "authentication-lingkung.appspot.com"
+    "project_number": "597538094454",
+    "firebase_url": "https://fir-lingkung.firebaseio.com",
+    "project_id": "fir-lingkung",
+    "storage_bucket": "fir-lingkung.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:441794980484:android:22d85c27342693cc72b0d1",
+        "mobilesdk_app_id": "1:597538094454:android:3ac7034368865fe8e04e57",
         "android_client_info": {
           "package_name": "com.example.lingkung"
         }
       },
       "oauth_client": [
         {
-          "client_id": "441794980484-n0jefa9ivh8a3invk34g8urkgmpa1mgd.apps.googleusercontent.com",
+          "client_id": "597538094454-0a7n8k98mmhflmbtuttet74ibjae6klm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB-JakAOYaS2hXO94hyGvXNVSUIUdh6FrA"
+          "current_key": "AIzaSyDyv2H_uMdO2_x70cF6NwFUObUiNFyrQvk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "441794980484-n0jefa9ivh8a3invk34g8urkgmpa1mgd.apps.googleusercontent.com",
+              "client_id": "597538094454-0a7n8k98mmhflmbtuttet74ibjae6klm.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
