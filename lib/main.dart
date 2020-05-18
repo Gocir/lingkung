@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lingkung/models/user.dart';
 import 'package:lingkung/screens/splash.dart';
-import 'package:lingkung/screens/wrapper.dart';
 import 'package:lingkung/services/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Lingkung',
-        home: Wrapper(),
+        home: Splash(),
       ),
     );
   }
