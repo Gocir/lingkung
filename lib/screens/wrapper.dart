@@ -1,3 +1,4 @@
+import 'package:lingkung/main.dart';
 import 'package:lingkung/models/user.dart';
 import 'package:lingkung/screens/authenticate/authenticate.dart';
 import 'package:lingkung/screens/home.dart';
@@ -15,7 +16,7 @@ class Wrapper extends StatelessWidget {
     if (user == null) {
       return Authenticate();
     } else {
-      return HomePage();
+      return MainPage();
     }
   }
 }
