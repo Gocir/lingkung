@@ -187,6 +187,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lingkung/main.dart';
 import 'package:lingkung/screens/helps/helpLoginList.dart';
 import 'package:lingkung/services/auth.dart';
 import 'package:lingkung/utilities/loading.dart';
@@ -364,7 +365,10 @@ class _LoginViewState extends State<LoginView> {
                           if (_formkey.currentState.validate()){
                             setState(() => loading = true);
                             dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-                            if (result == null) {
+                            if (result != null) {
+                              Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (context) => MainPage()),);
+                            } else {
                               setState(() {
                                 error = 'Tidak dapat masuk dengan akun tersebut';
                                 loading = false;
