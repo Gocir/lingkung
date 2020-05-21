@@ -1,7 +1,6 @@
 import 'package:lingkung/main.dart';
 import 'package:lingkung/models/user.dart';
 import 'package:lingkung/screens/authenticate/authenticate.dart';
-import 'package:lingkung/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

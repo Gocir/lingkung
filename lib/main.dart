@@ -2,11 +2,11 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lingkung/models/user.dart';
-import 'package:lingkung/screens/home.dart';
-import 'package:lingkung/screens/message.dart';
-import 'package:lingkung/screens/order.dart';
-import 'package:lingkung/screens/profile.dart';
-import 'package:lingkung/screens/splash.dart';
+import 'package:lingkung/screens/menu/home.dart';
+import 'package:lingkung/screens/menu/message.dart';
+import 'package:lingkung/screens/menu/order.dart';
+import 'package:lingkung/screens/menu/profile.dart';
+import 'package:lingkung/screens/introduction/splash.dart';
 import 'package:lingkung/services/auth.dart';
 import 'package:provider/provider.dart';
 
