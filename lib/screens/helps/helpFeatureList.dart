@@ -7,7 +7,7 @@ class HelpFeatureList extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Masuk',
+          'Bantuan',
           style: TextStyle(
             fontFamily: 'Poppins',
             color: Colors.black
