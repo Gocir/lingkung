@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lingkung/main.dart';
-import 'package:lingkung/screens/transporTrash/transporTrash.dart';
 import 'package:lingkung/screens/trashBank/trashBankDetail.dart';
 
 class TrashBankList extends StatelessWidget {
@@ -74,16 +72,16 @@ class TrashBankList extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               iconTheme: IconThemeData(color: Colors.black),
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MainPage(),
-                      ));
-                },
-              ),
+              // leading: IconButton(
+              //   icon: Icon(Icons.arrow_back),
+              //   onPressed: () {
+              //     Navigator.pushReplacement(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) => MainPage(),
+              //         ));
+              //   },
+              // ),
               title: Text(
                 'Bank Sampah',
                 style: TextStyle(
