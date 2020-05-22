@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingkung/screens/trashBank/trashBankList.dart';
-import 'package:lingkung/screens/transporTrash/transporTrash.dart';
+import 'package:lingkung/screens/transporTrash/orderTrash.dart';
 
 class TrashBankDetail extends StatelessWidget {
   @override
@@ -392,7 +392,7 @@ class TrashBankDetail extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => TransporTrash(),
+                                builder: (context) => OrderTrash(),
                               ));
                         },
                       ),
