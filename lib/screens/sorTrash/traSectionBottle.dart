@@ -27,7 +27,7 @@ class TraSectionBottle extends StatelessWidget {
                 style: TextStyle(fontFamily: "Poppins", fontSize: 12.0),
               ),
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => TrashBankList(),
