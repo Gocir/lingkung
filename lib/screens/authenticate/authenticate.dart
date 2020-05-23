@@ -14,6 +14,7 @@ class _AuthenticateState extends State<Authenticate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffffffff),
       body: Column(
         children: <Widget>[
           Flexible(
@@ -61,7 +62,7 @@ class _AuthenticateState extends State<Authenticate> {
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 20.0,
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.w700
                         ),
                       ),
                     ),
@@ -97,9 +98,9 @@ class _AuthenticateState extends State<Authenticate> {
                                 child: Text(
                                   "MASUK",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: const Color(0xffffffff),
                                     fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold
+                                    fontWeight: FontWeight.w700
                                   )
                                 ),
                               ),
@@ -122,16 +123,16 @@ class _AuthenticateState extends State<Authenticate> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50.0),
                                 side: BorderSide(
-                                  color: Colors.lightGreen,
+                                  color: const Color(0xff9bc53d),
                                   width: 3.0)
                               ),
                               child: Center(
                                 child: Text(
                                   "DAFTAR",
                                   style: TextStyle(
-                                    color: Colors.lightGreen,
+                                    color: const Color(0xff9bc53d),
                                     fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold
+                                    fontWeight: FontWeight.w700
                                   )
                                 )
                               ),
@@ -155,7 +156,7 @@ class _AuthenticateState extends State<Authenticate> {
                             TextSpan(
                               text: 'Dengan masuk atau mendaftar, kamu menyetujui ',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: const Color(0xff000000),
                                 fontFamily: 'Poppins',
                                 fontSize: 12.0,
                               ),
@@ -168,7 +169,7 @@ class _AuthenticateState extends State<Authenticate> {
                                   MaterialPageRoute(builder: (context) => TermsOfService()),);
                               },
                               style: TextStyle(
-                                color: Colors.lightGreen,
+                                color: const Color(0xff9bc53d),
                                 fontFamily: 'Poppins',
                                 fontSize: 12.0,
                               ),
@@ -176,7 +177,7 @@ class _AuthenticateState extends State<Authenticate> {
                             TextSpan(
                               text: ' dan ',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: const Color(0xff000000),
                                 fontFamily: 'Poppins',
                                 fontSize: 12.0,
                               ),
@@ -189,7 +190,7 @@ class _AuthenticateState extends State<Authenticate> {
                                   MaterialPageRoute(builder: (context) => PrivacyPolicy()),);
                               },
                               style: TextStyle(
-                                color: Colors.lightGreen,
+                                color: const Color(0xff9bc53d),
                                 fontFamily: 'Poppins',
                                 fontSize: 12.0,
                               ),
@@ -260,7 +261,7 @@ class _AuthenticateState extends State<Authenticate> {
 //                         style: TextStyle(
 //                           fontFamily: 'Poppins',
 //                           fontSize: 20.0,
-//                           fontWeight: FontWeight.bold
+//                           fontWeight: FontWeight.w700
 //                         ),
 //                       ),
 //                     ),
@@ -298,7 +299,7 @@ class _AuthenticateState extends State<Authenticate> {
 //                                   style: TextStyle(
 //                                     color: Colors.white,
 //                                     fontFamily: 'Poppins',
-//                                     fontWeight: FontWeight.bold
+//                                     fontWeight: FontWeight.w700
 //                                   )
 //                                 ),
 //                               ),
@@ -330,7 +331,7 @@ class _AuthenticateState extends State<Authenticate> {
 //                                   style: TextStyle(
 //                                     color: Colors.lightGreen,
 //                                     fontFamily: 'Poppins',
-//                                     fontWeight: FontWeight.bold
+//                                     fontWeight: FontWeight.w700
 //                                   )
 //                                 )
 //                               ),
@@ -354,7 +355,7 @@ class _AuthenticateState extends State<Authenticate> {
 //                             TextSpan(
 //                               text: 'Dengan masuk atau mendaftar, kamu menyetujui ',
 //                               style: TextStyle(
-//                                 color: Colors.black,
+//                                 color: const Color(0xffffffff),
 //                                 fontFamily: 'Poppins',
 //                                 fontSize: 12.0,
 //                               ),
@@ -375,7 +376,7 @@ class _AuthenticateState extends State<Authenticate> {
 //                             TextSpan(
 //                               text: ' dan ',
 //                               style: TextStyle(
-//                                 color: Colors.black,
+//                                 color: const Color(0xffffffff),
 //                                 fontFamily: 'Poppins',
 //                                 fontSize: 12.0,
 //                               ),

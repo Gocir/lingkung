@@ -8,7 +8,7 @@
 // import 'package:provider/provider.dart';
 
 // class LoginView extends StatefulWidget {
-  
+
 //   @override
 //   _LoginViewState createState() => _LoginViewState();
 // }
@@ -18,7 +18,7 @@
 //   // TextEditingController phoneController = new TextEditingController();
 //   String phoneNumber = "";
 
-//   void _onCountryChange(CountryCode countryCode) {  
+//   void _onCountryChange(CountryCode countryCode) {
 //     this.phoneNumber =  countryCode.toString();
 //   }
 
@@ -31,7 +31,7 @@
 //     return new Scaffold(
 //       resizeToAvoidBottomPadding: false,
 //       appBar: AppBar(
-//         backgroundColor: Colors.white,
+//         backgroundColor: const Color(0xffffffff),
 //         iconTheme: IconThemeData(
 //           color: Colors.black
 //         ),
@@ -77,7 +77,7 @@
 //                         style: TextStyle(
 //                           fontFamily: 'Poppins',
 //                           fontSize: 22.0,
-//                           fontWeight: FontWeight.bold
+//                           fontWeight: FontWeight.w700
 //                         ),
 //                       ),
 //                     ),
@@ -135,8 +135,8 @@
 //                           child: Text(
 //                             'LANJUT',
 //                             style: TextStyle(
-//                               color: Colors.white,
-//                               fontWeight: FontWeight.bold,
+//                               color: const Color(0xffffffff),
+//                               fontWeight: FontWeight.w700,
 //                               fontFamily: 'Poppins',
 //                             ),
 //                           ),
@@ -193,213 +193,208 @@ import 'package:lingkung/services/auth.dart';
 import 'package:lingkung/utilities/loading.dart';
 
 class LoginView extends StatefulWidget {
-  
   @override
   _LoginViewState createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
-
   final AuthService _auth = AuthService();
   final _formkey = GlobalKey<FormState>();
 
   bool loading = false;
-  
+
   //text field state
-  String email = '';
-  String password = '';
-  String error = '';
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  String _email = "";
+  String _password = "";
+  String _error = "";
 
   @override
   Widget build(BuildContext context) {
-    return loading ? Loading() : Scaffold(
-      resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(
-          color: Colors.black
-        ),
-        actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => HelpLoginList(),
-                ));
-              },
-              child: Icon(
-                Icons.help_outline,
-                size: 26.0,
-              ),
-            )
-          ),
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            flex: 2,
-            child: Container(
+    return loading
+        ? Loading()
+        : Scaffold(
+            resizeToAvoidBottomPadding: false,
+            backgroundColor: const Color(0xffffffff),
+            appBar: AppBar(
+              backgroundColor: const Color(0xffffffff),
+              elevation: 0.0,
+              iconTheme: IconThemeData(color: Colors.black),
+              actions: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 10.0, right: 16.0, bottom: 10.0),
+                  height: 10.0,
+                  child: RaisedButton(
+                    color: const Color(0xff9bc53d),
+                    elevation: 2.0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.help_outline,
+                          color: const Color(0xffffffff),
+                          size: 26.0,
+                        ),
+                        SizedBox(width: 5.0),
+                        Text(
+                          'Bantuan',
+                          style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 12.0,
+                            color: const Color(0xffffffff),
+                          ),
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HelpLoginList(),
+                          ));
+                    },
+                  ),
+                ),
+                // Padding(
+                //   padding: EdgeInsets.only(right: 16.0),
+                //   child: GestureDetector(
+                //     onTap: () {
+                //       Navigator.push(context, MaterialPageRoute(
+                //         builder: (context) => HelpLoginList(),
+                //       ));
+                //     },
+                //     child: Icon(
+                //       Icons.help_outline,
+                //       size: 26.0,
+                //     ),
+                //   )
+                // ),
+              ],
+            ),
+            body: Container(
               margin: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Flexible(
-                    flex: 2,
-                    child: Container(
-                      child: Image.asset(
-                        'assets/images/masuk.png',
-                        scale: 1.25,
-                      ),
+                  Container(
+                    child: Image.asset(
+                      'assets/images/masuk.png',
+                      scale: 1.25,
                     ),
                   ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      child: Text(
-                        'Silakan masukkan Email & Password yang terdaftar',
-                        style: TextStyle(
+                  Container(
+                    child: Text(
+                      'Silakan masuk dengan Email & Password yang terdaftar',
+                      style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 22.0,
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
+                          fontWeight: FontWeight.w700),
                     ),
                   ),
-                  Flexible(
-                    flex: 1,
+                  Container(
                     child: Form(
                       key: _formkey,
                       child: Column(
                         children: <Widget>[
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              margin: EdgeInsets.only(top: 16.0),
-                              child: TextFormField(
+                          Container(
+                            child: TextFormField(
                                 decoration: InputDecoration(
                                   labelText: 'Email',
                                   labelStyle: TextStyle(
-                                    color: Colors.grey,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16.0
-                                  ),
+                                      color: Colors.grey,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16.0),
                                   focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.blueAccent
-                                    )
-                                  ),
+                                      borderSide:
+                                          BorderSide(color: Colors.blueAccent)),
                                 ),
-                                validator: (val) => val.isEmpty ? 'Masukkan email' : null,
+                                validator: (val) =>
+                                    val.isEmpty ? 'Masukkan email kamu' : null,
                                 onChanged: (val) {
-                                  setState(() => email = val);
-                                }
-                              ),
-                            ),
+                                  setState(() => _email = val);
+                                }),
                           ),
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              margin: EdgeInsets.only(top: 16.0),
-                              child: TextFormField(
+                          SizedBox(height: 10),
+                          Container(
+                            child: TextFormField(
                                 decoration: InputDecoration(
-                                  labelText: 'Password',
+                                  labelText: 'Kata Sandi',
                                   labelStyle: TextStyle(
-                                    color: Colors.grey,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16.0
-                                  ),
+                                      color: Colors.grey,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16.0),
                                   focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.blueAccent
-                                    )
-                                  ),
+                                      borderSide:
+                                          BorderSide(color: Colors.blueAccent)),
                                 ),
                                 obscureText: true,
-                                validator: (val) => val.length < 6  ? 'Masukkan panjang password >6' : null,
+                                validator: (val) => val.length < 6
+                                    ? 'Panjangnya harus lebih dari 6'
+                                    : null,
                                 onChanged: (val) {
-                                  setState(() => password = val);
-                                }
-                              ),
-                            ),
+                                  setState(() => _password = val);
+                                }),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      height: 45.0,
-                      margin: EdgeInsets.only(top: 30.0, bottom: 16.0),
-                      child: RaisedButton(
-                        color: Color(0xff9bc53d),
-                        elevation: 2.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)
-                        ),
-                        child: Center(
-                          child: Text(
-                            'MASUK',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Poppins',
-                            ),
+                  Container(
+                    height: 45.0,
+                    margin: EdgeInsets.only(top: 20.0),
+                    child: RaisedButton(
+                      color: const Color(0xff9bc53d),
+                      elevation: 2.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      child: Center(
+                        child: Text(
+                          'MASUK',
+                          style: TextStyle(
+                            color: const Color(0xffffffff),
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Poppins',
                           ),
                         ),
-                        onPressed: () async{
-                          if (_formkey.currentState.validate()){
-                            setState(() => loading = true);
-                            dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-                            if (result != null) {
-                              Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (context) => MainPage()),);
-                            } else {
-                              setState(() {
-                                error = 'Tidak dapat masuk dengan akun tersebut';
-                                loading = false;
-                              });
-                            }
-                          }
-                        },
                       ),
+                      onPressed: () async {
+                        if (_formkey.currentState.validate()) {
+                          setState(() => loading = true);
+                          dynamic result = await _auth
+                              .loginWithEmailAndPassword(email: _email, password: _password);
+                          if (result != null) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MainPage()),
+                            );
+                          } else {
+                            setState(() {
+                              _error = 'Tidak dapat masuk dengan akun tersebut';
+                              loading = false;
+                            });
+                          }
+                        }
+                      },
                     ),
                   ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      height: 45.0,
-                      margin: EdgeInsets.only(top: 30.0),
-                      child: Text(
-                        error,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Poppins',
-                        ),
+                  Container(
+                    height: 45.0,
+                    margin: EdgeInsets.only(top: 30.0),
+                    child: Text(
+                      _error,
+                      style: TextStyle(
+                        color: const Color(0xffffffff),
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Poppins',
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }
