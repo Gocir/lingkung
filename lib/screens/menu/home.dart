@@ -1,39 +1,51 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lingkung/models/user.dart';
+import 'package:lingkung/screens/products/exploreProduct.dart';
 import 'package:lingkung/screens/sorTrash/traSectionList.dart';
 import 'package:lingkung/screens/trashBank/trashBankList.dart';
-// import 'package:lingkung/services/auth.dart';
+import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
-  // final AuthService _auth = AuthService();
+class HomePage extends StatefulWidget {
+  final FirebaseUser user;
 
-  final String garbagecar = 'assets/icons/garbagecar.svg';
-  final String recycles = 'assets/icons/recycles.svg';
-  final String bank = 'assets/icons/bank.svg';
   final ImageProvider grass2;
   final ImageProvider fightcorona;
   final ImageProvider news;
   final ImageProvider reduce;
   final ImageProvider grass1;
-  final ImageProvider user;
+  final ImageProvider profile;
   final ImageProvider bohlilin;
   final ImageProvider bamboostraw;
   final ImageProvider tumblr;
   HomePage({
     Key key,
+    this.user,
     this.grass2 = const AssetImage('assets/images/grass2.png'),
     this.fightcorona = const AssetImage('assets/images/fightcorona.png'),
     this.news = const AssetImage('assets/images/news.png'),
     this.reduce = const AssetImage('assets/images/reduce.png'),
     this.grass1 = const AssetImage('assets/images/grass1.png'),
-    this.user = const AssetImage('assets/images/user.png'),
+    this.profile = const AssetImage('assets/images/user.png'),
     this.bohlilin = const AssetImage('assets/images/bohlilin.jpg'),
     this.bamboostraw = const AssetImage('assets/images/bamboostraw.png'),
     this.tumblr = const AssetImage('assets/images/tumblr.png'),
   }) : super(key: key);
 
   @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  final String garbagecar = 'assets/icons/garbagecar.svg';
+  final String recycles = 'assets/icons/recycles.svg';
+  final String bank = 'assets/icons/bank.svg';
+
+  @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
     return Scaffold(
       backgroundColor: const Color(0xff9bc53d),
       body: Stack(
@@ -50,7 +62,7 @@ class HomePage extends StatelessWidget {
                   height: 115.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: grass1,
+                      image: widget.grass1,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -65,7 +77,7 @@ class HomePage extends StatelessWidget {
                   height: 149.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: grass2,
+                      image: widget.grass2,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -91,7 +103,7 @@ class HomePage extends StatelessWidget {
                             children: <Widget>[
                               Container(
                                 child: Text(
-                                  'Hai, Ridwan',
+                                  'Hai, ${user?.name}',
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 22,
@@ -126,7 +138,7 @@ class HomePage extends StatelessWidget {
                                       blurRadius: 3)
                                 ],
                                 image: DecorationImage(
-                                    image: user, fit: BoxFit.cover),
+                                    image: widget.profile, fit: BoxFit.cover),
                               ),
                             ))
                       ],
@@ -167,7 +179,7 @@ class HomePage extends StatelessWidget {
                             style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 14,
-                                fontWeight: FontWeight.w700),
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                         Container(
@@ -270,27 +282,25 @@ class HomePage extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 14,
-                                    fontWeight: FontWeight.w700),
+                                    fontWeight: FontWeight.w600),
                               ),
                             ),
-                            Container(
-                              margin: EdgeInsets.only(top: 15.0, right: 16),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Lainnya',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: const Color(0xff9e9e9e)),
-                                  ),
-                                  Icon(
-                                    Icons.chevron_right,
-                                    color: Colors.lightGreen,
-                                    size: 20,
-                                  ),
-                                ],
+                            GestureDetector(
+                              onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) => ExploreProductPage()
+                                    ));
+                                  },
+                              child: Container(
+                                margin: EdgeInsets.only(top: 15.0, right: 16),
+                                child: Text(
+                                  'Lihat lainnya',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xff5bc0eb)),
+                                ),
                               ),
                             ),
                           ],
@@ -318,8 +328,8 @@ class HomePage extends StatelessWidget {
                                 ),
                                 child: Column(
                                   children: <Widget>[
-                                    Image.asset("assets/images/bamboostraw.png"),
-                                    Text('Sedotan Bambu 2 set + sikat'),
+                                    Image.asset("assets/images/bamboostraw.png", fit: BoxFit.fill,),
+                                    Text('Sedotan Bambu 2', style: TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.w500)),
                                     Text('Rp 25.000'),
                                   ],
                                 )
@@ -339,7 +349,7 @@ class HomePage extends StatelessWidget {
                                         blurRadius: 3)
                                   ],
                                   image: DecorationImage(
-                                    image: bohlilin,
+                                    image: widget.bohlilin,
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -359,7 +369,7 @@ class HomePage extends StatelessWidget {
                                         blurRadius: 3)
                                   ],
                                   image: DecorationImage(
-                                    image: tumblr,
+                                    image: widget.tumblr,
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -382,7 +392,7 @@ class HomePage extends StatelessWidget {
                             style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 14,
-                                fontWeight: FontWeight.w700),
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                         Container(
@@ -400,7 +410,7 @@ class HomePage extends StatelessWidget {
                             ],
                             image: DecorationImage(
                               alignment: Alignment.centerLeft,
-                              image: news,
+                              image: widget.news,
                               fit: BoxFit.contain,
                             ),
                           ),
@@ -420,7 +430,7 @@ class HomePage extends StatelessWidget {
                             ],
                             image: DecorationImage(
                               alignment: Alignment.centerLeft,
-                              image: fightcorona,
+                              image: widget.fightcorona,
                               fit: BoxFit.contain,
                             ),
                           ),

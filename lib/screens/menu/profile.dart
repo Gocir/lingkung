@@ -1,16 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lingkung/screens/contact.dart';
+import 'package:lingkung/models/user.dart';
+import 'package:lingkung/screens/contactUs.dart';
 import 'package:lingkung/screens/helps/helpFeatureList.dart';
 import 'package:lingkung/screens/privacyPolicy.dart';
 import 'package:lingkung/screens/termsOfService.dart';
 import 'package:lingkung/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
   final AuthService _auth = AuthService();
+  final FirebaseUser user;
+
+  ProfilePage({Key key, this.user}) : super (key: key);
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
     return Scaffold(
       backgroundColor: const Color(0xff9bc53d),
       body: Stack(children: <Widget>[
@@ -83,7 +90,7 @@ class ProfilePage extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         child: Text(
-                          'Hai, Ridwan',
+                          '${user?.name}',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 22,
@@ -92,11 +99,11 @@ class ProfilePage extends StatelessWidget {
                       ),
                       Container(
                         child: Text(
-                          'Ridwanwanwan72@supermail.id',
+                          '${user?.email}',
                           style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
                               color: const Color(0xffffffff)),
                         ),
                       ),
@@ -312,7 +319,7 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () async {
-                        await _auth.signOut();
+                        await _auth.logout();
                       },
                     ),
                   ),
@@ -324,7 +331,7 @@ class ProfilePage extends StatelessWidget {
         ),
         //ListView Vertical
         Container(
-          height: 100.0,
+          height: 120.0,
           margin: EdgeInsets.only(left: 16.0, top: 120.0, right: 16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
