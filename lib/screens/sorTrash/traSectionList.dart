@@ -2,35 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:lingkung/screens/sorTrash/traSectionBottle.dart';
 import 'package:lingkung/screens/sorTrash/traSectionGlass.dart';
 import 'package:lingkung/screens/trashBank/trashBankList.dart';
+import 'package:lingkung/utilities/colorStyle.dart';
+// import 'package:lingkung/widgets/categoryTrash.dart';
+import 'package:lingkung/utilities/textStyle.dart';
 
 class TraSectionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff5bc0eb),
-        title: Text(
-          'Pilah Sampah',
-          style: TextStyle(
-            fontFamily: "Poppins",
-          ),
+        backgroundColor: blue,
+        title: CustomText(
+          text: 'Pilah Sampah',
+          color: white,
+          size: 20,
+          weight: FontWeight.w600,
         ),
         actions: <Widget>[
           Container(
             margin: EdgeInsets.only(top: 10.0, right: 16.0, bottom: 10.0),
             height: 10.0,
             child: RaisedButton(
-              color: Color(0xfffde74c),
+              color: yellow,
                 elevation: 2.0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50)
                 ),
-              child: Text(
-                'Jual Sampah',
-                style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 12.0
-                ),
+              child: CustomText(
+                text: 'Jual Sampah',
+                size: 12.0,
+                weight: FontWeight.w500,
               ),
               onPressed: () {
                 Navigator.push(
@@ -44,23 +45,22 @@ class TraSectionList extends StatelessWidget {
         ],
       ),
       body: Container(
-        margin: EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
+        padding: EdgeInsets.all(16.0),
         child: ListView(
           children: <Widget>[
+            // Categories(),
+            // SizedBox(height: 16.0),
             Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Gelas',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
+                title: CustomText(
+                  text: 'Gelas',
+                  size: 14.0,
+                  weight: FontWeight.w700
                   ),
-                ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: green,
                 ),
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(

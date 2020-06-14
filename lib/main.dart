@@ -1,16 +1,18 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lingkung/models/user.dart';
+import 'package:lingkung/providers/partnerProvider.dart';
 import 'package:lingkung/screens/menu/home.dart';
 import 'package:lingkung/screens/menu/message.dart';
 import 'package:lingkung/screens/menu/order.dart';
 import 'package:lingkung/screens/menu/profile.dart';
 import 'package:lingkung/screens/introduction/splash.dart';
-import 'package:lingkung/services/auth.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -21,8 +23,10 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
       
-    return StreamProvider<User>.value(
-      value: AuthService().user,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: PartnerProvider.initialize()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Lingkung',

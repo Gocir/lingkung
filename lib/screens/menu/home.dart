@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lingkung/models/user.dart';
+import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/products/exploreProduct.dart';
 import 'package:lingkung/screens/sorTrash/traSectionList.dart';
 import 'package:lingkung/screens/trashBank/trashBankList.dart';
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final user = Provider.of<UserProvider>(context);
     return Scaffold(
       backgroundColor: const Color(0xff9bc53d),
       body: Stack(

@@ -196,9 +196,12 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/helps/helpRegisterList.dart';
-import 'package:lingkung/services/auth.dart';
+import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/loading.dart';
+import 'package:lingkung/utilities/textStyle.dart';
+import 'package:provider/provider.dart';
 
 import '../../main.dart';
 
@@ -208,22 +211,18 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final AuthService _auth = AuthService();
-  final _formkey = GlobalKey<FormState>();
+  final _scaffoldStateKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
 
   bool loading = false;
 
-  //text field state
-  String _name = "";
-  String _email = "";
-  String _password = "";
-  String _error = "";
-
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<UserProvider>(context);
     return loading
         ? Loading()
         : Scaffold(
+          key: _scaffoldStateKey,
             resizeToAvoidBottomPadding: false,
             backgroundColor: const Color(0xffffffff),
             appBar: AppBar(
@@ -236,10 +235,9 @@ class _RegisterViewState extends State<RegisterView> {
                   height: 10.0,
                   child: RaisedButton(
                     color: const Color(0xff9bc53d),
-                      elevation: 2.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)
-                      ),
+                    elevation: 2.0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
                     child: Row(
                       children: <Widget>[
                         Icon(
@@ -260,152 +258,141 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                     onPressed: () {
                       Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HelpRegisterList(),
-                            ));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HelpRegisterList(),
+                          ));
                     },
                   ),
                 ),
               ],
             ),
-            body: Container(
-              margin: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    child: Text(
-                      'Lengkapi data dirimu di bawah ini',
-                      style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.w700),
+            body: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text(
+                        'Lengkapi data dirimu di bawah ini',
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.w700),
+                      ),
                     ),
-                  ),
-                  Container(
-                    child: Form(
-                      key: _formkey,
+                    Form(
+                      key: _formKey,
                       child: Column(
                         children: <Widget>[
                           Container(
                             child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Nama',
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16.0),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: const Color(0xff5bc0eb))),
-                                ),
-                                validator: (val) =>
-                                    val.isEmpty ? 'Isi Nama Kamu' : null,
-                                onChanged: (val) {
-                                  setState(() => _name = val);
-                                }),
+                              controller: authProvider.name,
+                              decoration: InputDecoration(
+                                labelText: 'Nama',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: const Color(0xff5bc0eb))),
+                              ),
+                              validator: (val) =>
+                                  val.isEmpty ? 'Isi Nama Kamu' : null,
+                            ),
                           ),
                           SizedBox(height: 10),
                           Container(
                             child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Email',
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16.0),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: const Color(0xff5bc0eb))),
-                                ),
-                                validator: (val) => val.isEmpty
-                                    ? 'Isi alamat email kamu'
-                                    : null,
-                                onChanged: (val) {
-                                  setState(() => _email = val);
-                                }),
+                              controller: authProvider.email,
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: const Color(0xff5bc0eb))),
+                              ),
+                              validator: (val) =>
+                                  val.isEmpty ? 'Isi alamat email kamu' : null,
+                            ),
                           ),
                           SizedBox(height: 10),
                           Container(
                             child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Kata Sandi',
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16.0),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: const Color(0xff5bc0eb))),
-                                ),
-                                obscureText: true,
-                                validator: (val) => val.length < 8
-                                    ? 'Panjangnya harus lebih dari 8'
-                                    : null,
-                                onChanged: (val) {
-                                  setState(() => _password = val);
-                                }),
+                              controller: authProvider.password,
+                              decoration: InputDecoration(
+                                labelText: 'Kata Sandi',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: const Color(0xff5bc0eb))),
+                              ),
+                              obscureText: true,
+                              validator: (val) => val.length < 8
+                                  ? 'Panjangnya harus lebih dari 8'
+                                  : null,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  Container(
-                    height: 45.0,
-                    margin: EdgeInsets.only(top: 30.0, bottom: 16.0),
-                    child: RaisedButton(
-                        color: const Color(0xff9bc53d),
-                        elevation: 2.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50)),
-                        child: Center(
-                          child: Text(
-                            'DAFTAR',
-                            style: TextStyle(
-                              color: const Color(0xffffffff),
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Poppins',
+                    Container(
+                      height: 45.0,
+                      margin: EdgeInsets.only(top: 30.0, bottom: 16.0),
+                      child: RaisedButton(
+                          color: const Color(0xff9bc53d),
+                          elevation: 2.0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50)),
+                          child: Center(
+                            child: Text(
+                              'DAFTAR',
+                              style: TextStyle(
+                                color: const Color(0xffffffff),
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Poppins',
+                              ),
                             ),
                           ),
-                        ),
-                        onPressed: () async {
-                          if (_formkey.currentState.validate()) {
-                            setState(() => loading = true);
-                            dynamic result =
-                                await _auth.registerWithEmailAndPassword(
-                                    name: _name, email: _email, password: _password);
-                            if (result != null) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MainPage()),
-                              );
-                            } else {
-                              setState(() {
-                                _error = 'Tolong masukkan email yang benar';
-                                loading = false;
-                              });
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              setState(() => loading = true);
+                              dynamic result = await authProvider.register();
+                              if (result != null) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MainPage()),
+                                );
+                                authProvider.clearController();
+                              } else {
+                                setState(() {
+                                  _scaffoldStateKey.currentState
+                                      .showSnackBar(SnackBar(
+                                          content: CustomText(
+                                    text: "Tolong isi data dengan benar",
+                                    color: white,
+                                    weight: FontWeight.w600,
+                                  )));
+                                  loading = false;
+                                });
+                              }
                             }
-                          }
-                        }),
-                  ),
-                  Container(
-                    height: 45.0,
-                    margin: EdgeInsets.only(top: 30.0),
-                    child: Text(
-                      _error,
-                      style: TextStyle(
-                        color: const Color(0xffffffff),
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Poppins',
-                      ),
+                          }),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

@@ -1,23 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lingkung/models/user.dart';
-import 'package:lingkung/screens/contactUs.dart';
+import 'package:lingkung/providers/userProvider.dart';
+import 'package:lingkung/screens/authenticate/authenticate.dart';
+import 'package:lingkung/screens/helps/contactUs.dart';
 import 'package:lingkung/screens/helps/helpFeatureList.dart';
 import 'package:lingkung/screens/privacyPolicy.dart';
 import 'package:lingkung/screens/termsOfService.dart';
-import 'package:lingkung/services/auth.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
-  final AuthService _auth = AuthService();
   final FirebaseUser user;
 
   ProfilePage({Key key, this.user}) : super (key: key);
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final user = Provider.of<UserProvider>(context);
     return Scaffold(
       backgroundColor: const Color(0xff9bc53d),
       body: Stack(children: <Widget>[
@@ -57,8 +56,7 @@ class ProfilePage extends StatelessWidget {
           ],
         ),
         //ListView Vertical
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        ListView(
           children: <Widget>[
             //user
             Container(
@@ -129,6 +127,116 @@ class ProfilePage extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.fromLTRB(16.0, 50.0, 16.0, 5.0),
                     child: Text(
+                      'Tambah',
+                      style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(
+                          left: 16.0, right: 16.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: const Color(0xffffffff),
+                        boxShadow: [
+                          BoxShadow(
+                              color: const Color(0x29000000),
+                              offset: Offset(0, 0),
+                              blurRadius: 3)
+                        ],
+                      ),
+                      child: Column(
+                        children: ListTile.divideTiles(
+                            context: context,
+                            tiles: [
+                              ListTile(
+                                leading: Icon(Icons.category),
+                                title: Text(
+                                  'Tambah Kategori Sampah',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                trailing: Icon(
+                                  Icons.chevron_right,
+                                  color: const Color(0xff9bc53d),
+                                ),
+                                dense: true,
+                                onTap: () {
+                                  // Navigator.push(context, MaterialPageRoute(
+                                  //   builder: (context) => AddProduct(),
+                                  // ));
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.category),
+                                title: Text(
+                                  'Tambah Kategori Produk',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                trailing: Icon(
+                                  Icons.chevron_right,
+                                  color: const Color(0xff9bc53d),
+                                ),
+                                dense: true,
+                                onTap: () {
+                                  // Navigator.push(context, MaterialPageRoute(
+                                  //   builder: (context) => AddProduct(),
+                                  // ));
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.add_circle_outline),
+                                title: Text(
+                                  'Tambah Jenis Sampah',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                trailing: Icon(
+                                  Icons.chevron_right,
+                                  color: const Color(0xff9bc53d),
+                                ),
+                                dense: true,
+                                onTap: () {
+                                  // Navigator.push(context, MaterialPageRoute(
+                                  //   builder: (context) => HelpFeatureList(),
+                                  // ));
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.add_shopping_cart),
+                                title: Text(
+                                  'Tambah Produk',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                trailing: Icon(
+                                  Icons.chevron_right,
+                                  color: const Color(0xff9bc53d),
+                                ),
+                                dense: true,
+                                onTap: () {
+                                  // Navigator.push(context, MaterialPageRoute(
+                                  //   builder: (context) => ContactUs(),
+                                  // ));
+                                },
+                              ),
+                            ],
+                          ).toList(),
+                      )),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 5.0),
+                    child: Text(
                       'Akun',
                       style: TextStyle(
                           fontFamily: 'Poppins',
@@ -156,7 +264,7 @@ class ProfilePage extends StatelessWidget {
                               ListTile(
                                 leading: SvgPicture.asset("assets/icons/editprofil.svg"),
                                 title: Text(
-                                  'Edit Profil',
+                                  'Ubah Profil',
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 14.0,
@@ -169,7 +277,7 @@ class ProfilePage extends StatelessWidget {
                                 dense: true,
                                 onTap: () {
                                   // Navigator.push(context, MaterialPageRoute(
-                                  //   builder: (context) => TraSectionGlass(),
+                                  //   builder: (context) => AddProduct(),
                                   // ));
                                 },
                               ),
@@ -319,7 +427,10 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () async {
-                        await _auth.logout();
+                        await user.logout();
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                                    builder: (context) => Authenticate(),
+                                  ));
                       },
                     ),
                   ),
@@ -330,20 +441,20 @@ class ProfilePage extends StatelessWidget {
           ],
         ),
         //ListView Vertical
-        Container(
-          height: 120.0,
-          margin: EdgeInsets.only(left: 16.0, top: 120.0, right: 16.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: const Color(0xffffffff),
-            boxShadow: [
-              BoxShadow(
-                  color: const Color(0x29000000),
-                  offset: Offset(0, 0),
-                  blurRadius: 6)
-            ],
-          ),
-        )
+        // Container(
+        //   height: 120.0,
+        //   margin: EdgeInsets.only(left: 16.0, top: 120.0, right: 16.0),
+        //   decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(20),
+        //     color: const Color(0xffffffff),
+        //     boxShadow: [
+        //       BoxShadow(
+        //           color: const Color(0x29000000),
+        //           offset: Offset(0, 0),
+        //           blurRadius: 6)
+        //     ],
+        //   ),
+        // )
       ]),
     );
   }

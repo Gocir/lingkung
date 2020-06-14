@@ -188,9 +188,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lingkung/main.dart';
+import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/helps/helpLoginList.dart';
-import 'package:lingkung/services/auth.dart';
+import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/loading.dart';
+import 'package:lingkung/utilities/textStyle.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -198,21 +201,18 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final AuthService _auth = AuthService();
-  final _formkey = GlobalKey<FormState>();
+  final _scaffoldStateKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
 
   bool loading = false;
 
-  //text field state
-  String _email = "";
-  String _password = "";
-  String _error = "";
-
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<UserProvider>(context);
     return loading
         ? Loading()
         : Scaffold(
+          key: _scaffoldStateKey,
             resizeToAvoidBottomPadding: false,
             backgroundColor: const Color(0xffffffff),
             appBar: AppBar(
@@ -291,54 +291,50 @@ class _LoginViewState extends State<LoginView> {
                           fontWeight: FontWeight.w700),
                     ),
                   ),
-                  Container(
-                    child: Form(
-                      key: _formkey,
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Email',
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16.0),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.blueAccent)),
-                                ),
-                                validator: (val) =>
-                                    val.isEmpty ? 'Masukkan email kamu' : null,
-                                onChanged: (val) {
-                                  setState(() => _email = val);
-                                }),
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Kata Sandi',
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16.0),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.blueAccent)),
-                                ),
-                                obscureText: true,
-                                validator: (val) => val.length < 6
-                                    ? 'Panjangnya harus lebih dari 6'
-                                    : null,
-                                onChanged: (val) {
-                                  setState(() => _password = val);
-                                }),
-                          ),
-                        ],
-                      ),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child: TextFormField(
+                            controller: authProvider.email,
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.blueAccent)),
+                              ),
+                              validator: (val) =>
+                                  val.isEmpty ? 'Masukkan email kamu' : null,
+                              ),
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          child: TextFormField(
+                              controller: authProvider.password,
+                              decoration: InputDecoration(
+                                labelText: 'Kata Sandi',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.blueAccent)),
+                              ),
+                              obscureText: true,
+                              validator: (val) => val.length < 8
+                                  ? 'Panjangnya harus lebih dari 8'
+                                  : null,
+                              ),
+                        ),
+                      ],
                     ),
                   ),
                   Container(
@@ -360,36 +356,30 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       onPressed: () async {
-                        if (_formkey.currentState.validate()) {
-                          setState(() => loading = true);
-                          dynamic result = await _auth
-                              .loginWithEmailAndPassword(email: _email, password: _password);
-                          if (result != null) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MainPage()),
-                            );
-                          } else {
-                            setState(() {
-                              _error = 'Tidak dapat masuk dengan akun tersebut';
-                              loading = false;
-                            });
-                          }
-                        }
+                        if (_formKey.currentState.validate()) {
+                                setState(() => loading = true);
+                                dynamic result = await authProvider.login();
+                                if (result != null) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MainPage()),
+                                  );
+                                  authProvider.clearController();
+                                } else {
+                                  setState(() {
+                                    _scaffoldStateKey.currentState
+                                        .showSnackBar(SnackBar(
+                                            content: CustomText(
+                                      text:
+                                          "Tidak dapat masuk dengan akun tersebut",
+                                      color: white,
+                                      weight: FontWeight.w600,
+                                    )));
+                                  });
+                                }
+                              }
                       },
-                    ),
-                  ),
-                  Container(
-                    height: 45.0,
-                    margin: EdgeInsets.only(top: 30.0),
-                    child: Text(
-                      _error,
-                      style: TextStyle(
-                        color: const Color(0xffffffff),
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Poppins',
-                      ),
                     ),
                   ),
                 ],
