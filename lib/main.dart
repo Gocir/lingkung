@@ -1,7 +1,7 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lingkung/providers/partnerProvider.dart';
+import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/menu/home.dart';
 import 'package:lingkung/screens/menu/message.dart';
 import 'package:lingkung/screens/menu/order.dart';
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: PartnerProvider.initialize()),
+        ChangeNotifierProvider.value(value: UserProvider.initialize()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
