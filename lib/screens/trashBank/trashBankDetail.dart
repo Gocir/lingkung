@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:lingkung/providers/partnerProvider.dart';
+import 'package:lingkung/models/partnerModel.dart';
 import 'package:lingkung/screens/trashBank/trashBankList.dart';
 import 'package:lingkung/screens/transporTrash/orderTrash.dart';
-import 'package:provider/provider.dart';
 
 class TrashBankDetail extends StatelessWidget {
-  final String bsid;
-  TrashBankDetail(this.bsid);
+  // final String bsid;
+  // TrashBankDetail(this.bsid);
+  final PartnerModel partner;
+  TrashBankDetail({this.partner});
+
   @override
   Widget build(BuildContext context) {
-    final partner = Provider.of<PartnerProvider>(context);
+    
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: Stack(children: <Widget>[
@@ -93,7 +95,7 @@ class TrashBankDetail extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       child: Text(
-                        'BS. ${partner.businessPartnerModel.name}',
+                        partner.name,
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 20,

@@ -66,32 +66,32 @@ import 'package:provider/provider.dart';
 class PartnerLisTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final partner = Provider.of<PartnerProvider>(context);
+    final partnerProvider = Provider.of<PartnerProvider>(context);
 
     return ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: partner.partners.length,
+        itemCount: partnerProvider.partners.length,
         itemBuilder: (_, index) {
           return Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0)),
             child: ListTile(
               onTap: (){
-              print("BS. ${partner.partners[index].id}");
+              print("BS. ${partnerProvider.partners[index].id}");
               Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TrashBankDetail(partner.partners[index].id),
+                          builder: (context) => TrashBankDetail(partner: partnerProvider.partners[index]),
                         ));
               },
               title: CustomText(
-                text: "BS. ${partner.partners[index].name}",
+                text: "BS. ${partnerProvider.partners[index].name}",
                 size: 16,
                 color: black,
                 weight: FontWeight.w600,
               ),
               subtitle: CustomText(
-                text: '${partner.partners[index].address}',
+                text: '${partnerProvider.partners[index].address}',
                 size: 10,
                 color: grey,
                 weight: FontWeight.w500,
