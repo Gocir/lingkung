@@ -29,7 +29,7 @@ class PartnerModel{
 //  public variable
 
   PartnerModel.fromSnapshot(DocumentSnapshot snapshot){
-    _id = snapshot.data[ID];
+    _id = snapshot.data["uid"];
     _name = snapshot.data[NAME];
     _email = snapshot.data[EMAIL];
     _address = snapshot.data[ADDRESS];

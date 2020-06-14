@@ -10,9 +10,6 @@ import 'package:lingkung/screens/termsOfService.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
-  final FirebaseUser user;
-
-  ProfilePage({Key key, this.user}) : super (key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +85,7 @@ class ProfilePage extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         child: Text(
-                          '${user?.name}',
+                          '${user.userModel?.name}',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 22,
@@ -97,7 +94,7 @@ class ProfilePage extends StatelessWidget {
                       ),
                       Container(
                         child: Text(
-                          '${user?.email}',
+                          '${user.userModel?.email}',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 12,

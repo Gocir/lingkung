@@ -8,7 +8,6 @@ import 'package:lingkung/screens/trashBank/trashBankList.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  final FirebaseUser user;
 
   final ImageProvider grass2;
   final ImageProvider fightcorona;
@@ -21,7 +20,6 @@ class HomePage extends StatefulWidget {
   final ImageProvider tumblr;
   HomePage({
     Key key,
-    this.user,
     this.grass2 = const AssetImage('assets/images/grass2.png'),
     this.fightcorona = const AssetImage('assets/images/fightcorona.png'),
     this.news = const AssetImage('assets/images/news.png'),
@@ -103,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                             children: <Widget>[
                               Container(
                                 child: Text(
-                                  'Hai, ${user?.name}',
+                                  'Hai, ${user.userModel?.name}',
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontSize: 22,

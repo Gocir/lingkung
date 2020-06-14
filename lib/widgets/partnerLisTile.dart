@@ -58,6 +58,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:lingkung/providers/partnerProvider.dart';
+import 'package:lingkung/screens/trashBank/trashBankDetail.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 import 'package:provider/provider.dart';
@@ -75,6 +76,14 @@ class PartnerLisTile extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0)),
             child: ListTile(
+              onTap: (){
+              print("BS. ${partner.partners[index].id}");
+              Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TrashBankDetail(partner.partners[index].id),
+                        ));
+              },
               title: CustomText(
                 text: "BS. ${partner.partners[index].name}",
                 size: 16,
