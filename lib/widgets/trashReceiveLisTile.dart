@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:lingkung/providers/partnerProvider.dart';
+import 'package:lingkung/models/partnerModel.dart';
 import 'package:lingkung/providers/trashReceiveProvider.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 import 'package:provider/provider.dart';
 
 class TrashReceiveLisTile extends StatelessWidget {
-   
+  final PartnerModel partner;
+  TrashReceiveLisTile({this.partner});
+
   @override
   Widget build(BuildContext context) {
-    final partner = Provider.of<PartnerProvider>(context);
-
     final trashReceiveProvider = Provider.of<TrashReceiveProvider>(context);
-    trashReceiveProvider.loadTrashReceiveByPartner("HBm0o5t7llQFQmyIeylNPnLhzyU2");
-    
+    trashReceiveProvider.loadTrashReceiveByPartner(partner.id);
     return Container(
-      height: 200,
+      height: 300,
       child: ListView.builder(
           scrollDirection: Axis.vertical,
           itemCount: trashReceiveProvider.trashReceiveByPartner.length,
