@@ -194,6 +194,7 @@ class PartnerProvider with ChangeNotifier {
   PartnerModel get businessPartnerModel => _businessPartnerModel;
 
   PartnerProvider.initialize(){
+   // print("mthrfcjer");
     loadPartner();
   }
 
