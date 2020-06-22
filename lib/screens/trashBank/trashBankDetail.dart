@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lingkung/models/partnerModel.dart';
-import 'package:lingkung/screens/trashBank/trashBankList.dart';
 import 'package:lingkung/screens/transporTrash/orderTrash.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/widgets/trashReceiveLisTile.dart';
 
 class TrashBankDetail extends StatelessWidget {
-  // final String bsid;
-  // TrashBankDetail(this.bsid);
   final PartnerModel partner;
   TrashBankDetail({this.partner});
 
@@ -19,27 +16,10 @@ class TrashBankDetail extends StatelessWidget {
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           iconTheme: IconThemeData(color: Colors.black),
-          // leading: Container(
-          //   margin: EdgeInsets.only(left: 10.0, top: 10.0),
-          //   decoration: BoxDecoration(
-          //     color: const Color(0xffffffff).withOpacity(0.8),
-          //     borderRadius: BorderRadius.circular(100.0),
-          //   ),
-          //   child: IconButton(
-          //     icon: Icon(Icons.arrow_back),
-          //     onPressed: () {
-          //       Navigator.pushReplacement(
-          //           context,
-          //           MaterialPageRoute(
-          //             builder: (context) => TrashBankList(),
-          //           ));
-          //     },
-          //   ),
-          // ),
         ),
         body: SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height,
+            // height: MediaQuery.of(context).size.height,
             margin: EdgeInsets.only(top: 120.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -100,7 +80,7 @@ class TrashBankDetail extends StatelessWidget {
                   SizedBox(height: 10.0),
                   Divider(
                     color: const Color(0xff9e9e9e),
-                    thickness: 2.0,
+                    thickness: 1.0,
                   ),
                   SizedBox(height: 10.0),
                   Container(
@@ -113,7 +93,7 @@ class TrashBankDetail extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10.0),
-                  TrashReceiveLisTile(),
+                  TrashReceiveLisTile(partner: partner),
                   SizedBox(height: 30.0),
                   Container(
                     height: 45.0,
