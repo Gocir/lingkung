@@ -2,6 +2,7 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lingkung/providers/partnerProvider.dart';
+import 'package:lingkung/providers/trashReceiveProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/menu/home.dart';
 import 'package:lingkung/screens/menu/message.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: UserProvider.initialize()),
         ChangeNotifierProvider.value(value: PartnerProvider.initialize()),
+        ChangeNotifierProvider.value(value: TrashReceiveProvider.initialize()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
