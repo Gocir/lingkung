@@ -1,51 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/products/exploreProduct.dart';
 import 'package:lingkung/screens/sorTrash/traSectionList.dart';
 import 'package:lingkung/screens/trashBank/trashBankList.dart';
+import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-
-  final ImageProvider grass2;
-  final ImageProvider fightcorona;
-  final ImageProvider news;
-  final ImageProvider reduce;
-  final ImageProvider grass1;
-  final ImageProvider profile;
-  final ImageProvider bohlilin;
-  final ImageProvider bamboostraw;
-  final ImageProvider tumblr;
-  HomePage({
-    Key key,
-    this.grass2 = const AssetImage('assets/images/grass2.png'),
-    this.fightcorona = const AssetImage('assets/images/fightcorona.png'),
-    this.news = const AssetImage('assets/images/news.png'),
-    this.reduce = const AssetImage('assets/images/reduce.png'),
-    this.grass1 = const AssetImage('assets/images/grass1.png'),
-    this.profile = const AssetImage('assets/images/user.png'),
-    this.bohlilin = const AssetImage('assets/images/bohlilin.jpg'),
-    this.bamboostraw = const AssetImage('assets/images/bamboostraw.png'),
-    this.tumblr = const AssetImage('assets/images/tumblr.png'),
-  }) : super(key: key);
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
-  final String garbagecar = 'assets/icons/garbagecar.svg';
-  final String recycles = 'assets/icons/recycles.svg';
-  final String bank = 'assets/icons/bank.svg';
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context);
     return Scaffold(
-      backgroundColor: const Color(0xff9bc53d),
+      backgroundColor: blue,
       body: Stack(
         children: <Widget>[
           //BG Grass
@@ -60,7 +32,7 @@ class _HomePageState extends State<HomePage> {
                   height: 115.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: widget.grass1,
+                      image: AssetImage("assets/images/grass1.png"),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -75,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                   height: 149.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: widget.grass2,
+                      image: AssetImage("assets/images/grass2.png"),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -136,7 +108,11 @@ class _HomePageState extends State<HomePage> {
                                       blurRadius: 3)
                                 ],
                                 image: DecorationImage(
-                                    image: widget.profile, fit: BoxFit.cover),
+                                    // image: (user.userModel?.image == null)
+                                    //     ? AssetImage("assets/icons/profile.svg")
+                                    //     : FileImage(File(user.userModel?.image)),
+                                    image: AssetImage("assets/images/noimage.png"),
+                                    fit: BoxFit.cover),
                               ),
                             ))
                       ],
@@ -189,14 +165,18 @@ class _HomePageState extends State<HomePage> {
                                 flex: 1,
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) => TraSectionList()
-                                    ));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TraSectionList()));
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(30),
-                                    width: MediaQuery.of(context).size.width / 3,
-                                    height: MediaQuery.of(context).size.width / 3.5,
+                                    width:
+                                        MediaQuery.of(context).size.width / 3,
+                                    height:
+                                        MediaQuery.of(context).size.width / 3.5,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: const Color(0xffffffff),
@@ -207,8 +187,8 @@ class _HomePageState extends State<HomePage> {
                                             blurRadius: 6)
                                       ],
                                     ),
-                                    child: SvgPicture.asset(garbagecar
-                                    ),
+                                    child: SvgPicture.asset(
+                                        "assets/icons/garbagecar.svg"),
                                   ),
                                 ),
                               ),
@@ -223,8 +203,10 @@ class _HomePageState extends State<HomePage> {
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(30),
-                                    width: MediaQuery.of(context).size.width / 3,
-                                    height: MediaQuery.of(context).size.width / 3.5,
+                                    width:
+                                        MediaQuery.of(context).size.width / 3,
+                                    height:
+                                        MediaQuery.of(context).size.width / 3.5,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: const Color(0xffffffff),
@@ -235,7 +217,8 @@ class _HomePageState extends State<HomePage> {
                                             blurRadius: 6)
                                       ],
                                     ),
-                                    child: SvgPicture.asset(recycles),
+                                    child: SvgPicture.asset(
+                                        "assets/icons/recycles.svg"),
                                   ),
                                 ),
                               ),
@@ -244,14 +227,18 @@ class _HomePageState extends State<HomePage> {
                                 flex: 1,
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) => TrashBankList()
-                                    ));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TrashBankList()));
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(30),
-                                    width: MediaQuery.of(context).size.width / 3,
-                                    height: MediaQuery.of(context).size.width / 3.5,
+                                    width:
+                                        MediaQuery.of(context).size.width / 3,
+                                    height:
+                                        MediaQuery.of(context).size.width / 3.5,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: const Color(0xffffffff),
@@ -262,7 +249,8 @@ class _HomePageState extends State<HomePage> {
                                             blurRadius: 6)
                                       ],
                                     ),
-                                    child: SvgPicture.asset(bank),
+                                    child: SvgPicture.asset(
+                                        "assets/icons/bank.svg"),
                                   ),
                                 ),
                               ),
@@ -274,7 +262,8 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Container(
-                              margin: EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 10.0),
+                              margin:
+                                  EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 10.0),
                               child: Text(
                                 'Beli produk ramah Lingkung',
                                 style: TextStyle(
@@ -285,10 +274,12 @@ class _HomePageState extends State<HomePage> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) => ExploreProductPage()
-                                    ));
-                                  },
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ExploreProductPage()));
+                              },
                               child: Container(
                                 margin: EdgeInsets.only(top: 15.0, right: 16),
                                 child: Text(
@@ -310,28 +301,33 @@ class _HomePageState extends State<HomePage> {
                             scrollDirection: Axis.horizontal,
                             children: <Widget>[
                               Container(
-                                width: 140.0,
-                                height: 180.0,
-                                margin: EdgeInsets.only(
-                                    left: 2.0, top: 2.5, bottom: 2.5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: const Color(0xffffffff),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: const Color(0x29000000),
-                                        offset: Offset(0, 0),
-                                        blurRadius: 3)
-                                  ],
-                                ),
-                                child: Column(
-                                  children: <Widget>[
-                                    Image.asset("assets/images/bamboostraw.png", fit: BoxFit.fill,),
-                                    Text('Sedotan Bambu 2', style: TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.w500)),
-                                    Text('Rp 25.000'),
-                                  ],
-                                )
-                              ),
+                                  width: 140.0,
+                                  height: 180.0,
+                                  margin: EdgeInsets.only(
+                                      left: 2.0, top: 2.5, bottom: 2.5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: const Color(0xffffffff),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: const Color(0x29000000),
+                                          offset: Offset(0, 0),
+                                          blurRadius: 3)
+                                    ],
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Image.asset(
+                                        "assets/images/bamboostraw.png",
+                                        fit: BoxFit.fill,
+                                      ),
+                                      Text('Sedotan Bambu 2',
+                                          style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontWeight: FontWeight.w500)),
+                                      Text('Rp 25.000'),
+                                    ],
+                                  )),
                               SizedBox(width: 10.0),
                               Container(
                                 width: 140.0,
@@ -347,7 +343,8 @@ class _HomePageState extends State<HomePage> {
                                         blurRadius: 3)
                                   ],
                                   image: DecorationImage(
-                                    image: widget.bohlilin,
+                                    image: AssetImage(
+                                        "assets/images/bohlilin.png"),
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -367,7 +364,8 @@ class _HomePageState extends State<HomePage> {
                                         blurRadius: 3)
                                   ],
                                   image: DecorationImage(
-                                    image: widget.tumblr,
+                                    image:
+                                        AssetImage("assets/images/tumblr.png"),
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -408,7 +406,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                             image: DecorationImage(
                               alignment: Alignment.centerLeft,
-                              image: widget.news,
+                              image: AssetImage("assets/images/news.png"),
                               fit: BoxFit.contain,
                             ),
                           ),
@@ -428,7 +426,8 @@ class _HomePageState extends State<HomePage> {
                             ],
                             image: DecorationImage(
                               alignment: Alignment.centerLeft,
-                              image: widget.fightcorona,
+                              image:
+                                  AssetImage("assets/images/fightcorona.png"),
                               fit: BoxFit.contain,
                             ),
                           ),
