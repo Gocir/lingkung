@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PartnerModel{
-  static const ID = "id";
+  static const ID = "uid";
   static const NAME = "name";
   static const EMAIL = "email";
   static const ADDRESS = "address";
@@ -29,7 +29,7 @@ class PartnerModel{
 //  public variable
 
   PartnerModel.fromSnapshot(DocumentSnapshot snapshot){
-    _id = snapshot.data["uid"];
+    _id = snapshot.data[ID];
     _name = snapshot.data[NAME];
     _email = snapshot.data[EMAIL];
     _address = snapshot.data[ADDRESS];
