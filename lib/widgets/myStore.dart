@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingkung/screens/products/addProduct.dart';
+import 'package:lingkung/screens/products/myProduct.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 
@@ -94,10 +95,10 @@ class MyStore extends StatelessWidget {
               CustomText(text: 'Produk', weight: FontWeight.w700),
               GestureDetector(
                 onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => ExploreProductPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyProductPage()));
                 },
                 child: CustomText(text: 'Lihat lainnya', size: 12, color: green),
               ),
