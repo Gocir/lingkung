@@ -9,6 +9,8 @@ import 'package:lingkung/screens/menu/message.dart';
 import 'package:lingkung/screens/menu/order.dart';
 import 'package:lingkung/screens/menu/profile.dart';
 import 'package:lingkung/screens/introduction/splash.dart';
+import 'package:lingkung/utilities/colorStyle.dart';
+import 'package:lingkung/utilities/textStyle.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -81,25 +83,40 @@ class _MainPageState extends State<MainPage> {
         //     _incrementTab(index);
         //   },
         selectedIndex: _currentIndex,
+        showElevation: true,
+        itemCornerRadius: 10.0,
+        curve: Curves.easeInBack,
         onItemSelected: (index) {
           _incrementTab(index);
         },
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-            title: Text('Beranda'),
-            icon: Icon(Icons.home)
+            title: Text('Beranda', style: TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.w700)),
+            icon: Icon(Icons.home),
+            activeColor: green,
+            inactiveColor: grey,
+            textAlign: TextAlign.center
           ),
           BottomNavyBarItem(
-            title: Text('Riwayat'),
-            icon: Icon(Icons.history)
+            title: Text('Riwayat', style: TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.w700)),
+            icon: Icon(Icons.history),
+            activeColor: green,
+            inactiveColor: grey,
+            textAlign: TextAlign.center
           ),
           BottomNavyBarItem(
-            title: Text('Pesan'),
-            icon: Icon(Icons.chat_bubble_outline)
+            title: Text('Pesan', style: TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.w700)),
+            icon: Icon(Icons.chat_bubble_outline),
+            activeColor: green,
+            inactiveColor: grey,
+            textAlign: TextAlign.center
           ),
           BottomNavyBarItem(
-            title: Text('Saya'),
-            icon: Icon(Icons.person_outline)
+            title: Text('Saya', style: TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.w700)),
+            icon: Icon(Icons.person_outline),
+            activeColor: green,
+            inactiveColor: grey,
+            textAlign: TextAlign.center
           ),
         ],
       ),
