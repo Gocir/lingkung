@@ -1,19 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Product{
+class ProductModel{
   static const ID = "id";
   static const NAME = "name";
   static const STOCK = "stock";
   static const PRICE = "price";
   static const DESCRIPTION = "description";
-  static const IMAGE = "image";
+  static const IMAGE = "images";
+  static const USER_ID = "userId";
 
   String _id;
   String _name;
   int _stock;
   int _price;
   String _description;
-  String _image;
+  List<String> _image;
+  String _userId;
 
 //  getters
   String get id => _id;
@@ -21,16 +23,17 @@ class Product{
   int get stock => _stock;
   int get price => _price;
   String get description => _description;
-  String get image => _image;
+  List<String> get image => _image;
+  String get userId => _userId;
 
 //  named constructure
-  Product.fromSnapshot(DocumentSnapshot snapshot){
-    Map data = snapshot.data;
-    _id = data[NAME];
-    _name = data[NAME];
-    _stock = data[STOCK];
-    _price = data[PRICE];
-    _description = data[DESCRIPTION];
-    _image = data[IMAGE];
+  ProductModel.fromSnapshot(DocumentSnapshot snapshot){
+    _id = snapshot.data[ID];
+    _name = snapshot.data[NAME];
+    _stock = snapshot.data[STOCK];
+    _price = snapshot.data[PRICE];
+    _description = snapshot.data[DESCRIPTION];
+    // _image = snapshot.data[IMAGE];
+    _userId = snapshot.data[USER_ID];
   }
 }
