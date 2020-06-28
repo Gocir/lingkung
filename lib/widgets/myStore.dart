@@ -3,6 +3,7 @@ import 'package:lingkung/screens/products/addProduct.dart';
 import 'package:lingkung/screens/products/myProduct.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
+import 'package:lingkung/widgets/productLisTile.dart';
 
 class MyStore extends StatelessWidget {
   @override
@@ -46,9 +47,9 @@ class MyStore extends StatelessWidget {
                       },
                     ),
                     ListTile(
-                      leading: Icon(Icons.edit_attributes),
+                      leading: Icon(Icons.multiline_chart),
                       title: CustomText(
-                        text: 'Perbarui Produk',
+                        text: 'Performa Toko',
                         weight: FontWeight.w500,
                       ),
                       trailing: Icon(
@@ -109,38 +110,7 @@ class MyStore extends StatelessWidget {
           ),
           Container(
             height: 185.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                Container(
-                    width: 140.0,
-                    height: 180.0,
-                    margin: EdgeInsets.only(left: 2.0, top: 2.5, bottom: 2.5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: const Color(0xffffffff),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(0, 0),
-                            blurRadius: 3)
-                      ],
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset(
-                          "assets/images/bamboostraw.png",
-                          fit: BoxFit.fill,
-                        ),
-                        Text('Sedotan Bambu 2',
-                            style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontWeight: FontWeight.w500)),
-                        Text('Rp 25.000'),
-                      ],
-                    )),
-              ],
-            ),
+            child: ProductLisTile()
           ),
         ],
       ),
