@@ -14,7 +14,7 @@ class ProductModel{
   int _stock;
   int _price;
   String _description;
-  List<String> _image;
+  String _image;
   String _userId;
 
 //  getters
@@ -23,7 +23,7 @@ class ProductModel{
   int get stock => _stock;
   int get price => _price;
   String get description => _description;
-  List<String> get image => _image;
+  String get image => _image;
   String get userId => _userId;
 
 //  named constructure
@@ -33,7 +33,7 @@ class ProductModel{
     _stock = snapshot.data[STOCK];
     _price = snapshot.data[PRICE];
     _description = snapshot.data[DESCRIPTION];
-    // _image = snapshot.data[IMAGE];
+    _image = snapshot.data[IMAGE];
     _userId = snapshot.data[USER_ID];
   }
 }
