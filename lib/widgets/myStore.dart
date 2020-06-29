@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:lingkung/providers/productProvider.dart';
+import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/products/addProduct.dart';
 import 'package:lingkung/screens/products/myProduct.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
-import 'package:lingkung/widgets/productLisTile.dart';
+import 'package:provider/provider.dart';
 
 class MyStore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final productProvider = Provider.of<ProductProvider>(context);
+
+    productProvider.loadProductByUser(userProvider.user.uid);
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,12 +102,11 @@ class MyStore extends StatelessWidget {
               CustomText(text: 'Produk', weight: FontWeight.w700),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyProductPage()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MyProductPage()));
                 },
-                child: CustomText(text: 'Lihat lainnya', size: 12, color: green),
+                child:
+                    CustomText(text: 'Lihat lainnya', size: 12, color: green),
               ),
             ],
           ),
@@ -109,9 +114,59 @@ class MyStore extends StatelessWidget {
             height: 5.0,
           ),
           Container(
-            height: 185.0,
-            child: ProductLisTile()
-          ),
+              height: 195.0,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: productProvider.productByUser.length,
+                  itemBuilder: (_, index) {
+                    return Container(
+                      width: 140.0,
+                      height: 190.0,
+                      child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.35,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0),
+                                      ),
+                                      child: Image.network(
+                                          '${productProvider.productByUser[index].image.toString()}',
+                                          fit: BoxFit.cover))),
+                              Container(
+                                height: 38.0,
+                                padding:
+                                    EdgeInsets.only(left: 8.0, right: 8.0),
+                                child: Text(
+                                  '${productProvider.products[index].name}',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      fontSize: 12.0,
+                                      fontFamily: "Poppins",
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(left: 8.0, right: 8.0),
+                                child: CustomText(
+                                  text:
+                                      'Rp${productProvider.productByUser[index].price.toString()}',
+                                  weight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          )),
+                    );
+                  })),
         ],
       ),
     );

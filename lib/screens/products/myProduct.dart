@@ -16,68 +16,67 @@ class _MyProductPageState extends State<MyProductPage> {
     final userProvider = Provider.of<UserProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
 
-    productProvider.loadProductByUser(userProvider.user.uid);
+    productProvider.loadProductByUser(userProvider.user?.uid);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: blue,
           title: CustomText(
             text: 'Produk Toko Saya',
-            size: 20.0,
+            size: 18.0,
             color: white,
             weight: FontWeight.w600,
           ),
         ),
         backgroundColor: Colors.white,
-        body: Container(
-          padding: EdgeInsets.all(16.0),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: GridView.builder(
               itemCount: productProvider.productByUser.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 2 / 3.4),
+                  crossAxisCount: 2, childAspectRatio: 3 / 4),
               itemBuilder: (_, index) {
                 return Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width / 2.4,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10.0),
-                                  topRight: Radius.circular(10.0),
-                                ),
-                                child: Image.network(
-                                    '${productProvider.productByUser[index].image.toString()}',
-                                    fit: BoxFit.cover))),
-                        Container(
-                          height: 50.0,
-                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                          child: CustomText(
-                              text:
-                                  '${productProvider.productByUser[index].name} bifzouzp'),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                          child: CustomText(
-                            text:
-                                'Rp ${productProvider.productByUser[index].price.toString()}',
-                            color: yellow,
-                            weight: FontWeight.w500,
+                    child: InkWell(
+                      onTap: () {},
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width * 0.44,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    topRight: Radius.circular(10.0),
+                                  ),
+                                  child: Image.network(
+                                      '${productProvider.productByUser[index].image.toString()}',
+                                      fit: BoxFit.cover))),
+                          Container(
+                            height: 38.0,
+                            padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                            child: Text(
+                              '${productProvider.productByUser[index].name}',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontSize: 12.0,
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.normal),
+                            ),
                           ),
-                        ),
-                        Divider(
-                          height: 5.0,
-                        ),
-                        ButtonBar(
-                          children: <Widget>[
-                            Icon(Icons.edit, color: blue),
-                            Icon(Icons.delete_outline, color: yellow)
-                          ],
-                        )
-                      ],
+                          Padding(
+                            padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                            child: CustomText(
+                              text:
+                                  'Rp${productProvider.productByUser[index].price.toString()}',
+                              weight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ));
               }),
         ));
