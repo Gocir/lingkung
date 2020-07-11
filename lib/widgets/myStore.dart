@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+// Providers
 import 'package:lingkung/providers/productProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
+// Screens
 import 'package:lingkung/screens/products/addProduct.dart';
 import 'package:lingkung/screens/products/myProduct.dart';
+import 'package:lingkung/screens/products/updateProduct.dart';
+// Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
-import 'package:provider/provider.dart';
 
 class MyStore extends StatelessWidget {
   @override
@@ -125,45 +129,56 @@ class MyStore extends StatelessWidget {
                       child: Card(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.35,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10.0),
-                                        topRight: Radius.circular(10.0),
-                                      ),
-                                      child: Image.network(
-                                          '${productProvider.productByUser[index].image.toString()}',
-                                          fit: BoxFit.cover))),
-                              Container(
-                                height: 38.0,
-                                padding:
-                                    EdgeInsets.only(left: 8.0, right: 8.0),
-                                child: Text(
-                                  '${productProvider.products[index].name}',
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontFamily: "Poppins",
-                                      fontWeight: FontWeight.normal),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UpdateProduct(
+                                        productModel: productProvider
+                                            .productByUser[index]),
+                                  ));
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.width *
+                                        0.35,
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10.0),
+                                          topRight: Radius.circular(10.0),
+                                        ),
+                                        child: Image.network(
+                                            '${productProvider.productByUser[index].image.toString()}',
+                                            fit: BoxFit.cover))),
+                                Container(
+                                  height: 38.0,
+                                  padding:
+                                      EdgeInsets.only(left: 8.0, right: 8.0),
+                                  child: Text(
+                                    '${productProvider.productByUser[index].name}',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.normal),
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(left: 8.0, right: 8.0),
-                                child: CustomText(
-                                  text:
-                                      'Rp${productProvider.productByUser[index].price.toString()}',
-                                  weight: FontWeight.w500,
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 8.0, right: 8.0),
+                                  child: CustomText(
+                                    text:
+                                        'Rp${productProvider.productByUser[index].price.toString()}',
+                                    weight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           )),
                     );
                   })),
