@@ -1,19 +1,26 @@
 import 'dart:async';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:uuid/uuid.dart';
+// Firebase
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+// Models
 import 'package:lingkung/models/orderModel.dart';
 import 'package:lingkung/models/trashReceiveModel.dart';
-//models
 import 'package:lingkung/models/userModel.dart';
+// Services
 import 'package:lingkung/services/orderService.dart';
-//services
 import 'package:lingkung/services/userService.dart';
-import 'package:uuid/uuid.dart';
 
-enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated, Registering }
+enum Status {
+  Uninitialized,
+  Authenticated,
+  Authenticating,
+  Unauthenticated,
+  Registering
+}
 
 class UserProvider with ChangeNotifier {
   FirebaseAuth _auth;
@@ -38,7 +45,6 @@ class UserProvider with ChangeNotifier {
   TextEditingController name = TextEditingController();
   TextEditingController phoNumber = TextEditingController();
   TextEditingController address = TextEditingController();
-  File image;
 
   UserProvider.initialize() : _auth = FirebaseAuth.instance {
     _auth.onAuthStateChanged.listen(_onStateChanged);
@@ -69,15 +75,12 @@ class UserProvider with ChangeNotifier {
           .createUserWithEmailAndPassword(
               email: email.text.trim(), password: password.text.trim())
           .then((result) {
-        _firestore
-            .collection('users')
-            .document(result.user.uid)
-            .setData({
+        _firestore.collection('users').document(result.user.uid).setData({
           'uid': result.user.uid,
           'name': name.text,
           'phoneNumber': phoNumber.text,
           'email': email.text,
-          'image': image,
+          'image': "",
           'address': address.text,
         });
       });
@@ -113,8 +116,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> reloadUserModel() async {
-    _userModel =
-        await _userService.getUserById(user.uid);
+    _userModel = await _userService.getUserById(user.uid);
     notifyListeners();
   }
 
@@ -124,21 +126,20 @@ class UserProvider with ChangeNotifier {
     } else {
       _user = firebaseUser;
       _status = Status.Authenticated;
-      _userModel =
-          await _userService.getUserById(user.uid);
+      _userModel = await _userService.getUserById(user.uid);
     }
     notifyListeners();
   }
 
-  Future<bool> addToCarTrash({TrashReceiveModel trashReceiveModel})async{
+  Future<bool> addToCarTrash({TrashReceiveModel trashReceiveModel}) async {
     print("THE PRODUCT IS: ${trashReceiveModel.toString()}");
 
-    try{
+    try {
       var uuid = Uuid();
       String cartItemId = uuid.v4();
       List cart = _userModel.cart;
       //bool itemExists = false;
-      Map cartItem ={
+      Map cartItem = {
         "id": cartItemId,
         "trashId": trashReceiveModel.id,
         "name": trashReceiveModel.trashName,
@@ -155,30 +156,29 @@ class UserProvider with ChangeNotifier {
 //      }
 
 //      if(!itemExists){
-        print("CART ITEMS ARE: ${cart.toString()}");
-        _userService.addToCarTrash(userId: _user.uid, cartItem: cartItem);
+      print("CART ITEMS ARE: ${cart.toString()}");
+      _userService.addToCarTrash(userId: _user.uid, cartItem: cartItem);
 //      }
 
       return true;
-    }catch(e){
+    } catch (e) {
       print("THE ERROR ${e.toString()}");
       return false;
     }
-
   }
 
-  getOrders()async{
+  getOrders() async {
     orders = await _orderService.getUserOrders(userId: _user.uid);
     notifyListeners();
   }
 
-  Future<bool> removeFromCart({Map cartItem})async{
+  Future<bool> removeFromCart({Map cartItem}) async {
     print("THE PRODUC IS: ${cartItem.toString()}");
 
-    try{
+    try {
       _userService.removeFromCart(userId: _user.uid, cartItem: cartItem);
       return true;
-    }catch(e){
+    } catch (e) {
       print("THE ERROR ${e.toString()}");
       return false;
     }
