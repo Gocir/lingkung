@@ -1,11 +1,19 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+// Firebase
+import 'package:firebase_storage/firebase_storage.dart';
+// Providers
 import 'package:lingkung/providers/userProvider.dart';
+// Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
+// Widgets
 import 'package:lingkung/widgets/myAccount.dart';
 import 'package:lingkung/widgets/myStore.dart';
-import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -13,6 +21,11 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final FirebaseStorage storage = FirebaseStorage.instance;
+  // UserServices _userService = UserServices();
+
+  String imageUrl;
+  File _image;
   int _selectedIndexValue = 0;
 
   void onValueChanged(int newValue) {
@@ -31,6 +44,24 @@ class _ProfilePageState extends State<ProfilePage> {
       1: CustomText(
           text: 'Toko Saya', color: _selectedIndexValue == 0 ? black : white),
     };
+
+    Future getImage() async {
+      File _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+      if (_image == null) {
+        return;
+      }
+
+      // String fileName = "${user.userModel?.id}${DateTime.now().toString()}.jpg";
+      // StorageUploadTask uploadTask = storage.ref().child(fileName).putFile(_image);
+      // StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete.then((snapshot) => snapshot);
+      // uploadTask.onComplete.then((snapshot) async {
+      //   imageUrl = await taskSnapshot.ref.getDownloadURL();
+      //   _userService.updateUserData({
+      //     "image": imageUrl,
+      //   });
+      // });
+    }
 
     return Scaffold(
       backgroundColor: blue,
@@ -81,23 +112,33 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: <Widget>[
                     Flexible(
                         flex: 1,
-                        child: Container(
-                          height: 60.0,
-                          width: 60.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: white,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black12,
-                                  offset: Offset(0, 3),
-                                  blurRadius: 3)
-                            ],
-                            image: DecorationImage(
-                                image: AssetImage("assets/images/user.png"),
-                                fit: BoxFit.cover),
+                        child: Stack(children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(right: 6.0),
+                            height: 60.0,
+                            width: 60.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              color: white,
+                            ),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: (_image != null)
+                                    ? Image.file(_image, fit: BoxFit.cover)
+                                    : Image.asset("assets/images/user.png",
+                                        fit: BoxFit.cover)),
                           ),
-                        )),
+                          Positioned(
+                              right: -15,
+                              top: -15,
+                              child: IconButton(
+                                color: green,
+                                icon: Icon(Icons.camera_alt, size: 20.0),
+                                onPressed: () {
+                                  getImage();
+                                },
+                              ))
+                        ])),
                     SizedBox(width: 10.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,6 +224,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       )
                     ],
                   ),
+                  VerticalDivider(),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
@@ -194,6 +236,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       )
                     ],
                   ),
+                  VerticalDivider(),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
