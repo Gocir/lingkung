@@ -1,11 +1,18 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+// Firebase
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+// Models
+import 'package:lingkung/models/productModel.dart';
+// Services
 import 'package:lingkung/services/productService.dart';
+// Utilities
+import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/loading.dart';
+import 'package:lingkung/utilities/textStyle.dart';
 
 class AddProduct extends StatefulWidget {
   @override
@@ -13,43 +20,48 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
+  final _scaffoldStateKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
 
   ProductServices _productService = ProductServices();
-  TextEditingController productNameController = TextEditingController();
-  TextEditingController stockController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
 
+  String name = '';
+  String stock = '';
+  String price = '';
+  String description = '';
+
+  bool loading = false;
   File _image1;
   // File _image2;
   // File _image3;
-
-  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
     return loading
         ? Loading()
         : Scaffold(
+            key: _scaffoldStateKey,
             appBar: AppBar(
+              backgroundColor: blue,
               elevation: 0.0,
-              backgroundColor: const Color(0xffffffff),
-              iconTheme: IconThemeData(color: const Color(0xff000000)),
-              title: Text(
-                "Tambah Product",
-                style: TextStyle(color: const Color(0xff000000)),
+              iconTheme: IconThemeData(color: white),
+              title: CustomText(
+                text: 'Tambah Produk',
+                color: white,
+                size: 18.0,
+                weight: FontWeight.w600,
               ),
             ),
             body: Form(
               key: _formKey,
               child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
                             child: OutlineButton(
                                 borderSide: BorderSide(
                                     color: Colors.grey.withOpacity(0.5),
@@ -62,97 +74,178 @@ class _AddProductState extends State<AddProduct> {
                                 },
                                 child: _displayChild1()),
                           ),
-                        ),
-                        // Expanded(
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.all(8.0),
-                        //     child: OutlineButton(
-                        //         borderSide: BorderSide(
-                        //             color: Colors.grey.withOpacity(0.5),
-                        //             width: 2.5),
-                        //         onPressed: () {
-                        //           _selectImage(
-                        //               ImagePicker.pickImage(
-                        //                   source: ImageSource.gallery),
-                        //               2);
-                        //         },
-                        //         child: _displayChild2()),
-                        //   ),
-                        // ),
-                        // Expanded(
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.all(8.0),
-                        //     child: OutlineButton(
-                        //       borderSide: BorderSide(
-                        //           color: Colors.grey.withOpacity(0.5),
-                        //           width: 2.5),
-                        //       onPressed: () {
-                        //         _selectImage(
-                        //             ImagePicker.pickImage(
-                        //                 source: ImageSource.gallery),
-                        //             3);
-                        //       },
-                        //       child: _displayChild3(),
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: TextFormField(
-                        controller: productNameController,
-                        decoration: InputDecoration(hintText: 'Nama Produk'),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Isi nama produk-mu';
-                          } else if (value.length > 32) {
-                            return 'Tidak boleh lebih dari 32 kata';
-                          }
-                        },
+                          // Expanded(
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.all(8.0),
+                          //     child: OutlineButton(
+                          //         borderSide: BorderSide(
+                          //             color: Colors.grey.withOpacity(0.5),
+                          //             width: 2.5),
+                          //         onPressed: () {
+                          //           _selectImage(
+                          //               ImagePicker.pickImage(
+                          //                   source: ImageSource.gallery),
+                          //               2);
+                          //         },
+                          //         child: _displayChild2()),
+                          //   ),
+                          // ),
+                          // Expanded(
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.all(8.0),
+                          //     child: OutlineButton(
+                          //       borderSide: BorderSide(
+                          //           color: Colors.grey.withOpacity(0.5),
+                          //           width: 2.5),
+                          //       onPressed: () {
+                          //         _selectImage(
+                          //             ImagePicker.pickImage(
+                          //                 source: ImageSource.gallery),
+                          //             3);
+                          //       },
+                          //       child: _displayChild3(),
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: TextFormField(
-                          controller: stockController,
+                      TextFormField(
+                          textCapitalization: TextCapitalization.words,
+                          decoration: InputDecoration(
+                              counterStyle: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: black,
+                                  fontWeight: FontWeight.normal),
+                              hintText: 'Apa nama produk mu?',
+                              hintStyle: TextStyle(fontFamily: "Poppins"),
+                              labelText: 'Nama Produk',
+                              labelStyle: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: black,
+                                  fontWeight: FontWeight.w500),
+                              errorStyle: TextStyle(fontFamily: "Poppins"),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: yellow))),
+                          // maxLength: 100,
+                          onChanged: (String str) {
+                            setState(() {
+                              name = str;
+                            });
+                          },
+                          validator: (value) => (value.isEmpty)
+                              ? 'Masukkan nama produk'
+                              : (value.length > 100)
+                                  ? 'Batas maksimal karakter 100'
+                                  : null),
+                      TextFormField(
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: 'Jumlah Stok',
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Masukkan jumlah stok produk';
-                            } else if (value.length > 6) {
-                              return 'Batas maksimal stok 9.999';
-                            }
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: TextFormField(
-                          controller: priceController,
+                              counterStyle: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: black,
+                                  fontWeight: FontWeight.normal),
+                              hintText: 'Berapa jumlah stok yang tersedia?',
+                              hintStyle: TextStyle(fontFamily: "Poppins"),
+                              labelText: 'Jumlah Stok',
+                              labelStyle: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: black,
+                                  fontWeight: FontWeight.w500),
+                              errorStyle: TextStyle(fontFamily: "Poppins"),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: yellow))),
+                          onChanged: (String str) {
+                            setState(() {
+                              stock = str;
+                            });
+                          },
+                          validator: (value) => (value.isEmpty)
+                              ? 'Masukkan jumlah stok produk'
+                              : (value.length > 6)
+                                  ? 'Batas maksimal stok 9.999'
+                                  : null),
+                      TextFormField(
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: 'Harga',
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Masukkan harga produk-mu';
-                            } else if (value.length > 10) {
-                              return 'Tolong beri harga wajar';
-                            }
-                          }),
-                    ),
-                    FlatButton(
-                      color: Colors.red,
-                      textColor: const Color(0xffffffff),
-                      child: Text('Simpan'),
-                      onPressed: () {
-                        validateAndUpload();
-                      },
-                    )
-                  ],
+                              counterStyle: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: black,
+                                  fontWeight: FontWeight.normal),
+                              hintText: 'Berapa harga jual produk mu?',
+                              hintStyle: TextStyle(fontFamily: "Poppins"),
+                              labelText: 'Harga',
+                              labelStyle: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: black,
+                                  fontWeight: FontWeight.w500),
+                              prefixText: 'Rp',
+                              prefixStyle: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: yellow,
+                                  fontSize: 10.0),
+                              errorStyle: TextStyle(fontFamily: "Poppins"),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: yellow))),
+                          onChanged: (String str) {
+                            setState(() {
+                              price = str;
+                            });
+                          },
+                          validator: (value) => (value.isEmpty)
+                              ? 'Masukkan harga produk'
+                              : (value.length > 10)
+                                  ? 'Tolong beri harga wajar'
+                                  : null),
+                      TextFormField(
+                          // textCapitalization: TextCapitalization.words,
+                          decoration: InputDecoration(
+                              counterStyle: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: black,
+                                  fontWeight: FontWeight.normal),
+                              hintText:
+                                  'Berikan deskripsi atau keterangan produk mu!',
+                              hintStyle: TextStyle(fontFamily: "Poppins"),
+                              labelText: 'Deskripsi',
+                              labelStyle: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: black,
+                                  fontWeight: FontWeight.w500),
+                              errorStyle: TextStyle(fontFamily: "Poppins"),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: yellow))),
+                          // maxLength: 1000,
+                          maxLines: 5,
+                          onChanged: (String str) {
+                            setState(() {
+                              description = str;
+                            });
+                          },
+                          validator: (value) => (value.isEmpty)
+                              ? 'Berikan deskripsi produk'
+                              : (value.length > 1000)
+                                  ? 'Batas maksimal karakter 1000'
+                                  : null),
+                      Container(
+                          height: 45.0,
+                          margin: EdgeInsets.only(top: 30.0, bottom: 16.0),
+                          child: RaisedButton(
+                            color: green,
+                            elevation: 2.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                            child: Center(
+                              child: CustomText(
+                                  text: 'SIMPAN',
+                                  color: white,
+                                  weight: FontWeight.w700),
+                            ),
+                            onPressed: () {
+                              save();
+                            },
+                          )),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -173,7 +266,6 @@ class _AddProductState extends State<AddProduct> {
     //     setState(() => _image3 = tempImg);
     //     break;
     // }
-
   }
 
   Widget _displayChild1() {
@@ -188,7 +280,7 @@ class _AddProductState extends State<AddProduct> {
     } else {
       return Image.file(
         _image1,
-        fit: BoxFit.fill,
+        fit: BoxFit.contain,
         width: double.infinity,
       );
     }
@@ -230,12 +322,12 @@ class _AddProductState extends State<AddProduct> {
   //   }
   // }
 
-  void validateAndUpload() async {
+  void save() async {
     if (_formKey.currentState.validate()) {
       setState(() => loading = true);
       // if (_image1 != null && _image2 != null && _image3 != null) {
       if (_image1 != null) {
-        if (stockController != null && priceController != null) {
+        if (stock != null && price != null) {
           String imageUrl1;
           // String imageUrl2;
           // String imageUrl3;
@@ -270,10 +362,11 @@ class _AddProductState extends State<AddProduct> {
             FirebaseAuth auth = FirebaseAuth.instance;
             FirebaseUser _user = await auth.currentUser();
             _productService.addProduct({
-              "name": productNameController.text,
-              "price": int.parse(priceController.text),
               "images": imageUrl1,
-              "stock": int.parse(stockController.text),
+              "name": name,
+              "stock": int.parse(stock),
+              "price": int.parse(price),
+              "description": description,
               "userId": _user.uid,
             });
             // _formKey.currentState.reset();
