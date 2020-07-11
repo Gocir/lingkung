@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+// Providers
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/providers/productProvider.dart';
+// Screens
+import 'package:lingkung/screens/products/updateProduct.dart';
+// Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
-import 'package:provider/provider.dart';
 
 class MyProductPage extends StatefulWidget {
   @override
@@ -39,7 +43,14 @@ class _MyProductPageState extends State<MyProductPage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0)),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UpdateProduct(productModel: productProvider.productByUser[index]),
+                            ));
+                      },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
