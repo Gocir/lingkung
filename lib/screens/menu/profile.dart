@@ -22,10 +22,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final FirebaseStorage storage = FirebaseStorage.instance;
-  // UserServices _userService = UserServices();
 
-  String imageUrl;
-  File _image;
   int _selectedIndexValue = 0;
 
   void onValueChanged(int newValue) {
@@ -44,24 +41,6 @@ class _ProfilePageState extends State<ProfilePage> {
       1: CustomText(
           text: 'Toko Saya', color: _selectedIndexValue == 0 ? black : white),
     };
-
-    Future getImage() async {
-      File _image = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-      if (_image == null) {
-        return;
-      }
-
-      // String fileName = "${user.userModel?.id}${DateTime.now().toString()}.jpg";
-      // StorageUploadTask uploadTask = storage.ref().child(fileName).putFile(_image);
-      // StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete.then((snapshot) => snapshot);
-      // uploadTask.onComplete.then((snapshot) async {
-      //   imageUrl = await taskSnapshot.ref.getDownloadURL();
-      //   _userService.updateUserData({
-      //     "image": imageUrl,
-      //   });
-      // });
-    }
 
     return Scaffold(
       backgroundColor: blue,
@@ -114,7 +93,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         flex: 1,
                         child: Stack(children: <Widget>[
                           Container(
-                            margin: EdgeInsets.only(right: 6.0),
                             height: 60.0,
                             width: 60.0,
                             decoration: BoxDecoration(
@@ -123,23 +101,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20.0),
-                                child: (_image != null)
-                                    ? Image.file(_image, fit: BoxFit.cover)
+                                child: (user.userModel?.image.toString() != null)
+                                    ? Image.network("${user.userModel?.image.toString()}", scale: 1.0, fit: BoxFit.cover)
                                     : Image.asset("assets/images/user.png",
                                         fit: BoxFit.cover)),
                           ),
-                          Positioned(
-                              right: -15,
-                              top: -15,
-                              child: IconButton(
-                                color: green,
-                                icon: Icon(Icons.camera_alt, size: 20.0),
-                                onPressed: () {
-                                  getImage();
-                                },
-                              ))
                         ])),
-                    SizedBox(width: 10.0),
+                    SizedBox(width: 16.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[

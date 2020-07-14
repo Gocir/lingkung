@@ -98,27 +98,23 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Flexible(
-                          flex: 1,
-                          child: Container(
+                        flex: 1,
+                        child: Stack(children: <Widget>[
+                          Container(
                             height: 60.0,
                             width: 60.0,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
                               color: white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black12,
-                                    offset: Offset(0, 3),
-                                    blurRadius: 3)
-                              ],
-                              image: DecorationImage(
-                                  // image: (user.userModel?.image == null)
-                                  //     ? AssetImage("assets/icons/profile.svg")
-                                  //     : FileImage(File(user.userModel?.image)),
-                                  image: AssetImage("assets/images/user.png"),
-                                  fit: BoxFit.cover),
                             ),
-                          ))
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: (userProvider.userModel?.image.toString() != null)
+                                    ? Image.network("${userProvider.userModel.image.toString()}", scale: 1.0, fit: BoxFit.cover)
+                                    : Image.asset("assets/images/user.png",
+                                        fit: BoxFit.cover)),
+                          ),
+                        ])),
                     ],
                   ),
                 ),
