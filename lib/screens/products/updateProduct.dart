@@ -36,12 +36,11 @@ class _UpdateProductState extends State<UpdateProduct> {
   String stock;
   String price;
   String description;
-
-  bool loading = false;
   File _image1;
   // File _image2;
   // File _image3;
 
+  bool loading = false;
   @override
   void initState() {
     super.initState();
@@ -70,7 +69,7 @@ class _UpdateProductState extends State<UpdateProduct> {
               elevation: 0.0,
               iconTheme: IconThemeData(color: white),
               title: CustomText(
-                text: 'Tambah Produk',
+                text: 'Perbarui Produk',
                 color: white,
                 size: 18.0,
                 weight: FontWeight.w600,
