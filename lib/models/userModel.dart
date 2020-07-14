@@ -14,7 +14,7 @@ class UserModel{
   String _email;
   String _address;
   String _image;
-  String _phoNumber;
+  int _phoNumber;
   List<String> _cart;
 
 //  getters
@@ -23,7 +23,7 @@ class UserModel{
   String get email => _email;
   String get image => _image;
   String get address => _address;
-  String get phoneNumber => _phoNumber;
+  int get phoNumber => _phoNumber;
   List<String> get cart => _cart;
 
 //  public variable
