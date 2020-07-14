@@ -5,6 +5,7 @@ import 'package:lingkung/screens/helps/contactUs.dart';
 import 'package:lingkung/screens/helps/helpFeatureList.dart';
 import 'package:lingkung/screens/privacyPolicy.dart';
 import 'package:lingkung/screens/termsOfService.dart';
+import 'package:lingkung/screens/updateProfile.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 import 'package:provider/provider.dart';
@@ -45,9 +46,9 @@ class MyAccount extends StatelessWidget {
                       ),
                       dense: true,
                       onTap: () {
-                        // Navigator.push(context, MaterialPageRoute(
-                        //   builder: (context) => UpdateProfile(),
-                        // ));
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => UpdateProfile(userModel: user.userModel,),
+                        ));
                       },
                     ),
                     ListTile(
