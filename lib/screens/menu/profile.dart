@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:image_picker/image_picker.dart';
 // Firebase
 import 'package:firebase_storage/firebase_storage.dart';
 // Providers
@@ -34,7 +31,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context);
-
     final _children = <int, Widget>{
       0: CustomText(
           text: 'Akun Saya', color: _selectedIndexValue == 1 ? black : white),
@@ -103,33 +99,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius: BorderRadius.circular(20.0),
                                 child: (user.userModel?.image.toString() != null)
                                     ? Image.network("${user.userModel?.image.toString()}", scale: 1.0, fit: BoxFit.cover)
-                                    : Image.asset("assets/images/user.png",
-                                        fit: BoxFit.cover)),
+                                    : Image.asset("assets/images/user.png", fit: BoxFit.cover)),
                           ),
                         ])),
                     SizedBox(width: 16.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Container(
-                          child: Text(
-                            '${user.userModel?.name}',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700),
-                          ),
+                        CustomText(
+                          text: '${user.userModel?.name}',
+                          size: 20,
+                          weight: FontWeight.w700
                         ),
-                        Container(
-                          child: Text(
-                            '${user.userModel?.email}',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: white),
-                          ),
+                        CustomText(
+                          text: '${user.userModel?.email}',
+                          size: 12,
+                          color: white
                         ),
+                        (user.userModel?.phoNumber != null) ? CustomText(
+                          text: '+62${user.userModel?.phoNumber}',
+                          size: 12,
+                          color: white
+                        ) : null
                       ],
                     ),
                   ],
