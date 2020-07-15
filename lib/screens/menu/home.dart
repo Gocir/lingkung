@@ -99,22 +99,20 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Flexible(
                         flex: 1,
-                        child: Stack(children: <Widget>[
-                          Container(
-                            height: 60.0,
-                            width: 60.0,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: white,
-                            ),
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20.0),
-                                child: (userProvider.userModel?.image.toString() != null)
-                                    ? Image.network("${userProvider.userModel.image.toString()}", scale: 1.0, fit: BoxFit.cover)
-                                    : Image.asset("assets/images/user.png",
-                                        fit: BoxFit.cover)),
+                        child: Container(
+                          height: 60.0,
+                          width: 60.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: white,
                           ),
-                        ])),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20.0),
+                              child: (userProvider.userModel?.image.toString() != null)
+                                  ? Image.network("${userProvider.userModel?.image.toString()}", fit: BoxFit.cover)
+                                  : Image.asset("assets/images/user.png",
+                                      fit: BoxFit.cover)),
+                        )),
                     ],
                   ),
                 ),
@@ -150,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                                             TraSectionList()));
                               },
                               child: Container(
-                                padding: EdgeInsets.all(30),
+                                padding: EdgeInsets.all(20),
                                 width: MediaQuery.of(context).size.width / 3,
                                 height: MediaQuery.of(context).size.width / 3.5,
                                 decoration: BoxDecoration(
@@ -163,8 +161,8 @@ class _HomePageState extends State<HomePage> {
                                         blurRadius: 6)
                                   ],
                                 ),
-                                child: SvgPicture.asset(
-                                    "assets/icons/garbagecar.svg"),
+                                child: CustomText(text: 'Jual Sampah', weight: FontWeight.w600)
+                                // SvgPicture.asset("assets/icons/garbagecar.svg"),
                               ),
                             ),
                           ),
@@ -178,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                                 // ));
                               },
                               child: Container(
-                                padding: EdgeInsets.all(30),
+                                padding: EdgeInsets.all(20),
                                 width: MediaQuery.of(context).size.width / 3,
                                 height: MediaQuery.of(context).size.width / 3.5,
                                 decoration: BoxDecoration(
@@ -191,8 +189,8 @@ class _HomePageState extends State<HomePage> {
                                         blurRadius: 6)
                                   ],
                                 ),
-                                child: SvgPicture.asset(
-                                    "assets/icons/recycles.svg"),
+                                child: CustomText(text: 'Daur Ulang', weight: FontWeight.w600)
+                                // SvgPicture.asset("assets/icons/recycles.svg"),
                               ),
                             ),
                           ),
@@ -207,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                                         builder: (context) => TrashBankList()));
                               },
                               child: Container(
-                                padding: EdgeInsets.all(30),
+                                padding: EdgeInsets.all(20),
                                 width: MediaQuery.of(context).size.width / 3,
                                 height: MediaQuery.of(context).size.width / 3.5,
                                 decoration: BoxDecoration(
@@ -220,8 +218,8 @@ class _HomePageState extends State<HomePage> {
                                         blurRadius: 6)
                                   ],
                                 ),
-                                child:
-                                    SvgPicture.asset("assets/icons/bank.svg"),
+                                child: CustomText(text: 'Bank Sampah', weight: FontWeight.w600)
+                                    // SvgPicture.asset("assets/icons/bank.svg"),
                               ),
                             ),
                           ),
