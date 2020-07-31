@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 // Firebase
 import 'package:firebase_storage/firebase_storage.dart';
@@ -89,8 +90,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         flex: 1,
                         child: Stack(children: <Widget>[
                           Container(
-                            height: 60.0,
-                            width: 60.0,
+                            height: 70.0,
+                            width: 70.0,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
                               color: white,
@@ -159,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
           //BG3
           Container(
             height: 100.0,
-            margin: EdgeInsets.only(left: 16.0, top: 120.0, right: 16.0),
+            margin: EdgeInsets.only(left: 16.0, top: 130.0, right: 16.0),
             padding: EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -178,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Image.asset("assets/icons/balanceColor.png"),
                       CustomText(text: 'Saldo'),
                       CustomText(
-                        text: '0',
+                        text: NumberFormat.compactCurrency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(user.userModel?.balance),
                         weight: FontWeight.w600,
                       )
                     ],
@@ -190,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Image.asset("assets/icons/pointColor.png"),
                       CustomText(text: 'Poin'),
                       CustomText(
-                        text: '0',
+                        text: NumberFormat.compactCurrency(locale: 'id', symbol: '', decimalDigits: 0).format(user.userModel?.point),
                         weight: FontWeight.w600,
                       )
                     ],
@@ -202,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Image.asset("assets/icons/weightColor.png"),
                       CustomText(text: 'Sampah'),
                       CustomText(
-                        text: '0',
+                        text: NumberFormat.compactCurrency(locale: 'id', symbol: '', decimalDigits: 0).format(user.userModel?.weight),
                         weight: FontWeight.w600,
                       )
                     ],
