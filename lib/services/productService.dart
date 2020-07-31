@@ -17,6 +17,10 @@ class ProductServices {
     _firestore.collection(collection).document(values['id']).updateData(values);
   }
 
+  Future deleteProduct(String id) async {
+    _firestore.collection(collection).document(id).delete();
+  }
+
   Future<List<ProductModel>> getProduct() async =>
       _firestore.collection(collection).getDocuments().then((result) {
         List<ProductModel> products = [];
