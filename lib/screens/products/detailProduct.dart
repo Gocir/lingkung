@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lingkung/models/productModel.dart';
-import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
-import 'package:provider/provider.dart';
 
 class DetailProduct extends StatefulWidget {
   final ProductModel productModel;
@@ -80,7 +79,7 @@ class _DetailProductState extends State<DetailProduct> {
                       weight: FontWeight.w500),
                   SizedBox(height: 20.0),
                   CustomText(
-                    text: 'Rp${widget.productModel.price}',
+                    text: NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(widget.productModel.price),
                     size: 18,
                     color: green,
                     weight: FontWeight.w500
