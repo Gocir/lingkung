@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:lingkung/screens/products/detailProduct.dart';
 import 'package:provider/provider.dart';
 //providers
@@ -100,8 +101,8 @@ class _HomePageState extends State<HomePage> {
                       Flexible(
                         flex: 1,
                         child: Container(
-                          height: 60.0,
-                          width: 60.0,
+                          height: 50.0,
+                          width: 50.0,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.0),
                             color: white,
@@ -311,8 +312,7 @@ class _HomePageState extends State<HomePage> {
                                               padding: EdgeInsets.only(
                                                   left: 8.0, right: 8.0),
                                               child: CustomText(
-                                                text:
-                                                    'Rp${productProvider.products[index].price.toString()}',
+                                                text: NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(productProvider.products[index].price),
                                                 weight: FontWeight.w500,
                                               ),
                                             ),
