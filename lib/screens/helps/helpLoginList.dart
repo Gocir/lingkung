@@ -1,42 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:lingkung/screens/helps/howLogin.dart';
+import 'package:lingkung/screens/helps/lostOTP.dart';
+import 'package:lingkung/screens/helps/lostPhoNumber.dart';
+import 'package:lingkung/screens/helps/lostLogin.dart';
+import 'package:lingkung/utilities/colorStyle.dart';
+import 'package:lingkung/utilities/textStyle.dart';
 
 class HelpLoginList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: white,
       appBar: AppBar(
-        title: Text(
-          'Masuk',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            color: Colors.black
-          ),
-        ),
-        backgroundColor: Colors.white,
+        backgroundColor: blue,
         iconTheme: IconThemeData(
-          color: Colors.black
+          color: white
+        ),
+        title: CustomText(
+          text: 'Masuk',
+          size: 18.0,
+          color: white,
+          weight: FontWeight.w600,
         ),
       ),
-      body: Container(
-        margin: EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: <Widget>[
             Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Cara masuk ke akun Lingkung',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
-                  ),
+                title: CustomText(
+                  text: 'Cara masuk ke akun Lingkung',
+                  weight: FontWeight.w700
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(
@@ -48,21 +49,17 @@ class HelpLoginList extends StatelessWidget {
             Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Saya tidak bisa masuk',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
-                  ),
+                title: CustomText(
+                  text: 'Saya tidak bisa masuk',
+                  weight: FontWeight.w700
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => HowToLogin(),
+                    builder: (context) => LostLogin(),
                   ));
                 },
               ),
@@ -70,21 +67,17 @@ class HelpLoginList extends StatelessWidget {
             Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Saya belum menerima kode OTP',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
-                  ),
+                title: CustomText(
+                  text: 'Saya belum menerima kode OTP',
+                  weight: FontWeight.w700
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => HowToLogin(),
+                    builder: (context) => LostOTPCode(),
                   ));
                 },
               ),
@@ -92,21 +85,17 @@ class HelpLoginList extends StatelessWidget {
             Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Nomor ponsel saya hilang',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
-                  ),
+                title: CustomText(
+                  text: 'Nomor ponsel saya hilang',
+                  weight: FontWeight.w700
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => HowToLogin(),
+                    builder: (context) => LostPhoneNumber(),
                   ));
                 },
               ),

@@ -1,43 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:lingkung/utilities/colorStyle.dart';
+import 'package:lingkung/utilities/textStyle.dart';
 
 class HelpFeatureList extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Bantuan',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            color: Colors.black
-          ),
-        ),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(
-          color: Colors.black
+        backgroundColor: white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: black),
+        title: CustomText(
+          text: 'Bantuan',
+          color: black,
+          size: 18.0,
+          weight: FontWeight.w600,
         ),
       ),
       body: Container(
-        margin: EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
+        margin: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
         child: ListView(
           children: <Widget>[
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Cara Jual Sampah',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
-                  ),
+                title: CustomText(
+                  text: 'Cara Jual Sampah',
+                  weight: FontWeight.w700
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
-                onTap: (){
+                onTap: () {
                   // Navigator.push(context, MaterialPageRoute(
                   //   builder: (context) => HowToLogin(),
                   // ));
@@ -45,21 +41,18 @@ class HelpFeatureList extends StatelessWidget {
               ),
             ),
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Saya tidak tahu Jenis Sampah',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
-                  ),
+                title: CustomText(
+                  text: 'Saya tidak tahu Jenis Sampah',
+                  weight: FontWeight.w700
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
-                onTap: (){
+                onTap: () {
                   // Navigator.push(context, MaterialPageRoute(
                   //   builder: (context) => HowToLogin(),
                   // ));
@@ -67,21 +60,18 @@ class HelpFeatureList extends StatelessWidget {
               ),
             ),
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Saya tidak bisa menjual sampah',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
-                  ),
+                title: CustomText(
+                  text: 'Saya tidak bisa menjual sampah',
+                  weight: FontWeight.w700
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
-                onTap: (){
+                onTap: () {
                   // Navigator.push(context, MaterialPageRoute(
                   //   builder: (context) => HowToLogin(),
                   // ));
@@ -89,21 +79,18 @@ class HelpFeatureList extends StatelessWidget {
               ),
             ),
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Cara beli produk',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
-                  ),
+                title: CustomText(
+                  text: 'Cara beli produk',
+                  weight: FontWeight.w700
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
-                onTap: (){
+                onTap: () {
                   // Navigator.push(context, MaterialPageRoute(
                   //   builder: (context) => HowToLogin(),
                   // ));
@@ -111,21 +98,18 @@ class HelpFeatureList extends StatelessWidget {
               ),
             ),
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Saya tidak bisa merubah profil',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
-                  ),
+                title: CustomText(
+                  text: 'Saya tidak bisa merubah profil',
+                  weight: FontWeight.w700
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
-                onTap: (){
+                onTap: () {
                   // Navigator.push(context, MaterialPageRoute(
                   //   builder: (context) => HowToLogin(),
                   // ));
@@ -133,21 +117,18 @@ class HelpFeatureList extends StatelessWidget {
               ),
             ),
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Saya tidak bisa membeli produk',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold
-                  ),
+                title: CustomText(
+                  text: 'Saya tidak bisa membeli produk',
+                  weight: FontWeight.w700
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
-                onTap: (){
+                onTap: () {
                   // Navigator.push(context, MaterialPageRoute(
                   //   builder: (context) => HowToLogin(),
                   // ));

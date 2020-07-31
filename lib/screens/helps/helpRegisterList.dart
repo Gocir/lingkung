@@ -1,91 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:lingkung/screens/helps/howRegister.dart';
+import 'package:lingkung/screens/helps/lostOTP.dart';
+import 'package:lingkung/screens/helps/lostRegister.dart';
+import 'package:lingkung/utilities/colorStyle.dart';
+import 'package:lingkung/utilities/textStyle.dart';
 
 class HelpRegisterList extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: white,
       appBar: AppBar(
-        title: Text(
-          'Daftar',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            color: Colors.black
-          ),
-        ),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(
-          color: Colors.black
+        backgroundColor: blue,
+        iconTheme: IconThemeData(color: white),
+        title: CustomText(
+          text: 'Daftar',
+          size: 18.0,
+          color: white,
+          weight: FontWeight.w600,
         ),
       ),
       body: Container(
-        margin: EdgeInsets.only(left: 16.0, top:16.0, right: 16.0),
+        margin: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
         child: ListView(
           children: <Widget>[
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Cara membuat akun Lingkung',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600
-                  ),
-                ),
+                title: CustomText(
+                    text: 'Cara membuat akun Lingkung',
+                    weight: FontWeight.w700),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
-                onTap: (){
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HowToRegister(),
+                      ));
+                },
+              ),
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+              child: ListTile(
+                title: CustomText(
+                    text: 'Saya tidak bisa membuat akun', weight: FontWeight.w700),
+                trailing: Icon(
+                  Icons.chevron_right,
+                  color: yellow,
+                ),
+                onTap: () {
                   Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => HowToRegister(),
+                    builder: (context) => LostRegister(),
                   ));
                 },
               ),
             ),
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
               child: ListTile(
-                title: Text(
-                  'Saya tidak bisa membuat',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600
-                  ),
-                ),
+                title: CustomText(
+                    text: 'Saya belum menerima kode OTP',
+                    weight: FontWeight.w700),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color: Colors.lightGreen,
+                  color: yellow,
                 ),
-                onTap: (){
-                  // Navigator.push(context, MaterialPageRoute(
-                  //   builder: (context) => HowToLogin(),
-                  // ));
-                },
-              ),
-            ),
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-              child: ListTile(
-                title: Text(
-                  'Saya belum menerima kode OTP',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.chevron_right,
-                  color: Colors.lightGreen,
-                ),
-                onTap: (){
-                  // Navigator.push(context, MaterialPageRoute(
-                  //   builder: (context) => HowToLogin(),
-                  // ));
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => LostOTPCode(),
+                  ));
                 },
               ),
             ),
