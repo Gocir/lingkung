@@ -7,6 +7,9 @@ class UserModel{
   static const ADDRESS = "address";
   static const IMAGE = "image";
   static const PHONE_NUMBER = "phoneNumber";
+  static const BALANCE = "balance";
+  static const POINT = "point";
+  static const WEIGHT = "weight";
   static const CART = "cart";
 
   String _id;
@@ -15,6 +18,9 @@ class UserModel{
   String _address;
   String _image;
   int _phoNumber;
+  int _balance;
+  int _point;
+  int _weight;
   List<String> _cart;
 
 //  getters
@@ -24,6 +30,9 @@ class UserModel{
   String get image => _image;
   String get address => _address;
   int get phoNumber => _phoNumber;
+  int get balance => _balance;
+  int get point => _point;
+  int get weight => _weight;
   List<String> get cart => _cart;
 
 //  public variable
@@ -35,6 +44,9 @@ class UserModel{
     _address = snapshot.data[ADDRESS];
     _image = snapshot.data[IMAGE];
     _phoNumber = snapshot.data[PHONE_NUMBER];
+    _balance = snapshot.data[BALANCE];
+    _point = snapshot.data[POINT];
+    _weight = snapshot.data[WEIGHT];
   }
 
 }
