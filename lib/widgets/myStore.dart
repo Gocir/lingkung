@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 // Providers
 import 'package:lingkung/providers/productProvider.dart';
@@ -110,7 +111,7 @@ class MyStore extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => MyProductPage()));
                 },
                 child:
-                    CustomText(text: 'Lihat lainnya', size: 12, color: green),
+                    CustomText(text: 'Lihat lainnya', size: 12, color: blue),
               ),
             ],
           ),
@@ -172,8 +173,7 @@ class MyStore extends StatelessWidget {
                                   padding:
                                       EdgeInsets.only(left: 8.0, right: 8.0),
                                   child: CustomText(
-                                    text:
-                                        'Rp${productProvider.productByUser[index].price.toString()}',
+                                    text: NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(productProvider.productByUser[index].price),
                                     weight: FontWeight.w500,
                                   ),
                                 ),
