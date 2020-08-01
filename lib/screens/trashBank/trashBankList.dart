@@ -14,7 +14,9 @@ class TrashBankList extends StatelessWidget {
         iconTheme: IconThemeData(color: white),
         title: CustomText(
           text: 'Bank Sampah',
-            color: white
+            color: white,
+            size: 18.0,
+            weight: FontWeight.w600,
         ),
       ),
       // extendBodyBehindAppBar: true,
