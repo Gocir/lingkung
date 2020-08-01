@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lingkung/main.dart';
 import 'package:lingkung/models/productModel.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
@@ -15,19 +16,47 @@ class DetailProduct extends StatefulWidget {
 class _DetailProductState extends State<DetailProduct> {
   @override
   Widget build(BuildContext context) {
-    // final userProvider = Provider.of<UserProvider>(context);
-    // userProvider.reloadUserModel(widget.productModel.userId);
-
     return Scaffold(
         appBar: AppBar(
           backgroundColor: blue,
           elevation: 0.0,
           iconTheme: IconThemeData(color: white),
           actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Icon(Icons.shopping_cart, color: white),
-            )
+            IconButton(
+                icon: Icon(Icons.shopping_cart, color: white),
+                onPressed: () {}),
+            PopupMenuButton(
+                offset: Offset(0, 44),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        bottomLeft: Radius.circular(20.0),
+                        bottomRight: Radius.circular(20.0))),
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem(
+                        child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainPage(),
+                            ));
+                      },
+                      child: Row(children: <Widget>[
+                        Icon(Icons.home, color: yellow),
+                        SizedBox(width: 5.0),
+                        CustomText(text: 'Kembali ke Halaman Utama')
+                      ]),
+                    )),
+                    PopupMenuItem(
+                        child: Row(children: <Widget>[
+                      Icon(Icons.help_outline, color: yellow),
+                      SizedBox(width: 5.0),
+                      CustomText(text: 'Butuh Bantuan?')
+                    ]))
+                  ];
+                })
           ],
         ),
         body: Column(
@@ -37,30 +66,31 @@ class _DetailProductState extends State<DetailProduct> {
                 Navigator.push(
                     context,
                     PageRouteBuilder(
-                      opaque: false,
-                        pageBuilder: (BuildContext context, _, __) => GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              color: black.withOpacity(0.9),
-                              child: Center(
-                                child: Hero(
-                                  tag: 'ProductImage',
-                                  child: Image.network(
-                                    '${widget.productModel.image}',
+                        opaque: false,
+                        pageBuilder: (BuildContext context, _, __) =>
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  color: black.withOpacity(0.9),
+                                  child: Center(
+                                    child: Hero(
+                                      tag: 'ProductImage',
+                                      child: Image.network(
+                                        '${widget.productModel.image}',
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ))));
+                                ))));
               },
               child: Hero(
                 tag: 'ProductImage',
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width/1.2,
+                  height: MediaQuery.of(context).size.width / 1.2,
                   child: Image.network(
                     '${widget.productModel.image}',
                     fit: BoxFit.cover,
@@ -79,11 +109,12 @@ class _DetailProductState extends State<DetailProduct> {
                       weight: FontWeight.w500),
                   SizedBox(height: 20.0),
                   CustomText(
-                    text: NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(widget.productModel.price),
-                    size: 18,
-                    color: green,
-                    weight: FontWeight.w500
-                  ),
+                      text: NumberFormat.currency(
+                              locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                          .format(widget.productModel.price),
+                      size: 18,
+                      color: green,
+                      weight: FontWeight.w500),
                   SizedBox(height: 10.0),
                   // Divider(),
                   // Card(
