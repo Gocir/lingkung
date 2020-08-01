@@ -76,18 +76,27 @@ class PartnerLisTile extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0)),
             child: ListTile(
-              onTap: (){
-              print("BS. ${partnerProvider.partners[index].id}");
-              Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TrashBankDetail(partner: partnerProvider.partners[index]),
-                        ));
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TrashBankDetail(
+                          partner: partnerProvider.partners[index]),
+                    ));
               },
+              leading: Container(
+                width: 80.0,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                              "${partnerProvider.partners[index].image}"),
+                      fit: BoxFit.cover,
+                    )),
+              ),
               title: CustomText(
                 text: "BS. ${partnerProvider.partners[index].name}",
                 size: 16,
-                color: black,
                 weight: FontWeight.w600,
               ),
               subtitle: CustomText(
