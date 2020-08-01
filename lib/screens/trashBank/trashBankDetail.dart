@@ -30,7 +30,10 @@ class _TrashBankDetailState extends State<TrashBankDetail> {
             //   size: 20.0,
             //   weight: FontWeight.w600,
             // ),
-            background: Image.asset("assets/images/noimage.png", fit: BoxFit.fill,),
+            background: Image.network(
+              "${widget.partner.image}",
+              fit: BoxFit.fill,
+            ),
           ),
         ),
         SliverFillRemaining(
@@ -40,27 +43,21 @@ class _TrashBankDetailState extends State<TrashBankDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  child: Text(
-                    'BS. ${widget.partner.name}',
-                    style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700),
-                  ),
+                  child: CustomText(
+                      text: 'BS. ${widget.partner.name}',
+                      size: 18,
+                      weight: FontWeight.w700),
                 ),
                 SizedBox(height: 20.0),
                 Row(
                   children: <Widget>[
-                    Container(child: Icon(Icons.location_on)),
+                    Container(child: Icon(Icons.location_on, color: yellow)),
                     SizedBox(width: 5.0),
                     Container(
                       child: Flexible(
-                        child: Text(
-                          widget.partner.address,
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 12,
-                          ),
+                        child: CustomText(
+                          text: '${widget.partner.address}',
+                          size: 12,
                         ),
                       ),
                     ),
@@ -68,34 +65,22 @@ class _TrashBankDetailState extends State<TrashBankDetail> {
                 ),
                 SizedBox(height: 20.0),
                 Container(
-                  child: Text(
-                    'Jam Operasional',
-                    style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
-                  ),
+                  child: CustomText(
+                      text: 'Jam Operasional', weight: FontWeight.w500),
                 ),
                 SizedBox(height: 5.0),
                 Container(
-                  child: Text(
-                    'Setiap Hari pukul 06.00 - 21.00',
-                    style: TextStyle(fontFamily: 'Poppins', fontSize: 12),
-                  ),
+                  child: CustomText(
+                      text: 'Setiap Hari pukul 06.00 - 21.00', size: 12),
                 ),
                 SizedBox(height: 10.0),
-                Divider(
-                  color: const Color(0xff9e9e9e),
-                  thickness: 1.0,
-                ),
+                Divider(),
                 SizedBox(height: 10.0),
                 Container(
-                  child: Text(
-                    'Terima Jenis Sampah',
-                    style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700),
+                  child: CustomText(
+                    text: 'Terima Jenis Sampah',
+                    size: 16,
+                    weight: FontWeight.w600
                   ),
                 ),
                 SizedBox(height: 10.0),
@@ -104,17 +89,15 @@ class _TrashBankDetailState extends State<TrashBankDetail> {
                 Container(
                   height: 45.0,
                   child: RaisedButton(
-                    color: Color(0xff9bc53d),
+                    color: green,
                     elevation: 2.0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)),
+                        borderRadius: BorderRadius.circular(20)),
                     child: Center(
-                      child: Text(
-                        'LANJUT',
-                        style: TextStyle(
-                            color: const Color(0xffffffff),
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.bold),
+                      child: CustomText(
+                        text: 'LANJUT',
+                        color: white,
+                        weight: FontWeight.w700
                       ),
                     ),
                     onPressed: () {
