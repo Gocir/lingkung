@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lingkung/screens/products/detailMyProduct.dart';
 import 'package:provider/provider.dart';
 // Providers
 import 'package:lingkung/providers/productProvider.dart';
@@ -7,7 +8,6 @@ import 'package:lingkung/providers/userProvider.dart';
 // Screens
 import 'package:lingkung/screens/products/addProduct.dart';
 import 'package:lingkung/screens/products/myProduct.dart';
-import 'package:lingkung/screens/products/updateProduct.dart';
 // Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
@@ -110,8 +110,7 @@ class MyStore extends StatelessWidget {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => MyProductPage()));
                 },
-                child:
-                    CustomText(text: 'Lihat lainnya', size: 12, color: blue),
+                child: CustomText(text: 'Lihat lainnya', size: 12, color: blue),
               ),
             ],
           ),
@@ -135,10 +134,9 @@ class MyStore extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => UpdateProduct(
-                                        productModel: productProvider
-                                            .productByUser[index]),
-                                  ));
+                                      builder: (context) => DetailMyProduct(
+                                          productModel: productProvider
+                                              .productByUser[index])));
                             },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +171,12 @@ class MyStore extends StatelessWidget {
                                   padding:
                                       EdgeInsets.only(left: 8.0, right: 8.0),
                                   child: CustomText(
-                                    text: NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(productProvider.productByUser[index].price),
+                                    text: NumberFormat.currency(
+                                            locale: 'id',
+                                            symbol: 'Rp ',
+                                            decimalDigits: 0)
+                                        .format(productProvider
+                                            .productByUser[index].price),
                                     weight: FontWeight.w500,
                                   ),
                                 ),
