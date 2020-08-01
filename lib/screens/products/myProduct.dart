@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/providers/productProvider.dart';
 // Screens
-import 'package:lingkung/screens/products/updateProduct.dart';
+import 'package:lingkung/screens/products/detailMyProduct.dart';
 // Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
@@ -45,12 +45,12 @@ class _MyProductPageState extends State<MyProductPage> {
                         borderRadius: BorderRadius.circular(10.0)),
                     child: InkWell(
                       onTap: () {
-                        
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => UpdateProduct(productModel: productProvider.productByUser[index]),
-                            ));
+                                builder: (context) => DetailMyProduct(
+                                    productModel:
+                                        productProvider.productByUser[index])));
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +82,12 @@ class _MyProductPageState extends State<MyProductPage> {
                           Padding(
                             padding: EdgeInsets.only(left: 8.0, right: 8.0),
                             child: CustomText(
-                              text: NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(productProvider.productByUser[index].price),
+                              text: NumberFormat.currency(
+                                      locale: 'id',
+                                      symbol: 'Rp ',
+                                      decimalDigits: 0)
+                                  .format(productProvider
+                                      .productByUser[index].price),
                               weight: FontWeight.w500,
                             ),
                           ),
