@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:lingkung/screens/products/detailMyProduct.dart';
 import 'package:lingkung/screens/products/detailProduct.dart';
 import 'package:provider/provider.dart';
 //providers
@@ -99,21 +100,25 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Flexible(
-                        flex: 1,
-                        child: Container(
-                          height: 50.0,
-                          width: 50.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: white,
-                          ),
-                          child: ClipRRect(
+                          flex: 1,
+                          child: Container(
+                            height: 50.0,
+                            width: 50.0,
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
-                              child: (userProvider.userModel?.image.toString() != null)
-                                  ? Image.network("${userProvider.userModel?.image.toString()}", fit: BoxFit.cover)
-                                  : Image.asset("assets/images/user.png",
-                                      fit: BoxFit.cover)),
-                        )),
+                              color: white,
+                            ),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: (userProvider.userModel?.image
+                                            .toString() !=
+                                        null)
+                                    ? Image.network(
+                                        "${userProvider.userModel?.image.toString()}",
+                                        fit: BoxFit.cover)
+                                    : Image.asset("assets/images/user.png",
+                                        fit: BoxFit.cover)),
+                          )),
                     ],
                   ),
                 ),
@@ -149,22 +154,25 @@ class _HomePageState extends State<HomePage> {
                                             TraSectionList()));
                               },
                               child: Container(
-                                padding: EdgeInsets.all(20),
-                                width: MediaQuery.of(context).size.width / 3,
-                                height: MediaQuery.of(context).size.width / 3.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  color: white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black12,
-                                        offset: Offset(0, 0),
-                                        blurRadius: 6)
-                                  ],
-                                ),
-                                child: CustomText(text: 'Jual Sampah', weight: FontWeight.w600)
-                                // SvgPicture.asset("assets/icons/garbagecar.svg"),
-                              ),
+                                  padding: EdgeInsets.all(20),
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  height:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    color: white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black12,
+                                          offset: Offset(0, 0),
+                                          blurRadius: 6)
+                                    ],
+                                  ),
+                                  child: CustomText(
+                                      text: 'Jual Sampah',
+                                      weight: FontWeight.w600)
+                                  // SvgPicture.asset("assets/icons/garbagecar.svg"),
+                                  ),
                             ),
                           ),
                           SizedBox(width: 10.0),
@@ -177,22 +185,25 @@ class _HomePageState extends State<HomePage> {
                                 // ));
                               },
                               child: Container(
-                                padding: EdgeInsets.all(20),
-                                width: MediaQuery.of(context).size.width / 3,
-                                height: MediaQuery.of(context).size.width / 3.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  color: white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black12,
-                                        offset: Offset(0, 0),
-                                        blurRadius: 6)
-                                  ],
-                                ),
-                                child: CustomText(text: 'Daur Ulang', weight: FontWeight.w600)
-                                // SvgPicture.asset("assets/icons/recycles.svg"),
-                              ),
+                                  padding: EdgeInsets.all(20),
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  height:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    color: white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black12,
+                                          offset: Offset(0, 0),
+                                          blurRadius: 6)
+                                    ],
+                                  ),
+                                  child: CustomText(
+                                      text: 'Daur Ulang',
+                                      weight: FontWeight.w600)
+                                  // SvgPicture.asset("assets/icons/recycles.svg"),
+                                  ),
                             ),
                           ),
                           SizedBox(width: 10.0),
@@ -206,22 +217,25 @@ class _HomePageState extends State<HomePage> {
                                         builder: (context) => TrashBankList()));
                               },
                               child: Container(
-                                padding: EdgeInsets.all(20),
-                                width: MediaQuery.of(context).size.width / 3,
-                                height: MediaQuery.of(context).size.width / 3.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  color: white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black12,
-                                        offset: Offset(0, 0),
-                                        blurRadius: 6)
-                                  ],
-                                ),
-                                child: CustomText(text: 'Bank Sampah', weight: FontWeight.w600)
-                                    // SvgPicture.asset("assets/icons/bank.svg"),
-                              ),
+                                  padding: EdgeInsets.all(20),
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  height:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    color: white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black12,
+                                          offset: Offset(0, 0),
+                                          blurRadius: 6)
+                                    ],
+                                  ),
+                                  child: CustomText(
+                                      text: 'Bank Sampah',
+                                      weight: FontWeight.w600)
+                                  // SvgPicture.asset("assets/icons/bank.svg"),
+                                  ),
                             ),
                           ),
                         ],
@@ -264,11 +278,13 @@ class _HomePageState extends State<HomePage> {
                                               BorderRadius.circular(10.0)),
                                       child: InkWell(
                                         onTap: () {
-                                          Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          DetailProduct(productModel: productProvider.products[index])));
+                                          (productProvider.products[index].userId == userProvider.user.uid) ?
+                                          Navigator.push(context,
+                                            MaterialPageRoute(builder: (context) =>
+                                              DetailMyProduct(productModel: productProvider.products[index]))) :
+                                          Navigator.push(context,
+                                            MaterialPageRoute(builder: (context) =>
+                                              DetailProduct(productModel: productProvider.products[index])));
                                         },
                                         child: Column(
                                           crossAxisAlignment:
@@ -312,7 +328,12 @@ class _HomePageState extends State<HomePage> {
                                               padding: EdgeInsets.only(
                                                   left: 8.0, right: 8.0),
                                               child: CustomText(
-                                                text: NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(productProvider.products[index].price),
+                                                text: NumberFormat.currency(
+                                                        locale: 'id',
+                                                        symbol: 'Rp ',
+                                                        decimalDigits: 0)
+                                                    .format(productProvider
+                                                        .products[index].price),
                                                 weight: FontWeight.w500,
                                               ),
                                             ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingkung/providers/productProvider.dart';
+import 'package:lingkung/providers/userProvider.dart';
+import 'package:lingkung/screens/products/detailMyProduct.dart';
 import 'package:lingkung/screens/products/detailProduct.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
@@ -13,24 +15,26 @@ class ExploreProductPage extends StatefulWidget {
 class _ExploreProductPageState extends State<ExploreProductPage> {
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: blue,
+        titleSpacing: 0,
         title: CustomText(
           text: 'Produk Ramah Lingkung',
           size: 18.0,
           color: white,
+          weight: FontWeight.w600,
         ),
         actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Icon(
-              Icons.shopping_cart,
-              color: white,
-            ),
-          ),
+          IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+                color: white,
+              ),
+              onPressed: () {})
         ],
       ),
       backgroundColor: white,
@@ -46,12 +50,20 @@ class _ExploreProductPageState extends State<ExploreProductPage> {
                       borderRadius: BorderRadius.circular(10.0)),
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DetailProduct(
-                                  productModel:
-                                      productProvider.products[index])));
+                      (productProvider.products[index].userId ==
+                              userProvider.user.uid)
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailMyProduct(
+                                      productModel:
+                                          productProvider.products[index])))
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailProduct(
+                                      productModel:
+                                          productProvider.products[index])));
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
