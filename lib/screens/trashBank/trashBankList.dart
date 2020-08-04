@@ -20,8 +20,8 @@ class TrashBankList extends StatelessWidget {
         ),
       ),
       // extendBodyBehindAppBar: true,
-      body: Container(
-        padding: EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: PartnerLisTile()
       ),
     );
