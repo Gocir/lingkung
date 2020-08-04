@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lingkung/models/productModel.dart';
 import 'package:uuid/uuid.dart';
 // Firebase
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,6 +31,7 @@ class UserProvider with ChangeNotifier {
   UserServices _userService = UserServices();
   OrderServices _orderService = OrderServices();
   UserModel _userModel;
+  UserModel userById;
 
   // getter
   FirebaseUser get user => _user;
@@ -120,6 +122,12 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> loadUserById(String userId) async {
+    userById = await _userService.getUsersById(id: userId);
+    notifyListeners();
+  }
+
+
   Future<void> _onStateChanged(FirebaseUser firebaseUser) async {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
@@ -154,6 +162,34 @@ class UserProvider with ChangeNotifier {
 //          break;
 //        }
 //      }
+
+//      if(!itemExists){
+      print("CART ITEMS ARE: ${cart.toString()}");
+      _userService.addToCarTrash(userId: _user.uid, cartItem: cartItem);
+//      }
+
+      return true;
+    } catch (e) {
+      print("THE ERROR ${e.toString()}");
+      return false;
+    }
+  }
+
+  Future<bool> addToCarTProduct({ProductModel productModel}) async {
+    print("THE PRODUCT IS: ${productModel.toString()}");
+
+    try {
+      var uuid = Uuid();
+      String cartItemId = uuid.v4();
+      List cart = _userModel.cart;
+      //bool itemExists = false;
+      Map cartItem = {
+        "id": cartItemId,
+        "productId": productModel.id,
+        "name": productModel.name,
+        "price": productModel.price,
+        "image": productModel.image
+      };
 
 //      if(!itemExists){
       print("CART ITEMS ARE: ${cart.toString()}");

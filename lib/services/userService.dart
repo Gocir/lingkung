@@ -19,7 +19,7 @@ class UserServices{
     return UserModel.fromSnapshot(doc);
   });
 
-  Future<UserModel> getBusinessDataById(String id) => _firestore.collection(collection).document(id).get().then((doc){
+  Future<UserModel> getUsersById({String id}) => _firestore.collection(collection).document(id.toString()).get().then((doc){
     return UserModel.fromSnapshot(doc);
   });
 
