@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingkung/providers/productProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
+import 'package:lingkung/screens/products/cartProduct.dart';
 import 'package:lingkung/screens/products/detailMyProduct.dart';
 import 'package:lingkung/screens/products/detailProduct.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
@@ -34,7 +35,13 @@ class _ExploreProductPageState extends State<ExploreProductPage> {
                 Icons.shopping_cart,
                 color: white,
               ),
-              onPressed: () {})
+              onPressed: () {
+                Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CartProduct(),
+                        ));
+              })
         ],
       ),
       backgroundColor: white,
