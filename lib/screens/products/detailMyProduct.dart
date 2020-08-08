@@ -80,98 +80,100 @@ class _DetailMyProductState extends State<DetailMyProduct> {
                 })
           ],
         ),
-        body: Column(
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                        opaque: false,
-                        pageBuilder: (BuildContext context, _, __) =>
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  color: black.withOpacity(0.9),
-                                  child: Center(
-                                    child: Hero(
-                                      tag: 'ProductImage',
-                                      child: Image.network(
-                                        '${widget.productModel.image}',
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          opaque: false,
+                          pageBuilder: (BuildContext context, _, __) =>
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    color: black.withOpacity(0.9),
+                                    child: Center(
+                                      child: Hero(
+                                        tag: 'ProductImage',
+                                        child: Image.network(
+                                          '${widget.productModel.image}',
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ))));
-              },
-              child: Hero(
-                tag: 'ProductImage',
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width / 1.3,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("assets/images/noimage.png"))),
-                  child: Image.network(
-                    '${widget.productModel.image}',
-                    fit: BoxFit.cover,
+                                  ))));
+                },
+                child: Hero(
+                  tag: 'ProductImage',
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width / 1.3,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage("assets/images/noimage.png"))),
+                    child: Image.network(
+                      '${widget.productModel.image}',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  CustomText(
-                      text: '${widget.productModel.name}',
-                      size: 16,
-                      weight: FontWeight.w500),
-                  SizedBox(height: 20.0),
-                  CustomText(
-                      text: NumberFormat.currency(
-                              locale: 'id', symbol: 'Rp ', decimalDigits: 0)
-                          .format(widget.productModel.price),
-                      size: 18,
-                      color: Colors.red,
-                      weight: FontWeight.w500),
-                  SizedBox(height: 10.0),
-                  Divider(),
-                  CustomText(
-                      text: 'Informasi Produk',
-                      size: 16.0,
-                      weight: FontWeight.w500),
-                  SizedBox(height: 5.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      CustomText(
-                        text: 'Stok',
-                      ),
-                      CustomText(
-                        text: '${widget.productModel.stock}',
-                        color: grey,
-                        weight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
-                  Divider(),
-                  CustomText(
-                      text: 'Deskripsi Produk',
-                      size: 16.0,
-                      weight: FontWeight.w500),
-                  SizedBox(height: 5.0),
-                  CustomText(
-                    text: '${widget.productModel.description}',
-                  ),
-                ],
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    CustomText(
+                        text: '${widget.productModel.name}',
+                        size: 16,
+                        weight: FontWeight.w500),
+                    SizedBox(height: 20.0),
+                    CustomText(
+                        text: NumberFormat.currency(
+                                locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                            .format(widget.productModel.price),
+                        size: 18,
+                        color: Colors.red,
+                        weight: FontWeight.w500),
+                    SizedBox(height: 10.0),
+                    Divider(),
+                    CustomText(
+                        text: 'Informasi Produk',
+                        size: 16.0,
+                        weight: FontWeight.w500),
+                    SizedBox(height: 5.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        CustomText(
+                          text: 'Stok',
+                        ),
+                        CustomText(
+                          text: '${widget.productModel.stock}',
+                          color: grey,
+                          weight: FontWeight.w600,
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    CustomText(
+                        text: 'Deskripsi Produk',
+                        size: 16.0,
+                        weight: FontWeight.w500),
+                    SizedBox(height: 5.0),
+                    CustomText(
+                      text: '${widget.productModel.description}',
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ));
   }
 }

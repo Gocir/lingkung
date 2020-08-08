@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingkung/providers/cartBloc.dart';
 import 'package:lingkung/providers/productProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/products/cartProduct.dart';
@@ -9,6 +10,7 @@ import 'package:lingkung/utilities/textStyle.dart';
 import 'package:provider/provider.dart';
 
 class ExploreProductPage extends StatefulWidget {
+  ExploreProductPage({Key key}) : super(key: key);
   @override
   _ExploreProductPageState createState() => _ExploreProductPageState();
 }
@@ -19,9 +21,16 @@ class _ExploreProductPageState extends State<ExploreProductPage> {
     final userProvider = Provider.of<UserProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
 
+    // var cartBloc = Provider.of<CartBloc>(context);
+    int totalCount = 0;
+    // if (cartBloc.cart.length > 0) {
+    //   totalCount = cartBloc.cart.values.reduce((a, b) => a + b);
+    // }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: blue,
+        iconTheme: IconThemeData(color: white),
         titleSpacing: 0,
         title: CustomText(
           text: 'Produk Ramah Lingkung',
@@ -30,18 +39,37 @@ class _ExploreProductPageState extends State<ExploreProductPage> {
           weight: FontWeight.w600,
         ),
         actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.shopping_cart,
-                color: white,
-              ),
-              onPressed: () {
-                Navigator.push(
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0, right: 10.0),
+            child: Stack(alignment: Alignment.topRight, children: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => CartProduct(),
                         ));
-              })
+                  }),
+              Positioned(
+                right: 5.0,
+                top: 5.0,
+                child: Container(
+                  height: 16.0,
+                  width: 16.0,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.red),
+                  child: CustomText(
+                      text: '$totalCount',
+                      size: 10.0,
+                      color: white,
+                      weight: FontWeight.w500),
+                ),
+              )
+            ]),
+          ),
         ],
       ),
       backgroundColor: white,
