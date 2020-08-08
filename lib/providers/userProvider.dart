@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lingkung/models/cartItemModel.dart';
 import 'package:lingkung/models/productModel.dart';
 import 'package:uuid/uuid.dart';
 // Firebase
@@ -15,19 +16,13 @@ import 'package:lingkung/models/userModel.dart';
 import 'package:lingkung/services/orderService.dart';
 import 'package:lingkung/services/userService.dart';
 
-enum Status {
-  Uninitialized,
-  Authenticated,
-  Authenticating,
-  Unauthenticated,
-  Registering
-}
+enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
 class UserProvider with ChangeNotifier {
   FirebaseAuth _auth;
   FirebaseUser _user;
-  Firestore _firestore = Firestore.instance;
   Status _status = Status.Uninitialized;
+  Firestore _firestore = Firestore.instance;
   UserServices _userService = UserServices();
   OrderServices _orderService = OrderServices();
   UserModel _userModel;
@@ -96,18 +91,24 @@ class UserProvider with ChangeNotifier {
   }
 
   // Logout
+  // Future logout() async {
+  //   try {
+  //     _status = Status.Unauthenticated;
+  //     notifyListeners();
+  //     await _auth.signOut();
+  //     return true;
+  //   } catch (e) {
+  //     _status = Status.Authenticating;
+  //     notifyListeners();
+  //     print(e.toString());
+  //     return false;
+  //   }
+  // }
   Future logout() async {
-    try {
-      _status = Status.Unauthenticated;
-      notifyListeners();
-      await _auth.signOut();
-      return true;
-    } catch (e) {
-      _status = Status.Authenticating;
-      notifyListeners();
-      print(e.toString());
-      return false;
-    }
+    _auth.signOut();
+    _status = Status.Unauthenticated;
+    notifyListeners();
+    return Future.delayed(Duration.zero);
   }
 
   void clearController() {
@@ -127,7 +128,6 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> _onStateChanged(FirebaseUser firebaseUser) async {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
@@ -139,63 +139,47 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> addToCarTrash({TrashReceiveModel trashReceiveModel}) async {
-    print("THE PRODUCT IS: ${trashReceiveModel.toString()}");
-
-    try {
-      var uuid = Uuid();
-      String cartItemId = uuid.v4();
-      List cart = _userModel.cart;
-      //bool itemExists = false;
-      Map cartItem = {
-        "id": cartItemId,
-        "trashId": trashReceiveModel.id,
-        "name": trashReceiveModel.trashName,
-        "price": trashReceiveModel.price,
-        "image": trashReceiveModel.image
-      };
-
-//      for(Map item in cart){
-//        if(item["productId"] == cartItem["productId"]){
-// //          call increment quantity
-//          itemExists = true;
-//          break;
-//        }
-//      }
-
-//      if(!itemExists){
-      print("CART ITEMS ARE: ${cart.toString()}");
-      _userService.addToCarTrash(userId: _user.uid, cartItem: cartItem);
-//      }
-
-      return true;
-    } catch (e) {
-      print("THE ERROR ${e.toString()}");
-      return false;
-    }
-  }
-
-  Future<bool> addToCarTProduct({ProductModel productModel}) async {
+  Future<bool> addToCartProduct(
+      {ProductModel productModel, int quantity}) async {
     print("THE PRODUCT IS: ${productModel.toString()}");
+    print("THE QUANTITY IS: ${quantity.toString()}");
 
     try {
       var uuid = Uuid();
       String cartItemId = uuid.v4();
-      List cart = _userModel.cart;
+      List cart = _userModel.cartProduct;
       //bool itemExists = false;
       Map cartItem = {
         "id": cartItemId,
         "productId": productModel.id,
+        "image": productModel.image,
         "name": productModel.name,
         "price": productModel.price,
-        "image": productModel.image
+        "quantity": quantity,
+        "storeOwnerId": productModel.userId,
+        "totalSaleProduct": productModel.price * quantity,
       };
 
-//      if(!itemExists){
+      CartItemModel item = CartItemModel.fromMap(cartItem);
+      //  if(!itemExists){
       print("CART ITEMS ARE: ${cart.toString()}");
-      _userService.addToCarTrash(userId: _user.uid, cartItem: cartItem);
-//      }
+      _userService.addToCartProduct(userId: _user.uid, cartItem: item);
+      //  }
+      // loading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print("THE ERROR ${e.toString()}");
+      notifyListeners();
+      return false;
+    }
+  }
 
+  Future<bool> removeFromCart({CartItemModel cartItem}) async {
+    print("THE PRODUC IS: ${cartItem.toString()}");
+
+    try {
+      _userService.removeFromCart(userId: _user.uid, cartItem: cartItem);
       return true;
     } catch (e) {
       print("THE ERROR ${e.toString()}");
@@ -208,15 +192,33 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> removeFromCart({Map cartItem}) async {
-    print("THE PRODUC IS: ${cartItem.toString()}");
+  // Future<bool> addToCarTrash({TrashReceiveModel trashReceiveModel}) async {
+  //   print("THE PRODUCT IS: ${trashReceiveModel.toString()}");
 
-    try {
-      _userService.removeFromCart(userId: _user.uid, cartItem: cartItem);
-      return true;
-    } catch (e) {
-      print("THE ERROR ${e.toString()}");
-      return false;
-    }
-  }
+  //   try {
+  //     var uuid = Uuid();
+  //     String cartItemId = uuid.v4();
+  //     List cart = _userModel.cart;
+  //     //bool itemExists = false;
+  //     Map cartItem = {
+  //       "id": cartItemId,
+  //       "trashId": trashReceiveModel.id,
+  //       "name": trashReceiveModel.trashName,
+  //       "price": trashReceiveModel.price,
+  //       "image": trashReceiveModel.image
+  //     };
+
+  //     CartItemModel item = CartItemModel.fromMap(cartItem);
+  //     //  if(!itemExists){
+  //     print("CART ITEMS ARE: ${cart.toString()}");
+  //     _userService.addToCarTrash(userId: _user.uid, cartItem: item);
+  //     //  }
+
+  //     return true;
+  //   } catch (e) {
+  //     print("THE ERROR ${e.toString()}");
+  //     return false;
+  //   }
+  // }
+
 }
