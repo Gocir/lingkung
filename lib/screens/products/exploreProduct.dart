@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingkung/providers/cartBloc.dart';
+import 'package:intl/intl.dart';
 import 'package:lingkung/providers/productProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/products/cartProduct.dart';
@@ -21,11 +21,10 @@ class _ExploreProductPageState extends State<ExploreProductPage> {
     final userProvider = Provider.of<UserProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
 
-    // var cartBloc = Provider.of<CartBloc>(context);
     int totalCount = 0;
-    // if (cartBloc.cart.length > 0) {
-    //   totalCount = cartBloc.cart.values.reduce((a, b) => a + b);
-    // }
+    if (userProvider.userModel.cartProduct.length > 0) {
+      totalCount = userProvider.userModel.cartProduct.length;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -105,7 +104,7 @@ class _ExploreProductPageState extends State<ExploreProductPage> {
                       children: <Widget>[
                         Container(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width * 0.44,
+                            height: MediaQuery.of(context).size.width * 0.42,
                             child: ClipRRect(
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(10.0),
@@ -115,22 +114,22 @@ class _ExploreProductPageState extends State<ExploreProductPage> {
                                     '${productProvider.products[index].image.toString()}',
                                     fit: BoxFit.cover))),
                         Container(
-                          height: 40.0,
+                          height: 45.0,
                           padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                          child: Text(
-                            '${productProvider.products[index].name}',
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(
-                                fontSize: 12.0,
-                                fontFamily: "Poppins",
-                                fontWeight: FontWeight.normal),
-                          ),
+                          child: CustomText(
+                              text: '${productProvider.products[index].name}',
+                              over: TextOverflow.ellipsis,
+                              line: 2)
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 8.0, right: 8.0),
                           child: CustomText(
-                            text: 'Rp${productProvider.products[index].price}',
+                            text: NumberFormat.currency(
+                                    locale: 'id',
+                                    symbol: 'Rp ',
+                                    decimalDigits: 0)
+                                .format(productProvider.products[index].price),
+                                color: Colors.red,
                             weight: FontWeight.w500,
                           ),
                         ),

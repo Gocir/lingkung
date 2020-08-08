@@ -26,7 +26,7 @@ class UserServices {
         return UserModel.fromSnapshot(doc);
       });
 
-  Future<UserModel> getUsersById({String id}) => _firestore
+  Future<UserModel> getOwnerById({String id}) => _firestore
           .collection(collection)
           .document(id.toString())
           .get()
@@ -46,7 +46,7 @@ class UserServices {
     print("THE USER ID IS: $userId");
     print("cart items are: ${cartItem.toString()}");
     _firestore.collection(collection).document(userId).updateData({
-      "cart": FieldValue.arrayRemove([cartItem.toMap()])
+      "cartProduct": FieldValue.arrayRemove([cartItem.toMap()])
     });
   }
 

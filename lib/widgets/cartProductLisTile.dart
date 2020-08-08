@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
@@ -18,12 +19,13 @@ class _CartProductLisTileState extends State<CartProductLisTile> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    return Expanded(
-      child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: userProvider.userModel.cartProduct.length,
-          itemBuilder: (_, index) {
-            return Card(
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: userProvider.userModel.cartProduct.length,
+        itemBuilder: (_, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(0, 10.0, 10.0, 10.0),
                 child: Row(
@@ -46,8 +48,8 @@ class _CartProductLisTileState extends State<CartProductLisTile> {
                           height: 70.0,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: NetworkImage(
-                                      "${userProvider.userModel.cartProduct[index].image}"),
+                                  image: NetworkImage(userProvider
+                                      .userModel.cartProduct[index].image),
                                   fit: BoxFit.cover),
                               borderRadius: BorderRadius.circular(10.0),
                               boxShadow: [
@@ -69,13 +71,19 @@ class _CartProductLisTileState extends State<CartProductLisTile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           CustomText(
-                            text: "${userProvider.userModel.cartProduct[index].name}",
+                            text:
+                                "${userProvider.userModel.cartProduct[index].name}",
                             line: 2,
                             over: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 5.0),
                           CustomText(
-                            text: "${userProvider.userModel.cartProduct[index].price}",
+                            text: NumberFormat.currency(
+                                    locale: 'id',
+                                    symbol: 'Rp ',
+                                    decimalDigits: 0)
+                                .format(userProvider
+                                    .userModel.cartProduct[index].price),
                             color: Colors.red,
                             size: 16.0,
                             weight: FontWeight.w600,
@@ -86,16 +94,14 @@ class _CartProductLisTileState extends State<CartProductLisTile> {
                             children: <Widget>[
                               GestureDetector(
                                 onTap: () async {
-                                  setState(() {
-                                    loading = true;
-                                  });
+                                  loading = true;
                                   bool value =
                                       await userProvider.removeFromCart(
                                           cartItem: userProvider
                                               .userModel.cartProduct[index]);
                                   if (value) {
                                     userProvider.reloadUserModel();
-                                    print("Item added to cart");
+                                    print("Removed from Cart!");
                                     _scaffoldStateKey.currentState.showSnackBar(
                                         SnackBar(
                                             content:
@@ -163,8 +169,8 @@ class _CartProductLisTileState extends State<CartProductLisTile> {
                   ],
                 ),
               ),
-            );
-          }),
-    );
+            ),
+          );
+        });
   }
 }

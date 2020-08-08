@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:lingkung/main.dart';
 import 'package:lingkung/models/productModel.dart';
-import 'package:lingkung/providers/cartBloc.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/products/cartProduct.dart';
 import 'package:lingkung/screens/products/checkoutProduct.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/loading.dart';
 import 'package:lingkung/utilities/textStyle.dart';
-import 'package:provider/provider.dart';
 
 class DetailProduct extends StatefulWidget {
   final ProductModel productModel;
@@ -30,11 +29,11 @@ class _DetailProductState extends State<DetailProduct> {
     final userProvider = Provider.of<UserProvider>(context);
     userProvider.loadUserById(widget.productModel.userId);
 
-    var cartBloc = Provider.of<CartBloc>(context);
     int totalCount = 0;
-    if (cartBloc.cart.length > 0) {
-      totalCount = cartBloc.cart.values.reduce((a, b) => a + b);
+    if (userProvider.userModel.cartProduct.length > 0) {
+      totalCount = userProvider.userModel.cartProduct.length;
     }
+
     return loading
         ? Loading()
         : Scaffold(

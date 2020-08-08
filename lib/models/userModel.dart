@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingkung/models/cartItemModel.dart';
 
-class UserModel{
+class UserModel {
   static const ID = "uid";
   static const NAME = "name";
   static const EMAIL = "email";
@@ -25,7 +25,6 @@ class UserModel{
   int _priceSum = 0;
 
   //  public variable
-  // List<CartItemModel> cartProduct = new List<CartItemModel>();
   List<CartItemModel> cartProduct;
   int totalCartPrice;
 
@@ -40,7 +39,7 @@ class UserModel{
   int get point => _point;
   int get weight => _weight;
 
-  UserModel.fromSnapshot(DocumentSnapshot snapshot){
+  UserModel.fromSnapshot(DocumentSnapshot snapshot) {
     _id = snapshot.data[ID];
     _name = snapshot.data[NAME];
     _email = snapshot.data[EMAIL];
@@ -51,32 +50,32 @@ class UserModel{
     _balance = snapshot.data[BALANCE];
     _point = snapshot.data[POINT];
     _weight = snapshot.data[WEIGHT];
-    // cartItemProduct = CartItemModel.fromMap(snapshot.data[CART_PRODUCT]);
-    // cartProduct = snapshot.data[CART_PRODUCT].map<CartItemModel>((item) {
-    //   return CartItemModel.fromMap(item);
-    // }).toList();
-    cartProduct = convertCartItems(snapshot.data[CART_PRODUCT]) ?? [];
-    totalCartPrice = snapshot.data[CART_PRODUCT] == null ? 0 : getTotalPrice(cart: snapshot.data[CART_PRODUCT]);
+    (snapshot.data[CART_PRODUCT] != null)
+        ? cartProduct = convertCartItems(snapshot.data[CART_PRODUCT])
+        : cartProduct = [];
+    totalCartPrice = snapshot.data[CART_PRODUCT] == null
+        ? 0
+        : getTotalPrice(cart: snapshot.data[CART_PRODUCT]);
   }
 
-  int getTotalPrice({List cart}){
-    if(cart == null){
+  int getTotalPrice({List cart}) {
+    if (cart == null) {
       return 0;
     }
-    for(Map cartItem in cart){
+    for (Map cartItem in cart) {
       _priceSum += cartItem["price"] * cartItem["quantity"];
     }
 
     int total = _priceSum;
 
-    print("THE TOTAL IS $total");
+    // print("THE TOTAL IS $total");
 
     return total;
   }
 
-  List<CartItemModel> convertCartItems(List cart){
+  List<CartItemModel> convertCartItems(List cart) {
     List<CartItemModel> convertedCart = [];
-    for(Map cartItem in cart){
+    for (Map cartItem in cart) {
       convertedCart.add(CartItemModel.fromMap(cartItem));
     }
     return convertedCart;

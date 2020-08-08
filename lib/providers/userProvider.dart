@@ -124,7 +124,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> loadUserById(String userId) async {
-    userById = await _userService.getUsersById(id: userId);
+    userById = await _userService.getOwnerById(id: userId);
     notifyListeners();
   }
 
@@ -148,7 +148,6 @@ class UserProvider with ChangeNotifier {
       var uuid = Uuid();
       String cartItemId = uuid.v4();
       List cart = _userModel.cartProduct;
-      //bool itemExists = false;
       Map cartItem = {
         "id": cartItemId,
         "productId": productModel.id,
@@ -161,11 +160,8 @@ class UserProvider with ChangeNotifier {
       };
 
       CartItemModel item = CartItemModel.fromMap(cartItem);
-      //  if(!itemExists){
       print("CART ITEMS ARE: ${cart.toString()}");
       _userService.addToCartProduct(userId: _user.uid, cartItem: item);
-      //  }
-      // loading = false;
       notifyListeners();
       return true;
     } catch (e) {
@@ -176,7 +172,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<bool> removeFromCart({CartItemModel cartItem}) async {
-    print("THE PRODUC IS: ${cartItem.toString()}");
+    print("THE PRODUCT IS: ${cartItem.toString()}");
 
     try {
       _userService.removeFromCart(userId: _user.uid, cartItem: cartItem);
