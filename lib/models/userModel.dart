@@ -55,7 +55,10 @@ class UserModel{
     // cartProduct = snapshot.data[CART_PRODUCT].map<CartItemModel>((item) {
     //   return CartItemModel.fromMap(item);
     // }).toList();
-    cartProduct = convertCartItems(snapshot.data[CART_PRODUCT]) ?? [];
+    if (snapshot.data[CART_PRODUCT] != null)
+    cartProduct =   convertCartItems(snapshot.data[CART_PRODUCT]);
+    else
+    cartProduct= [];
     totalCartPrice = snapshot.data[CART_PRODUCT] == null ? 0 : getTotalPrice(cart: snapshot.data[CART_PRODUCT]);
   }
 
