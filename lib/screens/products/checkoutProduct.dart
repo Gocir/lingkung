@@ -79,74 +79,100 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                             //   MaterialPageRoute(
                             //     builder: (context) => AddressList(),
                             //   ));
-                            showModalBottomSheet<void>(
+                            showModalBottomSheet(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(20.0),
                                         topRight: Radius.circular(20.0))),
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return ListView.builder(
-                                      scrollDirection: Axis.vertical,
-                                      padding: const EdgeInsets.all(8.0),
-                                      itemCount: userProvider
-                                          .userModel.addressModel.length,
-                                      itemBuilder: (_, index) {
-                                        return Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0)),
-                                            child: ListTile(
-                                                isThreeLine: true,
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                title: CustomText(
-                                                  text: userProvider
-                                                      .userModel
-                                                      .addressModel[index]
-                                                      .addressLabel,
-                                                  size: 12.0,
-                                                  weight: FontWeight.w600,
-                                                ),
-                                                subtitle: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    CustomText(
-                                                      text: userProvider
-                                                          .userModel
-                                                          .addressModel[index]
-                                                          .recipientsName,
-                                                      weight: FontWeight.w700,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 5.0,
-                                                    ),
-                                                    CustomText(
-                                                      text: '62' +
-                                                          userProvider
-                                                              .userModel
-                                                              .addressModel[
-                                                                  index]
-                                                              .phoNumber
-                                                              .toString(),
-                                                      size: 12.0,
-                                                      // color: grey,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 5.0,
-                                                    ),
-                                                    CustomText(
-                                                      text:
-                                                          '${userProvider.userModel.addressModel[index].addressDetail}, ${userProvider.userModel.addressModel[index].subDistrict}, ${userProvider.userModel.addressModel[index].city}, ${userProvider.userModel.addressModel[index].province}, ${userProvider.userModel.addressModel[index].posCode}',
-                                                      size: 12.0,
-                                                      // color: grey,
-                                                    ),
-                                                  ],
-                                                )));
-                                      });
+                                  return Column(
+                                    children: <Widget>[
+                                      ListTile(
+                                          leading:
+                                              Icon(Icons.close, color: black),
+                                          title: CustomText(
+                                            text: 'Daftar Alamat',
+                                            color: black,
+                                            size: 18.0,
+                                            weight: FontWeight.w600,
+                                          ),
+                                          trailing: InkWell(
+                                            onTap: () {},
+                                            child: CustomText(
+                                              text: 'Tambah',
+                                              color: blue,
+                                            ),
+                                          )),
+                                          SizedBox(height: 20.0),
+                                      Expanded(
+                                        child: ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                            padding: const EdgeInsets.all(8.0),
+                                            itemCount: userProvider
+                                                .userModel.addressModel.length,
+                                            itemBuilder: (_, index) {
+                                              return Card(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0)),
+                                                  child: ListTile(
+                                                      isThreeLine: true,
+                                                      onTap: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      title: CustomText(
+                                                        text: userProvider
+                                                            .userModel
+                                                            .addressModel[index]
+                                                            .addressLabel,
+                                                        size: 12.0,
+                                                        weight: FontWeight.w600,
+                                                      ),
+                                                      subtitle: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          CustomText(
+                                                            text: userProvider
+                                                                .userModel
+                                                                .addressModel[
+                                                                    index]
+                                                                .recipientsName,
+                                                            weight:
+                                                                FontWeight.w700,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5.0,
+                                                          ),
+                                                          CustomText(
+                                                            text: '62' +
+                                                                userProvider
+                                                                    .userModel
+                                                                    .addressModel[
+                                                                        index]
+                                                                    .phoNumber
+                                                                    .toString(),
+                                                            size: 12.0,
+                                                            // color: grey,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5.0,
+                                                          ),
+                                                          CustomText(
+                                                            text:
+                                                                '${userProvider.userModel.addressModel[index].addressDetail}, ${userProvider.userModel.addressModel[index].subDistrict}, ${userProvider.userModel.addressModel[index].city}, ${userProvider.userModel.addressModel[index].province}, ${userProvider.userModel.addressModel[index].posCode}',
+                                                            size: 12.0,
+                                                            // color: grey,
+                                                          ),
+                                                        ],
+                                                      )));
+                                            }),
+                                      ),
+                                    ],
+                                  );
                                 });
                           },
                           child: CustomText(
@@ -157,37 +183,45 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                   SizedBox(height: 5.0),
                   Card(
                       margin: const EdgeInsets.all(0),
-                      child: ListTile(
-                          dense: true,
-                          isThreeLine: true,
-                          title: CustomText(
-                            text: (widget.addressModel == null)
-                                ? userProvider
-                                    .userModel.addressModel[0].addressLabel
-                                : widget.addressModel.addressLabel,
-                            size: 12.0,
-                            weight: FontWeight.w600,
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              CustomText(
-                                text: userProvider.userModel.addressModel[0]
-                                        .recipientsName +
-                                    ' - 62${userProvider.userModel.addressModel[0].phoNumber}',
-                                color: grey,
-                                size: 10.0,
+                      child: (widget.addressModel == null &&
+                              userProvider.userModel.addressModel.isEmpty)
+                          ? ListTile(
+                              dense: true,
+                              title: CustomText(
+                                text: 'Pilih Alamat',
+                                size: 12.0,
+                                weight: FontWeight.w600,
                               ),
-                              CustomText(
-                                text:
-                                    '${userProvider.userModel.addressModel[0].addressDetail}, ${userProvider.userModel.addressModel[0].subDistrict}, ${userProvider.userModel.addressModel[0].city}, ${userProvider.userModel.addressModel[0].province} ${userProvider.userModel.addressModel[0].posCode}',
-                                line: 1,
-                                over: TextOverflow.ellipsis,
-                                color: grey,
-                                size: 10.0,
+                            )
+                          : ListTile(
+                              dense: true,
+                              isThreeLine: true,
+                              title: CustomText(
+                                text: userProvider
+                                    .userModel.addressModel[0].addressLabel,
+                                size: 12.0,
+                                weight: FontWeight.w600,
                               ),
-                            ],
-                          ))),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  CustomText(
+                                    text: userProvider.userModel.addressModel[0]
+                                            .recipientsName +
+                                        ' - 62${userProvider.userModel.addressModel[0].phoNumber}',
+                                    color: grey,
+                                    size: 10.0,
+                                  ),
+                                  CustomText(
+                                    text:
+                                        '${userProvider.userModel.addressModel[0].addressDetail}, ${userProvider.userModel.addressModel[0].subDistrict}, ${userProvider.userModel.addressModel[0].city}, ${userProvider.userModel.addressModel[0].province} ${userProvider.userModel.addressModel[0].posCode}',
+                                    line: 1,
+                                    over: TextOverflow.ellipsis,
+                                    color: grey,
+                                    size: 10.0,
+                                  ),
+                                ],
+                              ))),
                   Divider(),
                   SizedBox(height: 10.0),
                   CustomText(
@@ -197,102 +231,105 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                   SizedBox(height: 5.0),
                   (widget.productModel == null)
                       ? Container(
-                        height: 500.0,
-                        child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            padding: const EdgeInsets.all(8.0),
-                            itemCount:
-                                widget.cartItemModel.length,
-                            itemBuilder: (_, index) {
-                              return Card(
-                                margin: const EdgeInsets.all(0),
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                      16.0, 10.0, 16.0, 16.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Row(children: <Widget>[
-                                        Icon(Icons.store, color: grey),
-                                        SizedBox(width: 5.0),
-                                        CustomText(
-                                            text: widget.cartItemModel[index].name,
-                                            weight: FontWeight.w600)
-                                      ]),
-                                      Divider(),
-                                      SizedBox(height: 10.0),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
+                          height: 300.0,
+                          child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              padding: const EdgeInsets.all(8.0),
+                              itemCount: widget.cartItemModel.length,
+                              itemBuilder: (_, index) {
+                                return Card(
+                                  margin: const EdgeInsets.all(0),
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(
+                                        16.0, 10.0, 16.0, 16.0),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Row(children: <Widget>[
+                                          Icon(Icons.store, color: grey),
+                                          SizedBox(width: 5.0),
                                           CustomText(
-                                            text: widget.cartItemModel[index].quantity.toString() +
-                                                'x',
-                                            color: grey,
-                                            size: 18,
-                                            weight: FontWeight.w600,
-                                          ),
-                                          SizedBox(width: 16.0),
-                                          Container(
-                                            width: 60.0,
-                                            height: 60.0,
-                                            decoration: BoxDecoration(
-                                                color: white,
-                                                image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        "${widget.cartItemModel[index].image}"),
-                                                    fit: BoxFit.cover),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: Colors.black12,
-                                                      offset:
-                                                          Offset(0.0, 0.0),
-                                                      blurRadius: 2.0),
-                                                ]),
-                                          ),
-                                          SizedBox(
-                                            width: 16.0,
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                CustomText(
-                                                  text: widget
-                                                      .productModel.name,
-                                                  line: 2,
-                                                  over: TextOverflow.ellipsis,
-                                                  weight: FontWeight.w500,
-                                                ),
-                                                SizedBox(height: 5.0),
-                                                CustomText(
-                                                  text: NumberFormat.currency(
-                                                          locale: 'id',
-                                                          symbol: 'Rp',
-                                                          decimalDigits: 0)
-                                                      .format(widget
-                                                          .cartItemModel[index]
-                                                          .price),
-                                                  color: Colors.red,
-                                                ),
-                                              ],
+                                              text: widget
+                                                  .cartItemModel[index].name,
+                                              weight: FontWeight.w600)
+                                        ]),
+                                        Divider(),
+                                        SizedBox(height: 10.0),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            CustomText(
+                                              text: widget.cartItemModel[index]
+                                                      .quantity
+                                                      .toString() +
+                                                  'x',
+                                              color: grey,
+                                              size: 18,
+                                              weight: FontWeight.w600,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                            SizedBox(width: 16.0),
+                                            Container(
+                                              width: 60.0,
+                                              height: 60.0,
+                                              decoration: BoxDecoration(
+                                                  color: white,
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          "${widget.cartItemModel[index].image}"),
+                                                      fit: BoxFit.cover),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors.black12,
+                                                        offset:
+                                                            Offset(0.0, 0.0),
+                                                        blurRadius: 2.0),
+                                                  ]),
+                                            ),
+                                            SizedBox(
+                                              width: 16.0,
+                                            ),
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  CustomText(
+                                                    text: widget
+                                                        .productModel.name,
+                                                    line: 2,
+                                                    over: TextOverflow.ellipsis,
+                                                    weight: FontWeight.w500,
+                                                  ),
+                                                  SizedBox(height: 5.0),
+                                                  CustomText(
+                                                    text: NumberFormat.currency(
+                                                            locale: 'id',
+                                                            symbol: 'Rp',
+                                                            decimalDigits: 0)
+                                                        .format(widget
+                                                            .cartItemModel[
+                                                                index]
+                                                            .price),
+                                                    color: Colors.red,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            }),
-                      )
+                                );
+                              }),
+                        )
                       : Card(
                           margin: const EdgeInsets.all(0),
                           child: Padding(
