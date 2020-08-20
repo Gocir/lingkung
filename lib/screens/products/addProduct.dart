@@ -5,8 +5,6 @@ import 'package:image_picker/image_picker.dart';
 // Firebase
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-// Models
-import 'package:lingkung/models/productModel.dart';
 // Services
 import 'package:lingkung/services/productService.dart';
 // Utilities
@@ -367,6 +365,7 @@ class _AddProductState extends State<AddProduct> {
               "stock": int.parse(stock),
               "price": int.parse(price),
               "description": description,
+              "isCheck": false,
               "userId": _user.uid,
             });
             // _formKey.currentState.reset();

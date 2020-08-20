@@ -34,7 +34,7 @@ class _DetailProductState extends State<DetailProduct> {
       totalCount = userProvider.userModel.cartProduct.length;
     }
 
-    return loading
+    return loading || (userProvider.userModel.cartProduct == null)
         ? Loading()
         : Scaffold(
             key: _scaffoldStateKey,
@@ -161,7 +161,7 @@ class _DetailProductState extends State<DetailProduct> {
                         CustomText(
                             text: NumberFormat.currency(
                                     locale: 'id',
-                                    symbol: 'Rp ',
+                                    symbol: 'Rp',
                                     decimalDigits: 0)
                                 .format(widget.productModel.price),
                             size: 18,
@@ -300,7 +300,7 @@ class _DetailProductState extends State<DetailProduct> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       borderSide: BorderSide(color: yellow, width: 2.0),
-                      child: Icon(Icons.chat, color: yellow),
+                      child: Icon(Icons.sms, color: yellow),
                       onPressed: () {
                         // Navigator.push(
                         //     context,
@@ -312,7 +312,7 @@ class _DetailProductState extends State<DetailProduct> {
                   ),
                   SizedBox(width: 10.0),
                   Expanded(
-                    flex: 2,
+                    flex: 1,
                     child: OutlineButton(
                       color: white,
                       highlightColor: white,
@@ -320,36 +320,8 @@ class _DetailProductState extends State<DetailProduct> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       borderSide: BorderSide(color: green, width: 2.0),
-                      child: CustomText(
-                          text: 'Beli', color: green, weight: FontWeight.w700),
+                      child: Icon(Icons.add_shopping_cart, color: green),
                       onPressed: () async {
-                        _settingModalBottomSheet(context);
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 10.0),
-                  Expanded(
-                    flex: 2,
-                    child: RaisedButton(
-                      color: green,
-                      elevation: 0.0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.add,
-                            color: white,
-                            size: 15.0,
-                          ),
-                          CustomText(
-                              text: 'Keranjang',
-                              color: white,
-                              weight: FontWeight.w700),
-                        ],
-                      ),
-                      onPressed: () async {
-                        // cartBloc.addToCart(widget.productModel);
                         setState(() {
                           loading = true;
                         });
@@ -382,153 +354,342 @@ class _DetailProductState extends State<DetailProduct> {
                       },
                     ),
                   ),
+                  SizedBox(width: 10.0),
+                  Expanded(
+                    flex: 3,
+                    child: RaisedButton(
+                      color: green,
+                      elevation: 0.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: CustomText(
+                          text: 'Beli', color: white, weight: FontWeight.w700),
+                      onPressed: () async {
+                        // _settingModalBottomSheet(context);
+                        showModalBottomSheet(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20.0),
+                                    topRight: Radius.circular(20.0))),
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                height: 285.0,
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    InkWell(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Icon(Icons.close)),
+                                    SizedBox(height: 16.0),
+                                    Card(
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(
+                                            10.0, 10.0, 10.0, 15.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              width: 80.0,
+                                              height: 80.0,
+                                              decoration: BoxDecoration(
+                                                  color: white,
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          widget.productModel.image),
+                                                      fit: BoxFit.cover),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors.black12,
+                                                        offset:
+                                                            Offset(0.0, 0.0),
+                                                        blurRadius: 2.0),
+                                                  ]),
+                                            ),
+                                            SizedBox(
+                                              width: 15.0,
+                                            ),
+                                            Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                CustomText(
+                                                  text: NumberFormat.currency(
+                                                          locale: 'id',
+                                                          symbol: 'Rp',
+                                                          decimalDigits: 0)
+                                                      .format(widget
+                                                          .productModel.price),
+                                                  size: 16.0,
+                                                  weight: FontWeight.w600,
+                                                ),
+                                                SizedBox(height: 5.0),
+                                                Row(
+                                                  children: <Widget>[
+                                                    CustomText(
+                                                      text: 'Stok : ',
+                                                      color: Colors.red,
+                                                    ),
+                                                    CustomText(
+                                                      text: '10',
+                                                      color: Colors.red,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.0),
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Expanded(
+                                              child:
+                                                  CustomText(text: 'Jumlah')),
+                                          InkWell(
+                                              onTap: () {
+                                                if (_quantity != 1) {
+                                                  setState(() {
+                                                    _quantity -= 1;
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                  width: 25.0,
+                                                  height: 25.0,
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color:
+                                                              (_quantity != 1)
+                                                                  ? yellow
+                                                                  : grey,
+                                                          width: 2.0),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0)),
+                                                  child: Icon(Icons.remove,
+                                                      color: (_quantity != 1)
+                                                          ? yellow
+                                                          : grey,
+                                                      size: 14.0))),
+                                          SizedBox(width: 10.0),
+                                          CustomText(text: '$_quantity'),
+                                          SizedBox(width: 10.0),
+                                          InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  _quantity += 1;
+                                                });
+                                              },
+                                              child: Container(
+                                                  width: 25.0,
+                                                  height: 25.0,
+                                                  decoration: BoxDecoration(
+                                                      color: yellow,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0)),
+                                                  child: Icon(Icons.add,
+                                                      color: white,
+                                                      size: 14.0))),
+                                        ]),
+                                    SizedBox(height: 16.0),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: RaisedButton(
+                                        color: green,
+                                        elevation: 0.0,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: CustomText(
+                                            text: 'Beli Sekarang',
+                                            color: white,
+                                            weight: FontWeight.w700),
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CheckoutProduct(
+                                                        productModel:
+                                                            widget.productModel,
+                                                        userModel: userProvider
+                                                            .userById,
+                                                        quantity: _quantity),
+                                              ));
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            });
+                      },
+                    ),
+                  ),
                 ],
               ),
             ));
   }
 
-  void _settingModalBottomSheet(context) {
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0))),
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 285.0,
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(Icons.close)),
-                SizedBox(height: 16.0),
-                Card(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 15.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: 80.0,
-                          height: 80.0,
-                          decoration: BoxDecoration(
-                              color: white,
-                              image: DecorationImage(
-                                  image:
-                                      AssetImage("assets/images/noimage.png"),
-                                  fit: BoxFit.cover),
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black12,
-                                    offset: Offset(0.0, 0.0),
-                                    blurRadius: 2.0),
-                              ]),
-                        ),
-                        SizedBox(
-                          width: 15.0,
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            CustomText(
-                              text: 'Rp 20000',
-                              size: 16.0,
-                              weight: FontWeight.w600,
-                            ),
-                            SizedBox(height: 5.0),
-                            Row(
-                              children: <Widget>[
-                                CustomText(
-                                  text: 'Stok : ',
-                                  color: Colors.red,
-                                ),
-                                CustomText(
-                                  text: '10',
-                                  color: Colors.red,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.0),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(child: CustomText(text: 'Jumlah')),
-                      InkWell(
-                          onTap: () {
-                            if (_quantity != 1) {
-                              setState(() {
-                                _quantity -= 1;
-                              });
-                            }
-                          },
-                          child: Container(
-                              width: 25.0,
-                              height: 25.0,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: (_quantity != 1) ? yellow : grey,
-                                      width: 2.0),
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              child: Icon(Icons.remove,
-                                  color: (_quantity != 1) ? yellow : grey,
-                                  size: 14.0))),
-                      SizedBox(width: 10.0),
-                      CustomText(text: '$_quantity'),
-                      SizedBox(width: 10.0),
-                      InkWell(
-                          onTap: () {
-                            setState(() {
-                              _quantity += 1;
-                            });
-                          },
-                          child: Container(
-                              width: 25.0,
-                              height: 25.0,
-                              decoration: BoxDecoration(
-                                  color: yellow,
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              child:
-                                  Icon(Icons.add, color: white, size: 14.0))),
-                    ]),
-                SizedBox(height: 16.0),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: RaisedButton(
-                    color: green,
-                    elevation: 0.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: CustomText(
-                        text: 'Beli Sekarang',
-                        color: white,
-                        weight: FontWeight.w700),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CheckoutProduct(),
-                          ));
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
+//   void _settingModalBottomSheet(context) {
+//     showModalBottomSheet(
+//         shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.only(
+//                 topLeft: Radius.circular(20.0),
+//                 topRight: Radius.circular(20.0))),
+//         context: context,
+//         builder: (BuildContext context) {
+//           return Container(
+//             height: 285.0,
+//             padding: const EdgeInsets.all(16.0),
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: <Widget>[
+//                 InkWell(
+//                     onTap: () {
+//                       Navigator.pop(context);
+//                     },
+//                     child: Icon(Icons.close)),
+//                 SizedBox(height: 16.0),
+//                 Card(
+//                   child: Padding(
+//                     padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 15.0),
+//                     child: Row(
+//                       mainAxisSize: MainAxisSize.max,
+//                       crossAxisAlignment: CrossAxisAlignment.center,
+//                       children: <Widget>[
+//                         Container(
+//                           width: 80.0,
+//                           height: 80.0,
+//                           decoration: BoxDecoration(
+//                               color: white,
+//                               image: DecorationImage(
+//                                   image:
+//                                       AssetImage("assets/images/noimage.png"),
+//                                   fit: BoxFit.cover),
+//                               borderRadius: BorderRadius.circular(10.0),
+//                               boxShadow: [
+//                                 BoxShadow(
+//                                     color: Colors.black12,
+//                                     offset: Offset(0.0, 0.0),
+//                                     blurRadius: 2.0),
+//                               ]),
+//                         ),
+//                         SizedBox(
+//                           width: 15.0,
+//                         ),
+//                         Column(
+//                           mainAxisSize: MainAxisSize.max,
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: <Widget>[
+//                             CustomText(
+//                               text: 'Rp 20000',
+//                               size: 16.0,
+//                               weight: FontWeight.w600,
+//                             ),
+//                             SizedBox(height: 5.0),
+//                             Row(
+//                               children: <Widget>[
+//                                 CustomText(
+//                                   text: 'Stok : ',
+//                                   color: Colors.red,
+//                                 ),
+//                                 CustomText(
+//                                   text: '10',
+//                                   color: Colors.red,
+//                                 ),
+//                               ],
+//                             ),
+//                           ],
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(height: 10.0),
+//                 Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: <Widget>[
+//                       Expanded(child: CustomText(text: 'Jumlah')),
+//                       InkWell(
+//                           onTap: () {
+//                             if (_quantity != 1) {
+//                               setState(() {
+//                                 _quantity -= 1;
+//                               });
+//                             }
+//                           },
+//                           child: Container(
+//                               width: 25.0,
+//                               height: 25.0,
+//                               decoration: BoxDecoration(
+//                                   border: Border.all(
+//                                       color: (_quantity != 1) ? yellow : grey,
+//                                       width: 2.0),
+//                                   borderRadius: BorderRadius.circular(10.0)),
+//                               child: Icon(Icons.remove,
+//                                   color: (_quantity != 1) ? yellow : grey,
+//                                   size: 14.0))),
+//                       SizedBox(width: 10.0),
+//                       CustomText(text: '$_quantity'),
+//                       SizedBox(width: 10.0),
+//                       InkWell(
+//                           onTap: () {
+//                             setState(() {
+//                               _quantity += 1;
+//                             });
+//                           },
+//                           child: Container(
+//                               width: 25.0,
+//                               height: 25.0,
+//                               decoration: BoxDecoration(
+//                                   color: yellow,
+//                                   borderRadius: BorderRadius.circular(10.0)),
+//                               child:
+//                                   Icon(Icons.add, color: white, size: 14.0))),
+//                     ]),
+//                 SizedBox(height: 16.0),
+//                 Container(
+//                   width: MediaQuery.of(context).size.width,
+//                   child: RaisedButton(
+//                     color: green,
+//                     elevation: 0.0,
+//                     shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(10)),
+//                     child: CustomText(
+//                         text: 'Beli Sekarang',
+//                         color: white,
+//                         weight: FontWeight.w700),
+//                     onPressed: () {
+//                       Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                             builder: (context) => CheckoutProduct(productModel: widget.productModel, userModel: userProvider.userById),
+//                           ));
+//                     },
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           );
+//         });
+//   }
 }
