@@ -1,15 +1,16 @@
 import 'dart:async';
 
+import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lingkung/models/cartItemModel.dart';
-import 'package:lingkung/models/productModel.dart';
-import 'package:uuid/uuid.dart';
 // Firebase
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // Models
+import 'package:lingkung/models/addressModel.dart';
+import 'package:lingkung/models/cartItemModel.dart';
 import 'package:lingkung/models/orderModel.dart';
+import 'package:lingkung/models/productModel.dart';
 import 'package:lingkung/models/trashReceiveModel.dart';
 import 'package:lingkung/models/userModel.dart';
 // Services
@@ -40,8 +41,6 @@ class UserProvider with ChangeNotifier {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController name = TextEditingController();
-  TextEditingController phoNumber = TextEditingController();
-  TextEditingController address = TextEditingController();
 
   UserProvider.initialize() : _auth = FirebaseAuth.instance {
     _auth.onAuthStateChanged.listen(_onStateChanged);
@@ -75,10 +74,12 @@ class UserProvider with ChangeNotifier {
         _firestore.collection('users').document(result.user.uid).setData({
           'uid': result.user.uid,
           'name': name.text,
-          'phoneNumber': phoNumber.text,
+          'phoneNumber': int.parse(''),
           'email': email.text,
           'image': "",
-          'address': address.text,
+          'balance': int.parse(''),
+          'point': int.parse(''),
+          'weight': int.parse(''),
         });
       });
       return true;
@@ -113,7 +114,6 @@ class UserProvider with ChangeNotifier {
 
   void clearController() {
     name.text = "";
-    phoNumber.text = "";
     email.text = "";
     password.text = "";
   }
@@ -139,6 +139,41 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> addAddress(
+      {String addressLabel, String recipientsName, int phoNumber, String province, String city, String subDistrict, int posCode, String addressDetail}) async {
+    print("ADDRESS LABEL: ${addressLabel.toString()}");
+    print("RECIPIENTS NAME: ${recipientsName.toString()}");
+    print("ADDRESS DETAIL: ${recipientsName.toString()}");
+
+    try {
+      var uuid = Uuid();
+      String addressId = uuid.v4();
+      List addressList = _userModel.addressModel;
+      Map addressModel = {
+        "id": addressId,
+        "addressLabel": addressLabel,
+        "recipientsName": recipientsName,
+        "phoNumber": phoNumber,
+        "province": province,
+        "city": city,
+        "subDistrict": subDistrict,
+        "posCode": posCode,
+        "addressDetail": addressDetail,
+        "isCheck": false,
+      };
+
+      AddressModel address = AddressModel.fromMap(addressModel);
+      print("ADDRESS ARE: ${addressList.toString()}");
+      _userService.addAddress(userId: _user.uid, addressModel: address);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print("THE ERROR ${e.toString()}");
+      notifyListeners();
+      return false;
+    }
+  }
+
   Future<bool> addToCartProduct(
       {ProductModel productModel, int quantity}) async {
     print("THE PRODUCT IS: ${productModel.toString()}");
@@ -157,6 +192,7 @@ class UserProvider with ChangeNotifier {
         "quantity": quantity,
         "storeOwnerId": productModel.userId,
         "totalSaleProduct": productModel.price * quantity,
+        "isCheck": false,
       };
 
       CartItemModel item = CartItemModel.fromMap(cartItem);

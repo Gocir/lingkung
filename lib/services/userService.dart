@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingkung/models/cartItemModel.dart';
+import 'package:lingkung/models/addressModel.dart';
 import 'package:lingkung/models/userModel.dart';
 
 class UserServices {
@@ -33,6 +34,14 @@ class UserServices {
           .then((doc) {
         return UserModel.fromSnapshot(doc);
       });
+
+  void addAddress({String userId, AddressModel addressModel}) {
+    print("THE USER ID IS: $userId");
+    print("address are: ${addressModel.toString()}");
+    _firestore.collection(collection).document(userId).updateData({
+      "address": FieldValue.arrayUnion([addressModel.toMap()])
+    });
+  }
 
   void addToCartProduct({String userId, CartItemModel cartItem}) {
     print("THE USER ID IS: $userId");
