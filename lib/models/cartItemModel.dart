@@ -7,6 +7,7 @@ class CartItemModel {
   static const QUANTITY = "quantity";
   static const STORE_OWNER_ID = "storeOwnerId";
   static const TOTAL_SALE_PRODUCT = "totalSaleProduct";
+  static const IS_CHECK = "isCheck";
 
   String _id;
   String _productId;
@@ -16,6 +17,7 @@ class CartItemModel {
   int _quantity;
   String _storeOwnerId;
   int _totalSaleProduct;
+  bool _isCheck;
 
   //  getters
   String get id => _id;
@@ -26,8 +28,16 @@ class CartItemModel {
   int get quantity => _quantity;
   String get storeOwnerId => _storeOwnerId;
   int get totalSaleProduct => _totalSaleProduct;
+  bool get isCheck => _isCheck;
 
-  CartItemModel.fromMap(Map data){
+  set isCheck(bool value) {
+    if (value == null) {
+      throw new ArgumentError();
+    }
+    _isCheck = value;
+  }
+
+  CartItemModel.fromMap(Map data) {
     _id = data[ID];
     _productId = data[PRODUCT_ID];
     _image = data[IMAGE];
@@ -36,16 +46,18 @@ class CartItemModel {
     _quantity = data[QUANTITY];
     _storeOwnerId = data[STORE_OWNER_ID];
     _totalSaleProduct = data[TOTAL_SALE_PRODUCT];
+    _isCheck = data[IS_CHECK];
   }
 
   Map toMap() => {
-    ID: _id,
-    PRODUCT_ID: _productId,
-    IMAGE: _image,
-    NAME: _name,
-    PRICE: _price,
-    QUANTITY: _quantity,
-    STORE_OWNER_ID: _storeOwnerId,
-    TOTAL_SALE_PRODUCT: _totalSaleProduct,
-  };
+        ID: _id,
+        PRODUCT_ID: _productId,
+        IMAGE: _image,
+        NAME: _name,
+        PRICE: _price,
+        QUANTITY: _quantity,
+        STORE_OWNER_ID: _storeOwnerId,
+        TOTAL_SALE_PRODUCT: _totalSaleProduct,
+        IS_CHECK: _isCheck
+      };
 }

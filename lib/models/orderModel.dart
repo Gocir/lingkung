@@ -2,38 +2,45 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrderModel{
   static const ID = "id";
-  static const NOTE = "note";
-  static const CART = "cart";
   static const USER_ID = "userId";
+  static const STORE_OWNER_ID = "storeOwnerId";
+  static const ADDRESS = "address";
+  static const LIST_PRODUCT = "listProduct";
+  static const NOTE = "note";
   static const TOTAL = "total";
   static const STATUS = "status";
   static const CREATED_AT = "createdAt";
 
   String _id;
-  String _note;
   String _userId;
+  String _storeOwnerId;
+  String _note;
   int _total;
   String _status;
   int _createdAt;
 
 //  getters
   String get id => _id;
-  String get note => _note;
   String get userId => _userId;
-  String get status => _status;
+  String get storeOwnerId => _storeOwnerId;
+  String get note => _note;
   int get total => _total;
+  String get status => _status;
   int get createdAt => _createdAt;
 
-  // public variable
-  List cart;
+// public variable
+  List listProduct;
+  List address;
 
   OrderModel.fromSnapshot(DocumentSnapshot snapshot){
     _id = snapshot.data[ID];
+    _userId = snapshot.data[USER_ID];
+    _storeOwnerId = snapshot.data[STORE_OWNER_ID];
+    address = snapshot.data[ADDRESS];
+    listProduct = snapshot.data[LIST_PRODUCT];
     _note = snapshot.data[NOTE];
     _total = snapshot.data[TOTAL];
     _status = snapshot.data[STATUS];
-    _userId = snapshot.data[USER_ID];
     _createdAt = snapshot.data[CREATED_AT];
-    cart = snapshot.data[CART];
   }
 }

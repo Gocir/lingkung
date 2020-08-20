@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingkung/models/cartItemModel.dart';
+import 'package:lingkung/models/addressModel.dart';
 
 class UserModel {
   static const ID = "uid";
@@ -16,7 +17,6 @@ class UserModel {
   String _id;
   String _name;
   String _email;
-  String _address;
   String _image;
   int _phoNumber;
   int _balance;
@@ -26,6 +26,7 @@ class UserModel {
 
   //  public variable
   List<CartItemModel> cartProduct;
+  List<AddressModel> addressModel;
   int totalCartPrice;
 
   //  getters
@@ -33,7 +34,6 @@ class UserModel {
   String get name => _name;
   String get email => _email;
   String get image => _image;
-  String get address => _address;
   int get phoNumber => _phoNumber;
   int get balance => _balance;
   int get point => _point;
@@ -43,9 +43,11 @@ class UserModel {
     _id = snapshot.data[ID];
     _name = snapshot.data[NAME];
     _email = snapshot.data[EMAIL];
-    _address = snapshot.data[ADDRESS];
+    (snapshot.data[ADDRESS] != null)
+        ? addressModel = convertAddress(snapshot.data[ADDRESS])
+        : addressModel = [];
+    // addressModel = convertAddress(snapshot.data[CART_PRODUCT]);
     _image = snapshot.data[IMAGE];
-    // _image = List.from(snapshot.data[IMAGE]);
     _phoNumber = snapshot.data[PHONE_NUMBER];
     _balance = snapshot.data[BALANCE];
     _point = snapshot.data[POINT];
@@ -71,6 +73,14 @@ class UserModel {
     // print("THE TOTAL IS $total");
 
     return total;
+  }
+
+  List<AddressModel> convertAddress(List addressList) {
+    List<AddressModel> convertedAddress = [];
+    for (Map address in addressList) {
+      convertedAddress.add(AddressModel.fromMap(address));
+    }
+    return convertedAddress;
   }
 
   List<CartItemModel> convertCartItems(List cart) {
