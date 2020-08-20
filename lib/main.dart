@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:lingkung/providers/cartBloc.dart';
 import 'package:lingkung/providers/partnerProvider.dart';
 import 'package:lingkung/providers/productProvider.dart';
 import 'package:lingkung/providers/trashReceiveProvider.dart';
