@@ -8,6 +8,7 @@ class AddressModel {
   static const SUB_DISTRICT = "subDistrict";
   static const POS_CODE = "posCode";
   static const ADDRESS_DETAIL = "addressDetail";
+  static const IS_PRIMARY = "isPrimary";
   static const IS_CHECK = "isCheck";
 
   String _id;
@@ -19,6 +20,7 @@ class AddressModel {
   String _subDistrict;
   int _posCode;
   String _addressDetail;
+  bool _isPrimary;
   bool _isCheck;
 
   //  getters
@@ -31,7 +33,15 @@ class AddressModel {
   String get subDistrict => _subDistrict;
   int get posCode => _posCode;
   String get addressDetail => _addressDetail;
+  bool get isPrimary => _isPrimary;
   bool get isCheck => _isCheck;
+
+  set isPrimary(bool value) {
+    if (value == null) {
+      throw new ArgumentError();
+    }
+    _isPrimary = value;
+  }
 
   set isCheck(bool value) {
     if (value == null) {
@@ -50,6 +60,7 @@ class AddressModel {
     _subDistrict = data[SUB_DISTRICT];
     _posCode = data[POS_CODE];
     _addressDetail = data[ADDRESS_DETAIL];
+    _isPrimary = data[IS_PRIMARY];
     _isCheck = data[IS_CHECK];
   }
 

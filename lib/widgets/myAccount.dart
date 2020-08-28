@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+//  Providers
 import 'package:lingkung/providers/userProvider.dart';
+//  Screens
+import 'package:lingkung/screens/address/addressList.dart';
 import 'package:lingkung/screens/authenticate/authenticate.dart';
-import 'package:lingkung/screens/helps/contactUs.dart';
 import 'package:lingkung/screens/helps/helpFeatureList.dart';
 import 'package:lingkung/screens/privacyPolicy.dart';
 import 'package:lingkung/screens/termsOfService.dart';
 import 'package:lingkung/screens/updateProfile.dart';
+//  Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
-import 'package:provider/provider.dart';
 
 class MyAccount extends StatelessWidget {
   @override
@@ -73,7 +76,7 @@ class MyAccount extends StatelessWidget {
                     ListTile(
                       leading: Image.asset("assets/icons/contactColor.png"),
                       title: CustomText(
-                        text: 'Hubungi Kami',
+                        text: 'Alamat',
                         weight: FontWeight.w500,
                       ),
                       trailing: Icon(
@@ -85,7 +88,7 @@ class MyAccount extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ContactUs(),
+                              builder: (context) => AddressList(),
                             ));
                       },
                     ),
@@ -177,7 +180,7 @@ class MyAccount extends StatelessWidget {
               color: green,
               elevation: 2.0,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
+                  borderRadius: BorderRadius.circular(20)),
               child: Center(
                   child: CustomText(
                       text: 'KELUAR',

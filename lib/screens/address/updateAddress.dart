@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lingkung/models/addressModel.dart';
 import 'package:provider/provider.dart';
 //  Providers
 import 'package:lingkung/providers/userProvider.dart';
@@ -8,26 +9,65 @@ import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/loading.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 
-class Address extends StatefulWidget {
+class UpdateAddress extends StatefulWidget {
+  final AddressModel addressModel;
+  UpdateAddress({this.addressModel});
   @override
-  _AddressState createState() => _AddressState();
+  _UpdateAddressState createState() => _UpdateAddressState();
 }
 
-class _AddressState extends State<Address> {
+class _UpdateAddressState extends State<UpdateAddress> {
   final _scaffoldStateKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
 
-  String addressLabel = '';
-  String recipientsName = '';
-  String phoNumber = '';
-  String province = '';
-  String city = '';
-  String subDistrict = '';
-  String posCode = '';
-  String addressDetail = '';
+  TextEditingController addressLabelCtrl;
+  TextEditingController recipientsNameCtrl;
+  TextEditingController phoNumberCtrl;
+  TextEditingController provinceCtrl;
+  TextEditingController cityCtrl;
+  TextEditingController subDistrictCtrl;
+  TextEditingController posCodeCtrl;
+  TextEditingController addressDetailCtrl;
 
+  String addressLabel;
+  String recipientsName;
+  String phoNumber;
+  String province;
+  String city;
+  String subDistrict;
+  String posCode;
+  String addressDetail;
+  bool isPrimary;
   bool loading = false;
-  bool isPrimary = false;
+
+  @override
+  void initState() {
+    super.initState();
+    addressLabel = widget.addressModel.addressLabel;
+    recipientsName = widget.addressModel.recipientsName;
+    phoNumber = widget.addressModel.phoNumber.toString();
+    province = widget.addressModel.province;
+    city = widget.addressModel.city;
+    subDistrict = widget.addressModel.subDistrict;
+    posCode = widget.addressModel.posCode.toString();
+    addressDetail = widget.addressModel.addressDetail;
+    isPrimary = widget.addressModel.isPrimary;
+
+    addressLabelCtrl =
+        TextEditingController(text: widget.addressModel.addressLabel);
+    recipientsNameCtrl =
+        TextEditingController(text: widget.addressModel.recipientsName);
+    phoNumberCtrl =
+        TextEditingController(text: widget.addressModel.phoNumber.toString());
+    provinceCtrl = TextEditingController(text: widget.addressModel.province);
+    cityCtrl = TextEditingController(text: widget.addressModel.city);
+    subDistrictCtrl =
+        TextEditingController(text: widget.addressModel.subDistrict);
+    posCodeCtrl =
+        TextEditingController(text: widget.addressModel.posCode.toString());
+    addressDetailCtrl =
+        TextEditingController(text: widget.addressModel.addressDetail);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +80,7 @@ class _AddressState extends State<Address> {
               backgroundColor: blue,
               iconTheme: IconThemeData(color: white),
               title: CustomText(
-                text: 'Alamat Baru',
+                text: 'Perbarui Alamat',
                 color: white,
                 size: 18.0,
                 weight: FontWeight.w600,
@@ -54,6 +94,7 @@ class _AddressState extends State<Address> {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
+                          controller: addressLabelCtrl,
                           textCapitalization: TextCapitalization.words,
                           style: TextStyle(
                               fontFamily: "Poppins",
@@ -83,6 +124,7 @@ class _AddressState extends State<Address> {
                           validator: (value) =>
                               (value.isEmpty) ? 'Masukkan label alamat' : null),
                       TextFormField(
+                          controller: recipientsNameCtrl,
                           textCapitalization: TextCapitalization.words,
                           style: TextStyle(
                               fontFamily: "Poppins",
@@ -112,6 +154,7 @@ class _AddressState extends State<Address> {
                               ? 'Masukkan nama penerima'
                               : null),
                       TextFormField(
+                          controller: phoNumberCtrl,
                           keyboardType: TextInputType.phone,
                           style: TextStyle(
                               fontFamily: "Poppins",
@@ -148,6 +191,7 @@ class _AddressState extends State<Address> {
                                   ? 'Batas Maksimal Nomor Telepon adalah 11'
                                   : null),
                       TextFormField(
+                          controller: provinceCtrl,
                           textCapitalization: TextCapitalization.words,
                           style: TextStyle(
                               fontFamily: "Poppins",
@@ -177,6 +221,7 @@ class _AddressState extends State<Address> {
                               ? 'Masukkan nama provinsi'
                               : null),
                       TextFormField(
+                          controller: cityCtrl,
                           textCapitalization: TextCapitalization.words,
                           style: TextStyle(
                               fontFamily: "Poppins",
@@ -206,6 +251,7 @@ class _AddressState extends State<Address> {
                               ? 'Masukkan nama kota/kabupaten'
                               : null),
                       TextFormField(
+                          controller: subDistrictCtrl,
                           textCapitalization: TextCapitalization.words,
                           style: TextStyle(
                               fontFamily: "Poppins",
@@ -235,6 +281,7 @@ class _AddressState extends State<Address> {
                               ? 'Masukkan nama kecamatan'
                               : null),
                       TextFormField(
+                          controller: posCodeCtrl,
                           keyboardType: TextInputType.number,
                           style: TextStyle(
                               fontFamily: "Poppins",
@@ -266,6 +313,7 @@ class _AddressState extends State<Address> {
                                   ? 'Batas Maksimal karakter adalah 5'
                                   : null),
                       TextFormField(
+                          controller: addressDetailCtrl,
                           textCapitalization: TextCapitalization.words,
                           style: TextStyle(
                               fontFamily: "Poppins",
@@ -294,33 +342,31 @@ class _AddressState extends State<Address> {
                           validator: (value) => (value.isEmpty)
                               ? 'Masukkan detail alamat'
                               : null),
-                      SizedBox(height: 16.0),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          CustomText(
-                            text: 'Jadikan Sebagai Alamat Utama',
-                            weight: FontWeight.w600,
-                          ),
-                          CupertinoSwitch(
-                              value: isPrimary,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  isPrimary = value;
-                                });
-                              },
-                              activeColor: blue),
-                        ],
-                      ),
-                      SizedBox(height: 30.0),
+                      // Row(
+                      //   mainAxisSize: MainAxisSize.max,
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: <Widget>[
+                      //     CustomText(
+                      //       text: 'Jadikan Sebagai Alamat Utama',
+                      //     ),
+                      //     CupertinoSwitch(
+                      //         value: isPrimary,
+                      //         onChanged: (bool value) {
+                      //           setState(() {
+                      //             isPrimary = value;
+                      //           });
+                      //         },
+                      //         activeColor: blue),
+                      //   ],
+                      // ),
                       Container(
                           height: 45.0,
+                          margin: EdgeInsets.only(top: 30.0, bottom: 16.0),
                           child: RaisedButton(
                             color: green,
                             elevation: 2.0,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
+                                borderRadius: BorderRadius.circular(50)),
                             child: Center(
                               child: CustomText(
                                   text: 'SIMPAN',
