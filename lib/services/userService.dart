@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingkung/models/cartItemModel.dart';
 import 'package:lingkung/models/addressModel.dart';
+import 'package:lingkung/models/shippingModel.dart';
 import 'package:lingkung/models/userModel.dart';
 
 class UserServices {
@@ -40,6 +41,15 @@ class UserServices {
     print("address are: ${addressModel.toString()}");
     _firestore.collection(collection).document(userId).updateData({
       "address": FieldValue.arrayUnion([addressModel.toMap()])
+    });
+  }
+
+  void addShipping({String userId, ShippingModel shippingModel}) {
+    print("THE USER ID IS: $userId");
+    print("shipping are: ${shippingModel.toString()}");
+    _firestore.collection(collection).document(userId).updateData({
+      // "shipping": shippingModel.toMap()
+      "shipping": FieldValue.arrayUnion([shippingModel.toMap()])
     });
   }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:lingkung/models/shippingModel.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -140,10 +141,16 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<bool> addAddress(
-      {String addressLabel, String recipientsName, int phoNumber, String province, String city, String subDistrict, int posCode, String addressDetail}) async {
+      {String addressLabel,
+      String recipientsName,
+      int phoNumber,
+      String province,
+      String city,
+      String subDistrict,
+      int posCode,
+      String addressDetail}) async {
     print("ADDRESS LABEL: ${addressLabel.toString()}");
     print("RECIPIENTS NAME: ${recipientsName.toString()}");
-    print("ADDRESS DETAIL: ${recipientsName.toString()}");
 
     try {
       var uuid = Uuid();
@@ -159,6 +166,7 @@ class UserProvider with ChangeNotifier {
         "subDistrict": subDistrict,
         "posCode": posCode,
         "addressDetail": addressDetail,
+        "isPrimary": false,
         "isCheck": false,
       };
 
@@ -174,8 +182,34 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> addToCartProduct(
-      {ProductModel productModel, int quantity}) async {
+  Future<bool> addShipping({
+      String id, String name, bool isCheck
+      }) async {
+    print("ID: ${id.toString()}");
+
+    try {
+      var uuid = Uuid();
+      String shippingId = uuid.v4();
+      List shippingList = _userModel.shippingModel;
+      Map shippingModel = {
+        "id": shippingId,
+        "name": name,
+        "isCheck": isCheck
+      };
+
+      ShippingModel shipping = ShippingModel.fromMap(shippingModel);
+      print("ADDRESS ARE: ${shippingList.toString()}");
+      _userService.addShipping(userId: _user.uid, shippingModel: shipping);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print("THE ERROR ${e.toString()}");
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> addToCartProduct({ProductModel productModel, int quantity}) async {
     print("THE PRODUCT IS: ${productModel.toString()}");
     print("THE QUANTITY IS: ${quantity.toString()}");
 
@@ -206,6 +240,35 @@ class UserProvider with ChangeNotifier {
       return false;
     }
   }
+
+  // void increaseQuantity(int productId) {
+  //   //check if already in cart
+  //   cartItems.forEach((cart) {
+  //     if (cart.productId == productId) {
+  //       //already in cart, append qty
+  //       cart.quantity += 1;
+  //     }
+  //   });
+
+  //   //trigger listener
+  //   notifyListeners();
+  // }
+
+  // void decreaseQuantity(int productId) {
+  //   //check if already in cart
+  //   cartItems.forEach((cart) {
+  //     if (cart.productId == productId) {
+  //       //check if greater than 1, cannot be 0
+  //       if (cart.quantity > 1) {
+  //         //already in cart, append qty
+  //         cart.quantity -= 1;
+  //       }
+  //     }
+  //   });
+
+  //   //trigger listener
+  //   notifyListeners();
+  // }
 
   Future<bool> removeFromCart({CartItemModel cartItem}) async {
     print("THE PRODUCT IS: ${cartItem.toString()}");

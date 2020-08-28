@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingkung/models/cartItemModel.dart';
 import 'package:lingkung/models/addressModel.dart';
+import 'package:lingkung/models/shippingModel.dart';
 
 class UserModel {
   static const ID = "uid";
   static const NAME = "name";
   static const EMAIL = "email";
   static const ADDRESS = "address";
+  static const SHIPPING = "shipping";
   static const IMAGE = "image";
   static const PHONE_NUMBER = "phoneNumber";
   static const BALANCE = "balance";
@@ -27,6 +29,8 @@ class UserModel {
   //  public variable
   List<CartItemModel> cartProduct;
   List<AddressModel> addressModel;
+  List<ShippingModel> shippingModel;
+  // ShippingModel shippingModel;
   int totalCartPrice;
 
   //  getters
@@ -46,7 +50,12 @@ class UserModel {
     (snapshot.data[ADDRESS] != null)
         ? addressModel = convertAddress(snapshot.data[ADDRESS])
         : addressModel = [];
-    // addressModel = convertAddress(snapshot.data[CART_PRODUCT]);
+    (snapshot.data[SHIPPING] != null)
+        ? shippingModel = convertShipping(snapshot.data[SHIPPING])
+        : shippingModel = [];
+    // (snapshot.data[SHIPPING] != null)
+    //     ? shippingModel = ShippingModel.fromMap(snapshot.data[SHIPPING])
+    //     : shippingModel = snapshot.data[SHIPPING];
     _image = snapshot.data[IMAGE];
     _phoNumber = snapshot.data[PHONE_NUMBER];
     _balance = snapshot.data[BALANCE];
@@ -81,6 +90,14 @@ class UserModel {
       convertedAddress.add(AddressModel.fromMap(address));
     }
     return convertedAddress;
+  }
+  
+  List<ShippingModel> convertShipping(List shippingList) {
+    List<ShippingModel> convertedShipping = [];
+    for (Map shipping in shippingList) {
+      convertedShipping.add(ShippingModel.fromMap(shipping));
+    }
+    return convertedShipping;
   }
 
   List<CartItemModel> convertCartItems(List cart) {
