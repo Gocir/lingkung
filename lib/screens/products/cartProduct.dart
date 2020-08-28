@@ -49,8 +49,7 @@ class _CartProductState extends State<CartProduct> {
                           .userModel.cartProduct[index].storeOwnerId);
                       return Card(
                         child: Padding(
-                          padding: EdgeInsets.only(
-                              top: 16.0, right: 16.0, bottom: 16.0),
+                          padding: EdgeInsets.all(16.0),
                           child: Column(
                             children: <Widget>[
                               // Row(children: <Widget>[
@@ -281,31 +280,23 @@ class _CartProductState extends State<CartProduct> {
                           size: 16.0,
                           weight: FontWeight.w700),
                       onPressed: () {
-                        // List<CartItemModel> convertCartItems(List cart) {
-                        //   List<CartItemModel> convertedCart = [];
-                        //   for (Map cartItem in userProvider.userModel.cartProduct) {
-                        //     convertedCart.add(CartItemModel.fromMap(cartItem));
-                        //   }
-                        //   return convertedCart;
-                        // }
-                        // for (CartItemModel item in listProduct) {
-                        //   convertedCart.add(item.toMap());
-                        // }
                         List<CartItemModel> convertedCart = [];
-                        for (CartItemModel cartItem in userProvider.userModel.cartProduct) {
-                          if (cartItem.isCheck)
-                          print(cartItem.name);
-                          convertedCart.add(cartItem);
-                          print(convertedCart);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CheckoutProduct(
-                                  cartItemModel:
-                                      convertedCart,
-                                ),
-                              ));
+                        for (CartItemModel cartItem
+                            in userProvider.userModel.cartProduct) {
+                          if (cartItem.isCheck) {
+                            print(cartItem.name);
+                            convertedCart
+                                .add(CartItemModel.fromMap(cartItem.toMap()));
+                            print(convertedCart);
+                          }
                         }
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CheckoutProduct(
+                                cartItemModel: convertedCart,
+                              ),
+                            ));
                       },
                     ),
                   ),

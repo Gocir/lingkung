@@ -7,6 +7,7 @@ class OrderModel{
   static const ADDRESS = "address";
   static const LIST_PRODUCT = "listProduct";
   static const NOTE = "note";
+  static const SUB_TOTAL = "subTotal";
   static const TOTAL = "total";
   static const STATUS = "status";
   static const CREATED_AT = "createdAt";
@@ -15,6 +16,7 @@ class OrderModel{
   String _userId;
   String _storeOwnerId;
   String _note;
+  int _subTotal;
   int _total;
   String _status;
   int _createdAt;
@@ -24,6 +26,7 @@ class OrderModel{
   String get userId => _userId;
   String get storeOwnerId => _storeOwnerId;
   String get note => _note;
+  int get subTotal => _subTotal;
   int get total => _total;
   String get status => _status;
   int get createdAt => _createdAt;
@@ -39,6 +42,7 @@ class OrderModel{
     address = snapshot.data[ADDRESS];
     listProduct = snapshot.data[LIST_PRODUCT];
     _note = snapshot.data[NOTE];
+    _subTotal = snapshot.data[SUB_TOTAL];
     _total = snapshot.data[TOTAL];
     _status = snapshot.data[STATUS];
     _createdAt = snapshot.data[CREATED_AT];
