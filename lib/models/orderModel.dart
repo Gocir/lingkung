@@ -6,8 +6,10 @@ class OrderModel{
   static const STORE_OWNER_ID = "storeOwnerId";
   static const ADDRESS = "address";
   static const LIST_PRODUCT = "listProduct";
-  static const NOTE = "note";
+  static const SHIPPING = "shipping";
+  static const SHIPPING_PRICE = "shippingPrice";
   static const SUB_TOTAL = "subTotal";
+  static const NOTE = "note";
   static const TOTAL = "total";
   static const STATUS = "status";
   static const CREATED_AT = "createdAt";
@@ -15,8 +17,9 @@ class OrderModel{
   String _id;
   String _userId;
   String _storeOwnerId;
-  String _note;
+  int _shippingPrice;
   int _subTotal;
+  String _note;
   int _total;
   String _status;
   int _createdAt;
@@ -25,8 +28,9 @@ class OrderModel{
   String get id => _id;
   String get userId => _userId;
   String get storeOwnerId => _storeOwnerId;
-  String get note => _note;
+  int get shippingPrice => _shippingPrice;
   int get subTotal => _subTotal;
+  String get note => _note;
   int get total => _total;
   String get status => _status;
   int get createdAt => _createdAt;
@@ -34,6 +38,7 @@ class OrderModel{
 // public variable
   List listProduct;
   List address;
+  List shipping;
 
   OrderModel.fromSnapshot(DocumentSnapshot snapshot){
     _id = snapshot.data[ID];
@@ -41,8 +46,10 @@ class OrderModel{
     _storeOwnerId = snapshot.data[STORE_OWNER_ID];
     address = snapshot.data[ADDRESS];
     listProduct = snapshot.data[LIST_PRODUCT];
-    _note = snapshot.data[NOTE];
+    shipping = snapshot.data[SHIPPING];
+    _shippingPrice = snapshot.data[SHIPPING_PRICE];
     _subTotal = snapshot.data[SUB_TOTAL];
+    _note = snapshot.data[NOTE];
     _total = snapshot.data[TOTAL];
     _status = snapshot.data[STATUS];
     _createdAt = snapshot.data[CREATED_AT];

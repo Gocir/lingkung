@@ -19,7 +19,6 @@ class _CartProductState extends State<CartProduct> {
   final _scaffoldStateKey = GlobalKey<ScaffoldState>();
 
   bool loading = false;
-  int _quantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,8 @@ class _CartProductState extends State<CartProduct> {
 
     return loading
         ? Loading()
-        : Scaffold(
+        : Consumer<UserProvider>(
+          builder: (context, value, child) => Scaffold(
             key: _scaffoldStateKey,
             appBar: AppBar(
               backgroundColor: white,
@@ -45,42 +45,41 @@ class _CartProductState extends State<CartProduct> {
                     padding: const EdgeInsets.all(8.0),
                     itemCount: userProvider.userModel.cartProduct.length,
                     itemBuilder: (_, index) {
-                      userProvider.loadUserById(userProvider
-                          .userModel.cartProduct[index].storeOwnerId);
+                      CartItemModel cartItem = value.userModel.cartProduct[index];
+                      value.loadUserById(cartItem.storeOwnerId);
                       return Card(
                         child: Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Column(
                             children: <Widget>[
-                              // Row(children: <Widget>[
-                              //   Checkbox(
-                              //       value: _isChecked,
-                              //       onChanged: (bool value) {
-                              //         setState(() {
-                              //           _isChecked = value;
-                              //         });
-                              //       },
-                              //       activeColor: blue,
-                              //     ),
-                              //   Icon(Icons.store, color: grey),
-                              //   SizedBox(width: 5.0),
-                              //   CustomText(
-                              //       text: '${userProvider.userById?.name}',
-                              //       weight: FontWeight.w600)
-                              // ]),
-                              // Divider(height: 0,),
-                              // SizedBox(height: 16.0),
+                              Row(children: <Widget>[
+                                // Checkbox(
+                                //     value: _isChecked,
+                                //     onChanged: (bool value) {
+                                //       setState(() {
+                                //         _isChecked = value;
+                                //       });
+                                //     },
+                                //     activeColor: blue,
+                                //   ),
+                                Icon(Icons.store, color: grey),
+                                SizedBox(width: 5.0),
+                                CustomText(
+                                    text: '${value.userById?.name}',
+                                    weight: FontWeight.w600)
+                              ]),
+                              Divider(height: 0,),
+                              SizedBox(height: 16.0),
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Checkbox(
-                                    value: userProvider
-                                        .userModel.cartProduct[index].isCheck,
+                                    value: 
+                                        cartItem.isCheck,
                                     onChanged: (bool value) {
                                       setState(() {
-                                        userProvider.userModel
-                                            .cartProduct[index].isCheck = value;
+                                        cartItem.isCheck = value;
                                       });
                                     },
                                     activeColor: blue,
@@ -92,10 +91,8 @@ class _CartProductState extends State<CartProduct> {
                                         height: 70.0,
                                         decoration: BoxDecoration(
                                             image: DecorationImage(
-                                                image: NetworkImage(userProvider
-                                                    .userModel
-                                                    .cartProduct[index]
-                                                    .image),
+                                                image: NetworkImage(
+                                                    cartItem.image),
                                                 fit: BoxFit.cover),
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
@@ -121,7 +118,7 @@ class _CartProductState extends State<CartProduct> {
                                       children: <Widget>[
                                         CustomText(
                                           text:
-                                              "${userProvider.userModel.cartProduct[index].name}",
+                                              "${cartItem.name}",
                                           line: 2,
                                           over: TextOverflow.ellipsis,
                                         ),
@@ -131,8 +128,7 @@ class _CartProductState extends State<CartProduct> {
                                                   locale: 'id',
                                                   symbol: 'Rp ',
                                                   decimalDigits: 0)
-                                              .format(userProvider.userModel
-                                                  .cartProduct[index].price),
+                                              .format(cartItem.price),
                                           color: Colors.red,
                                           size: 16.0,
                                           weight: FontWeight.w600,
@@ -145,15 +141,12 @@ class _CartProductState extends State<CartProduct> {
                                             GestureDetector(
                                               onTap: () async {
                                                 loading = true;
-                                                bool value = await userProvider
-                                                    .removeFromCart(
-                                                        cartItem: userProvider
-                                                                .userModel
-                                                                .cartProduct[
-                                                            index]);
+                                                bool value = await 
+                                                    userProvider.removeFromCart(
+                                                        cartItem: 
+                                                                cartItem);
                                                 if (value) {
-                                                  userProvider
-                                                      .reloadUserModel();
+                                                  userProvider.reloadUserModel();
                                                   print("Removed from Cart!");
                                                   _scaffoldStateKey.currentState
                                                       .showSnackBar(SnackBar(
@@ -178,11 +171,7 @@ class _CartProductState extends State<CartProduct> {
                                             SizedBox(width: 10.0),
                                             InkWell(
                                                 onTap: () {
-                                                  if (_quantity != 1) {
-                                                    setState(() {
-                                                      _quantity -= 1;
-                                                    });
-                                                  }
+                                                    value.decreaseQuantity(cartItem.productId);
                                                 },
                                                 child: Container(
                                                     width: 25.0,
@@ -201,13 +190,11 @@ class _CartProductState extends State<CartProduct> {
                                             SizedBox(width: 10.0),
                                             CustomText(
                                                 text:
-                                                    '${userProvider.userModel.cartProduct[index].quantity}'),
+                                                    '${cartItem.quantity}'),
                                             SizedBox(width: 10.0),
                                             InkWell(
                                                 onTap: () {
-                                                  setState(() {
-                                                    _quantity += 1;
-                                                  });
+                                                  value.increaseQuantity(cartItem.productId);
                                                 },
                                                 child: Container(
                                                     width: 25.0,
@@ -260,7 +247,7 @@ class _CartProductState extends State<CartProduct> {
                         CustomText(
                           text: NumberFormat.currency(
                                   locale: 'id', symbol: 'Rp ', decimalDigits: 0)
-                              .format(userProvider.userModel.totalCartPrice),
+                              .format(value.userModel.totalCartPrice),
                           color: Colors.red,
                         ),
                       ],
@@ -282,7 +269,7 @@ class _CartProductState extends State<CartProduct> {
                       onPressed: () {
                         List<CartItemModel> convertedCart = [];
                         for (CartItemModel cartItem
-                            in userProvider.userModel.cartProduct) {
+                            in value.userModel.cartProduct) {
                           if (cartItem.isCheck) {
                             print(cartItem.name);
                             convertedCart
@@ -302,6 +289,6 @@ class _CartProductState extends State<CartProduct> {
                   ),
                 ],
               ),
-            ));
+            )));
   }
 }

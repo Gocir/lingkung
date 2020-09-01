@@ -3,6 +3,7 @@ import 'package:lingkung/models/cartItemModel.dart';
 import 'package:lingkung/models/addressModel.dart';
 import 'package:lingkung/models/shippingModel.dart';
 import 'package:lingkung/models/userModel.dart';
+import 'package:lingkung/screens/products/cartProduct.dart';
 
 class UserServices {
   String collection = "users";
@@ -58,6 +59,14 @@ class UserServices {
     print("cart items are: ${cartItem.toString()}");
     _firestore.collection(collection).document(userId).updateData({
       "cartProduct": FieldValue.arrayUnion([cartItem.toMap()])
+    });
+  }
+  
+  void updateCartProduct({String userId, CartItemModel cartItem}) {
+    print("THE USER ID IS: $userId");
+    print("cart items are: ${cartItem.toString()}");
+    _firestore.collection(collection).document(userId).updateData({
+      "cartProduct": FieldValue.arrayUnion([cartItem.quantity + 1])
     });
   }
 

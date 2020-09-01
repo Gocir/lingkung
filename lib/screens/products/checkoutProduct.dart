@@ -36,9 +36,9 @@ class _CheckoutProductState extends State<CheckoutProduct> {
 
   AddressModel addressModel;
   ShippingModel shippingModel;
-  int subTotalCartProduct;
+  int subTotalSingleProduct;
   int subTotalCart;
-  int subTotalCartList;
+  int subTotaListProduct;
   int shippingPrice;
   bool loading = false;
 
@@ -48,7 +48,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
 
     if (widget.cartItemModel == null) {
       setState(() {
-        subTotalCartProduct = widget.productModel.price * widget.quantity;
+        subTotalSingleProduct = widget.productModel.price * widget.quantity;
       });
     }
   }
@@ -149,184 +149,181 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                   ),
                   SizedBox(height: 5.0),
                   (widget.productModel == null)
-                      ? Container(
-                          height: (widget.cartItemModel.length > 1)
-                              ? 270.0 * 1.5
-                              : 270.0,
-                          child: ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              padding: const EdgeInsets.all(0),
-                              itemCount: widget.cartItemModel.length,
-                              itemBuilder: (_, index) {
-                                
-                                userProvider.loadUserById(widget.cartItemModel[index].storeOwnerId);
-                                subTotalCart = widget.cartItemModel[index].price * widget.cartItemModel[index].quantity;
-                                subTotalCartList = [subTotalCart].reduce((a, b) => a + b);
-                                print(subTotalCartList);
+                      ? ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          padding: const EdgeInsets.all(0),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: widget.cartItemModel.length,
+                          itemBuilder: (_, index) {
+                            
+                            userProvider.loadUserById(widget.cartItemModel[index].storeOwnerId);
+                            subTotalCart = widget.cartItemModel[index].price * widget.cartItemModel[index].quantity;
+                            subTotaListProduct = [subTotalCart].reduce((a, b) => a + b);
+                            print(subTotaListProduct);
 
-                                return Card(
-                                  margin: const EdgeInsets.only(bottom: 8.0),
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        16.0, 10.0, 16.0, 16.0),
-                                    child: Column(
+                            return Card(
+                              margin: const EdgeInsets.only(bottom: 8.0),
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(
+                                    16.0, 10.0, 16.0, 16.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    Row(children: <Widget>[
+                                      Icon(Icons.store, color: grey),
+                                      SizedBox(width: 5.0),
+                                      CustomText(
+                                          text: userProvider.userById.name,
+                                          weight: FontWeight.w600)
+                                    ]),
+                                    Divider(),
+                                    SizedBox(height: 10.0),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: <Widget>[
-                                        Row(children: <Widget>[
-                                          Icon(Icons.store, color: grey),
-                                          SizedBox(width: 5.0),
-                                          CustomText(
-                                              text: userProvider.userById.name,
-                                              weight: FontWeight.w600)
-                                        ]),
-                                        Divider(),
-                                        SizedBox(height: 10.0),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            CustomText(
-                                              text: widget.cartItemModel[index]
-                                                      .quantity
-                                                      .toString() +
-                                                  'x',
-                                              color: grey,
-                                              size: 18,
-                                              weight: FontWeight.w600,
-                                            ),
-                                            SizedBox(width: 16.0),
-                                            Container(
-                                              width: 60.0,
-                                              height: 60.0,
-                                              decoration: BoxDecoration(
-                                                  color: white,
-                                                  image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          "${widget.cartItemModel[index].image}"),
-                                                      fit: BoxFit.cover),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        color: Colors.black12,
-                                                        offset:
-                                                            Offset(0.0, 0.0),
-                                                        blurRadius: 2.0),
-                                                  ]),
-                                            ),
-                                            SizedBox(
-                                              width: 16.0,
-                                            ),
-                                            Expanded(
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  CustomText(
-                                                    text: widget.cartItemModel[index].name,
-                                                    line: 2,
-                                                    over: TextOverflow.ellipsis,
-                                                    weight: FontWeight.w500,
-                                                  ),
-                                                  SizedBox(height: 5.0),
-                                                  CustomText(
-                                                    text: NumberFormat.currency(
-                                                            locale: 'id',
-                                                            symbol: 'Rp',
-                                                            decimalDigits: 0)
-                                                        .format(widget
-                                                            .cartItemModel[index]
-                                                            .price),
-                                                    color: Colors.red,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
+                                        CustomText(
+                                          text: widget.cartItemModel[index]
+                                                  .quantity
+                                                  .toString() +
+                                              'x',
+                                          color: grey,
+                                          size: 18,
+                                          weight: FontWeight.w600,
                                         ),
-                                        SizedBox(height: 10.0),
-                                        Divider(),
-                                        SizedBox(height: 5.0),
-                                        Card(
-                                            margin: const EdgeInsets.all(0),
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                side: BorderSide(
-                                                    color: green, width: 1.0)),
-                                            child: (shippingModel == null)
-                                            ? ListTile(onTap: () {
-                                              _shippingModalBottomSheet(context);
-                                            },
-                                            dense: true,
-                                            title: CustomText(text: 'Jasa Pengiriman', weight: FontWeight.w600),
-                                            trailing: Icon(Icons.chevron_right))
-                                            :
-                                            ListTile(
-                                              onTap: () {
-                                                _shippingModalBottomSheet(context);
-                                              },
-                                              dense: true,
-                                              leading:
-                                                  Icon(Icons.local_shipping),
-                                              title: CustomText(
-                                                text: '${shippingModel.type} (${shippingModel.duration})',
-                                                weight: FontWeight.w600,
-                                              ),
-                                              subtitle: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: <Widget>[
-                                                        CustomText(
-                                                            text: shippingModel.name),
-                                                        CustomText(
-                                                            text: NumberFormat
-                                                                    .currency(
-                                                                        locale: 'id',
-                                                                        symbol: 'Rp',
-                                                                        decimalDigits: 0)
-                                                                .format(
-                                                                  (shippingModel.name == 'AnterAja' && shippingModel.type == 'Reguler') ? shippingPrice = 12000 :
-                                                                  (shippingModel.name == 'Si Cepat' && shippingModel.type == 'Reguler') ? shippingPrice = 15000 :
-                                                                  (shippingModel.name == 'Si Cepat' && shippingModel.type == 'BEST') ? shippingPrice = 20000 : shippingPrice = 34000
-                                                                  ), color: Colors.red)
-                                                      ],
-                                                    ),
-                                              trailing:
-                                                  Icon(Icons.chevron_right),
-                                            )),
-                                        SizedBox(height: 5.0),
-                                        Divider(),
-                                        SizedBox(height: 5.0),
-                                        ButtonBar(
+                                        SizedBox(width: 16.0),
+                                        Container(
+                                          width: 60.0,
+                                          height: 60.0,
+                                          decoration: BoxDecoration(
+                                              color: white,
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      "${widget.cartItemModel[index].image}"),
+                                                  fit: BoxFit.cover),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      10.0),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.black12,
+                                                    offset:
+                                                        Offset(0.0, 0.0),
+                                                    blurRadius: 2.0),
+                                              ]),
+                                        ),
+                                        SizedBox(
+                                          width: 16.0,
+                                        ),
+                                        Expanded(
+                                          child: Column(
                                             mainAxisSize: MainAxisSize.max,
-                                            alignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            buttonPadding: EdgeInsets.all(0),
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: <Widget>[
                                               CustomText(
-                                                text: 'Subtotal',
+                                                text: widget.cartItemModel[index].name,
+                                                line: 2,
+                                                over: TextOverflow.ellipsis,
                                                 weight: FontWeight.w500,
                                               ),
+                                              SizedBox(height: 5.0),
                                               CustomText(
                                                 text: NumberFormat.currency(
                                                         locale: 'id',
                                                         symbol: 'Rp',
                                                         decimalDigits: 0)
-                                                    .format((shippingPrice == null) ? subTotalCartList : subTotalCart + shippingPrice),
+                                                    .format(widget
+                                                        .cartItemModel[index]
+                                                        .price),
                                                 color: Colors.red,
-                                              )
-                                            ]),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
-                                  ),
-                                );
-                              }),
-                        )
+                                    SizedBox(height: 10.0),
+                                    Divider(),
+                                    SizedBox(height: 5.0),
+                                    Card(
+                                        margin: const EdgeInsets.all(0),
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            side: BorderSide(
+                                                color: green, width: 1.0)),
+                                        child: (shippingModel == null)
+                                        ? ListTile(onTap: () {
+                                          _shippingModalBottomSheet(context);
+                                        },
+                                        dense: true,
+                                        title: CustomText(text: 'Jasa Pengiriman', weight: FontWeight.w600),
+                                        trailing: Icon(Icons.chevron_right))
+                                        :
+                                        ListTile(
+                                          onTap: () {
+                                            _shippingModalBottomSheet(context);
+                                          },
+                                          dense: true,
+                                          leading:
+                                              Icon(Icons.local_shipping),
+                                          title: CustomText(
+                                            text: '${shippingModel.type} (${shippingModel.duration})',
+                                            weight: FontWeight.w600,
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    CustomText(
+                                                        text: shippingModel.name),
+                                                    CustomText(
+                                                        text: NumberFormat
+                                                                .currency(
+                                                                    locale: 'id',
+                                                                    symbol: 'Rp',
+                                                                    decimalDigits: 0)
+                                                            .format(
+                                                              (shippingModel.name == 'AnterAja' && shippingModel.type == 'Reguler') ? shippingPrice = 12000 :
+                                                              (shippingModel.name == 'Si Cepat' && shippingModel.type == 'Reguler') ? shippingPrice = 15000 :
+                                                              (shippingModel.name == 'Si Cepat' && shippingModel.type == 'BEST') ? shippingPrice = 20000 : shippingPrice = 34000
+                                                              ), color: Colors.red)
+                                                  ],
+                                                ),
+                                          trailing:
+                                              Icon(Icons.chevron_right),
+                                        )),
+                                    SizedBox(height: 5.0),
+                                    Divider(),
+                                    SizedBox(height: 5.0),
+                                    ButtonBar(
+                                        mainAxisSize: MainAxisSize.max,
+                                        alignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        buttonPadding: EdgeInsets.all(0),
+                                        children: <Widget>[
+                                          CustomText(
+                                            text: 'Subtotal untuk Produk',
+                                            weight: FontWeight.w500,
+                                          ),
+                                          CustomText(
+                                            text: NumberFormat.currency(
+                                                    locale: 'id',
+                                                    symbol: 'Rp',
+                                                    decimalDigits: 0)
+                                                .format(subTotalCart),
+                                            color: Colors.red,
+                                          )
+                                        ]),
+                                  ],
+                                ),
+                              ),
+                            );
+                          })
                       : Card(
                           margin: const EdgeInsets.all(0),
                           child: Padding(
@@ -460,7 +457,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                     buttonPadding: EdgeInsets.all(0),
                                     children: <Widget>[
                                       CustomText(
-                                        text: 'Subtotal',
+                                        text: 'Subtotal untuk Produk',
                                         weight: FontWeight.w500,
                                       ),
                                       CustomText(
@@ -468,7 +465,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                                 locale: 'id',
                                                 symbol: 'Rp',
                                                 decimalDigits: 0)
-                                            .format((shippingPrice == null) ? subTotalCartProduct : subTotalCartProduct + shippingPrice),
+                                            .format(subTotalSingleProduct),
                                         color: Colors.red,
                                       )
                                     ]),
@@ -522,7 +519,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                               .format(
                                 (widget.productModel == null) ?
                                   (shippingPrice == null) ? 0 : 0 + shippingPrice :
-                                  (shippingPrice == null) ? subTotalCartProduct : subTotalCartProduct + shippingPrice
+                                  (shippingPrice == null) ? subTotalSingleProduct : subTotalSingleProduct + shippingPrice
                                 ),
                           size: 16.0,
                           color: Colors.red,
@@ -852,7 +849,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
         context: context,
         builder: (BuildContext context) {
           return Container(
-            height: 100.0,
+            height: 125.0,
             padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -900,25 +897,23 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                           onPressed: () async {
                             var uuid = Uuid();
                             String id = uuid.v4();
+                            if (widget.productModel == null && widget.quantity == null) {
                             _orderService.createOrder(
                                 id: id,
                                 userId: userProvider.user.uid,
                                 address: (addressModel == null)
                                     ? userProvider.userModel.addressModel[0]
-                                    : userProvider.userModel.addressModel,
-                                listProduct: (widget.productModel == null)
-                                    ? widget.cartItemModel
-                                    : widget.productModel,
+                                    : addressModel,
+                                listProduct: widget.cartItemModel,
                                 note: "Some random description",
                                 shipping: shippingModel,
+                                shippingPrice: shippingPrice,
+                                subTotalProduct: (subTotalSingleProduct == null) ? subTotaListProduct : subTotalSingleProduct,
+                                total: (subTotalSingleProduct == null) ? subTotaListProduct : subTotalSingleProduct + shippingPrice,
                                 status: "waiting",
-                                subTotal: (subTotalCartProduct == null) ? subTotalCartList : subTotalCartProduct,
-                                total: (subTotalCartProduct == null) ? subTotalCartList : subTotalCartProduct
                                 );
-                            for (CartItemModel cartItem
-                                in widget.cartItemModel) {
-                              bool value = await userProvider.removeFromCart(
-                                  cartItem: cartItem);
+                            for (CartItemModel cartItem in widget.cartItemModel) {
+                              bool value = await userProvider.removeFromCart(cartItem: cartItem);
                               if (value) {
                                 userProvider.reloadUserModel();
                                 print("Item removed fromcart");
@@ -929,9 +924,28 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                 print("ITEM WAS NOT REMOVED");
                               }
                             }
-                            _scaffoldStateKey.currentState.showSnackBar(
-                                SnackBar(content: Text("Order created!")));
                             Navigator.pop(context);
+                            } else {
+                              _orderService.createOrder(
+                                id: id,
+                                userId: userProvider.user.uid,
+                                address: (addressModel == null)
+                                    ? userProvider.userModel.addressModel[0]
+                                    : addressModel,
+                                productModel: widget.productModel,
+                                quantity: widget.quantity,
+                                note: "Some random description",
+                                shipping: shippingModel,
+                                shippingPrice: shippingPrice,
+                                subTotalProduct: (subTotalSingleProduct == null) ? subTotaListProduct : subTotalSingleProduct,
+                                total: (subTotalSingleProduct == null) ? subTotaListProduct : subTotalSingleProduct + shippingPrice,
+                                status: "waiting",
+                                );
+                            Navigator.pop(context);
+                            }
+                            // _scaffoldStateKey.currentState.showSnackBar(
+                            //     SnackBar(content: Text("Order created!")));
+                            // Navigator.pop(context);
                           },
                         ),
                       ),

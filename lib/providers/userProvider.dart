@@ -29,11 +29,13 @@ class UserProvider with ChangeNotifier {
   OrderServices _orderService = OrderServices();
   UserModel _userModel;
   UserModel userById;
+  List<CartItemModel> _cartItems = List<CartItemModel>();
 
   // getter
   FirebaseUser get user => _user;
   UserModel get userModel => _userModel;
   Status get status => _status;
+  List<CartItemModel> get cartItems => _cartItems;
 
   // public variables
   List<OrderModel> orders = [];
@@ -182,9 +184,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> addShipping({
-      String id, String name, bool isCheck
-      }) async {
+  Future<bool> addShipping({String id, String name, bool isCheck}) async {
     print("ID: ${id.toString()}");
 
     try {
@@ -212,11 +212,14 @@ class UserProvider with ChangeNotifier {
   Future<bool> addToCartProduct({ProductModel productModel, int quantity}) async {
     print("THE PRODUCT IS: ${productModel.toString()}");
     print("THE QUANTITY IS: ${quantity.toString()}");
-
+    
     try {
+      bool isExist = false;
+
       var uuid = Uuid();
       String cartItemId = uuid.v4();
       List cart = _userModel.cartProduct;
+
       Map cartItem = {
         "id": cartItemId,
         "productId": productModel.id,
@@ -230,8 +233,21 @@ class UserProvider with ChangeNotifier {
       };
 
       CartItemModel item = CartItemModel.fromMap(cartItem);
-      print("CART ITEMS ARE: ${cart.toString()}");
-      _userService.addToCartProduct(userId: _user.uid, cartItem: item);
+      
+      //check if already in cart
+      cartItems.forEach((cart) {
+        if (cart.productId == productModel.id) {
+          //already in cart, append qty
+          // cart.quantity += 1;
+          _userService.updateCartProduct(userId: _user.uid, cartItem: item);
+          isExist = true;
+        }
+      });
+      
+      if (!isExist) {
+        print("CART ITEMS ARE: ${cart.toString()}");
+        _userService.addToCartProduct(userId: _user.uid, cartItem: item);
+      }
       notifyListeners();
       return true;
     } catch (e) {
@@ -241,30 +257,32 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  // void increaseQuantity(int productId) {
-  //   //check if already in cart
-  //   cartItems.forEach((cart) {
-  //     if (cart.productId == productId) {
-  //       //already in cart, append qty
-  //       cart.quantity += 1;
-  //     }
-  //   });
+  void increaseQuantity(String productId) {
+    //check if already in cart
+    cartItems.forEach((cart) {
+      if (cart.productId == productId) {
+        //already in cart, append qty
+        cart.quantity += 1;
+      }
+    });
+    //trigger listener
+    notifyListeners();
+  }
 
-  //   //trigger listener
-  //   notifyListeners();
-  // }
-
-  // void decreaseQuantity(int productId) {
-  //   //check if already in cart
-  //   cartItems.forEach((cart) {
-  //     if (cart.productId == productId) {
-  //       //check if greater than 1, cannot be 0
-  //       if (cart.quantity > 1) {
-  //         //already in cart, append qty
-  //         cart.quantity -= 1;
-  //       }
-  //     }
-  //   });
+  void decreaseQuantity(String productId) {
+    //check if already in cart
+    cartItems.forEach((cart) {
+      if (cart.productId == productId) {
+        //check if greater than 1, cannot be 0
+        if (cart.quantity > 1) {
+          //already in cart, append qty
+          cart.quantity -= 1;
+        }
+      }
+    });
+    //trigger listener
+    notifyListeners();
+  }
 
   //   //trigger listener
   //   notifyListeners();
