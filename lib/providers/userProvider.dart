@@ -26,7 +26,6 @@ class UserProvider with ChangeNotifier {
   Status _status = Status.Uninitialized;
   Firestore _firestore = Firestore.instance;
   UserServices _userService = UserServices();
-  OrderServices _orderService = OrderServices();
   UserModel _userModel;
   UserModel userById;
   List<CartItemModel> _cartItems = List<CartItemModel>();
@@ -36,9 +35,6 @@ class UserProvider with ChangeNotifier {
   UserModel get userModel => _userModel;
   Status get status => _status;
   List<CartItemModel> get cartItems => _cartItems;
-
-  // public variables
-  List<OrderModel> orders = [];
 
   final formkey = GlobalKey<FormState>();
   TextEditingController email = TextEditingController();
