@@ -300,11 +300,6 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  getOrders() async {
-    orders = await _orderService.getUserOrders(userId: _user.uid);
-    notifyListeners();
-  }
-
   // Future<bool> addToCarTrash({TrashReceiveModel trashReceiveModel}) async {
   //   print("THE PRODUCT IS: ${trashReceiveModel.toString()}");
 
