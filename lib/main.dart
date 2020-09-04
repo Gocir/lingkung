@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lingkung/providers/orderProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:lingkung/providers/partnerProvider.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: UserProvider.initialize()),
         ChangeNotifierProvider.value(value: ProductProvider.initialize()),
         ChangeNotifierProvider.value(value: PartnerProvider.initialize()),
-        ChangeNotifierProvider.value(value: TrashReceiveProvider.initialize())
+        ChangeNotifierProvider.value(value: TrashReceiveProvider.initialize()),
+        ChangeNotifierProvider.value(value: OrderProvider.initialize()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
