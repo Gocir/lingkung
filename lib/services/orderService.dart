@@ -64,10 +64,11 @@ class OrderServices {
         "isCheck": false,
       }];
       
+      storeOwnerUid = [productModel.userId];
       _firestore.collection(collection).document(id).setData({
         "id": id,
         "userId": userId,
-        "storeOwnerId": productModel.userId,
+        "storeOwnerId": storeOwnerUid,
         "address": convertedAddress,
         "listProduct": convertedProduct,
         "shipping": convertedShipping,
@@ -82,15 +83,44 @@ class OrderServices {
     print(id + " is saved!");
   }
 
-  Future<List<OrderModel>> getUserOrders({String userId}) async => _firestore
-          .collection(collection)
-          .where("userId", isEqualTo: userId)
-          .getDocuments()
-          .then((result) {
+   Future<List<OrderModel>> getOrder() async =>
+      _firestore.collection(collection).getDocuments().then((result) {
         List<OrderModel> orders = [];
         for (DocumentSnapshot order in result.documents) {
           orders.add(OrderModel.fromSnapshot(order));
         }
         return orders;
+      });
+
+  Future<OrderModel> getOrderById({String id}) => _firestore
+          .collection(collection)
+          .document(id.toString())
+          .get()
+          .then((doc) {
+        return OrderModel.fromSnapshot(doc);
+      });
+      
+  Future<List<OrderModel>> getUserOrders({String userId}) async => _firestore
+          .collection(collection)
+          .where("userId", isEqualTo: userId)
+          .getDocuments()
+          .then((result) {
+        List<OrderModel> userOrders = [];
+        for (DocumentSnapshot order in result.documents) {
+          userOrders.add(OrderModel.fromSnapshot(order));
+        }
+        return userOrders;
+      });
+  
+  Future<List<OrderModel>> getOrderByStatus({String status}) async => _firestore
+          .collection(collection)
+          .where("status", isEqualTo: status)
+          .getDocuments()
+          .then((result) {
+        List<OrderModel> orderByStatus = [];
+        for (DocumentSnapshot order in result.documents) {
+          orderByStatus.add(OrderModel.fromSnapshot(order));
+        }
+        return orderByStatus;
       });
 }
