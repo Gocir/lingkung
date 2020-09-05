@@ -100,9 +100,10 @@ class OrderServices {
         return OrderModel.fromSnapshot(doc);
       });
       
-  Future<List<OrderModel>> getUserOrders({String userId}) async => _firestore
+  Future<List<OrderModel>> getOrderByOwners({String userId, String status}) async => _firestore
           .collection(collection)
-          .where("userId", isEqualTo: userId)
+          .where("storeOwnerId", arrayContains: userId)
+          .where("status", isEqualTo: status)
           .getDocuments()
           .then((result) {
         List<OrderModel> userOrders = [];
@@ -112,8 +113,9 @@ class OrderServices {
         return userOrders;
       });
   
-  Future<List<OrderModel>> getOrderByStatus({String status}) async => _firestore
+  Future<List<OrderModel>> getUserOrderByStatus({String userId, String status}) async => _firestore
           .collection(collection)
+          .where("userId", isEqualTo: userId)
           .where("status", isEqualTo: status)
           .getDocuments()
           .then((result) {

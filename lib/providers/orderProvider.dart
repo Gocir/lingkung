@@ -4,13 +4,15 @@ import 'package:lingkung/services/orderService.dart';
 
 class OrderProvider with ChangeNotifier{
   OrderServices _orderService = OrderServices();
-  OrderModel _orderModel;
   List<OrderModel> orders = [];
-  List<OrderModel> orderByUser = [];
-  List<OrderModel> orderByStatus = [];
-
-  // Getter
-  OrderModel get orderModel => _orderModel;
+  List<OrderModel> salesOwnerNYP = [];
+  List<OrderModel> salesOwnerPacked = [];
+  List<OrderModel> salesOwnerSent = [];
+  List<OrderModel> salesOwnerFinish = [];
+  List<OrderModel> orderNYP = [];
+  List<OrderModel> orderPacked = [];
+  List<OrderModel> orderSent = [];
+  List<OrderModel> orderFinish = [];
 
   OrderProvider.initialize(){
     loadOrder();
@@ -21,19 +23,44 @@ class OrderProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  loadSingleOrder({String orderId}) async{
-    _orderModel = await _orderService.getOrderById(id: orderId);
+  loadOrderNYP(String userId) async {
+    orderNYP = await _orderService.getUserOrderByStatus(userId: userId, status: "Belum Bayar");
     notifyListeners();
   }
 
-  loadOrderByUser(String userId)async{
-    orderByUser = await _orderService.getUserOrders(userId: userId);
+  loadOrderPacked(String userId) async {
+    orderPacked = await _orderService.getUserOrderByStatus(userId: userId, status: "Dikemas");
+    notifyListeners();
+  }
+
+  loadOrderSent(String userId) async {
+    orderSent = await _orderService.getUserOrderByStatus(userId: userId, status: "Dikirim");
     notifyListeners();
   }
   
-  loadOrderByStatus(String status)async{
-    orderByStatus = await _orderService.getOrderByStatus(status: status);
+  loadOrderFinish(String userId) async {
+    orderFinish = await _orderService.getUserOrderByStatus(userId: userId, status: "Selesai");
     notifyListeners();
   }
-
+  
+  loadSalesOwnerNYP(String userId) async{
+    salesOwnerNYP = await _orderService.getOrderByOwners(userId: userId, status: "Belum Bayar");
+    notifyListeners();
+  }
+  
+  loadSalesOwnerPacked(String userId) async{
+    salesOwnerPacked = await _orderService.getOrderByOwners(userId: userId, status: "Dikemas");
+    notifyListeners();
+  }
+  
+  loadSalesOwnerSent(String userId) async{
+    salesOwnerSent = await _orderService.getOrderByOwners(userId: userId, status: "Dikirim");
+    notifyListeners();
+  }
+  
+  loadSalesOwnerFinish(String userId) async{
+    salesOwnerFinish = await _orderService.getOrderByOwners(userId: userId, status: "Selesai");
+    notifyListeners();
+  }
+  
 }
