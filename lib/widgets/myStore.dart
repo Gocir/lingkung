@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lingkung/screens/products/detailMyProduct.dart';
 import 'package:provider/provider.dart';
 // Providers
 import 'package:lingkung/providers/productProvider.dart';
@@ -8,6 +7,8 @@ import 'package:lingkung/providers/userProvider.dart';
 // Screens
 import 'package:lingkung/screens/products/addProduct.dart';
 import 'package:lingkung/screens/products/myProduct.dart';
+import 'package:lingkung/screens/products/salesProduct.dart';
+import 'package:lingkung/screens/products/detailMyProduct.dart';
 // Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
@@ -88,11 +89,11 @@ class MyStore extends StatelessWidget {
                       ),
                       dense: true,
                       onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => OrderProductList(),
-                        //     ));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SalesProductPage(),
+                            ));
                       },
                     ),
                   ],
