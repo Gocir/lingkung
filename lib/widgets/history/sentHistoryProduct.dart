@@ -14,14 +14,14 @@ class SentHistoryProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
     final orderProvider = Provider.of<OrderProvider>(context);
-    orderProvider.loadOrderByStatus("Dikirim");
-    return (orderProvider.orderByStatus.isNotEmpty)
+    orderProvider.loadOrderSent(userProvider.user.uid);
+    return (orderProvider.orderSent.isNotEmpty)
         ? ListView.builder(
             scrollDirection: Axis.vertical,
             padding: const EdgeInsets.all(8.0),
-            itemCount: orderProvider.orderByStatus.length,
+            itemCount: orderProvider.orderSent.length,
             itemBuilder: (_, index) {
-              OrderModel _order = orderProvider.orderByStatus[index];
+              OrderModel _order = orderProvider.orderSent[index];
               userProvider.loadUserById(_order.storeOwnerId[0]);
               return (_order.listProduct.length == 0)
                   ? Loading()
@@ -55,8 +55,11 @@ class SentHistoryProduct extends StatelessWidget {
                                         Icon(Icons.store, color: grey),
                                         SizedBox(width: 5.0),
                                         CustomText(
-                                            text:
-                                                '${userProvider.userById?.name}',
+                                            text: (userProvider
+                                                        .userById?.name !=
+                                                    null)
+                                                ? '${userProvider.userById?.name}'
+                                                : 'Loading ...',
                                             weight: FontWeight.w600)
                                       ]),
                                   Divider(),
