@@ -117,7 +117,7 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                 ),
                 Transform.translate(
-                  offset: Offset(180, -20.93),
+                  offset: Offset(150, -20.93),
                   child:
                       // Adobe XD layer: 'grass2' (shape)
                       Container(

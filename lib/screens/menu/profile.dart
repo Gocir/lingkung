@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 // Firebase
@@ -31,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
     final _children = <int, Widget>{
       0: CustomText(
           text: 'Akun Saya', color: _selectedIndexValue == 1 ? black : white),
@@ -62,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               Transform.translate(
-                offset: Offset(180, -20.93),
+                offset: Offset(150, -20.93),
                 child:
                     // Adobe XD layer: 'grass2' (shape)
                     Container(
@@ -86,42 +88,51 @@ class _ProfilePageState extends State<ProfilePage> {
                 margin: EdgeInsets.only(left: 16.0, top: 44.0, right: 16.0),
                 child: Row(
                   children: <Widget>[
-                    Flexible(
-                        flex: 1,
-                        child: Stack(children: <Widget>[
-                          Container(
-                            height: 70.0,
-                            width: 70.0,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: white,
-                            ),
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20.0),
-                                child: (user.userModel?.image.toString() != null)
-                                    ? Image.network("${user.userModel?.image.toString()}", scale: 1.0, fit: BoxFit.cover)
-                                    : Image.asset("assets/images/user.png", fit: BoxFit.cover)),
-                          ),
-                        ])),
+                    CachedNetworkImage(
+                      imageUrl: userProvider.userModel?.image.toString(),
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: 70.0,
+                        height: 70.0,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.cover),
+                          borderRadius: BorderRadius.circular(20.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0.0, 0.0),
+                                blurRadius: 3.0),
+                          ],
+                        ),
+                      ),
+                      placeholder: (context, url) => Center(child: SpinKitThreeBounce(color: black, size: 10.0)),
+                      errorWidget: (context, url, error) =>
+                          Image.asset("assets/images/userProvider.png"),
+                    ),
                     SizedBox(width: 16.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         CustomText(
-                          text: '${user.userModel?.name}',
+                          text: '${userProvider.userModel?.name}',
                           size: 20,
-                          weight: FontWeight.w700
+                          weight: FontWeight.w700,
+                          over: TextOverflow.fade,
                         ),
                         CustomText(
-                          text: '${user.userModel?.email}',
+                          text: '${userProvider.userModel?.email}',
                           size: 12,
-                          color: white
+                          color: white,
+                          over: TextOverflow.fade,
                         ),
-                        (user.userModel?.phoNumber != null) ? CustomText(
-                          text: '+62${user.userModel?.phoNumber}',
-                          size: 12,
-                          color: white
-                        ) : null
+                        (userProvider.userModel?.phoNumber != null)
+                            ? CustomText(
+                                text: '+62${userProvider.userModel?.phoNumber}',
+                                size: 12,
+                                color: white,
+                                over: TextOverflow.fade,
+                              )
+                            : null
                       ],
                     ),
                   ],
@@ -179,7 +190,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       Image.asset("assets/icons/balanceColor.png"),
                       CustomText(text: 'Saldo'),
                       CustomText(
-                        text: NumberFormat.compactCurrency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(user.userModel?.balance),
+                        text: NumberFormat.compactCurrency(
+                                locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                            .format(userProvider.userModel?.balance),
                         weight: FontWeight.w600,
                       )
                     ],
@@ -191,7 +204,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       Image.asset("assets/icons/pointColor.png"),
                       CustomText(text: 'Poin'),
                       CustomText(
-                        text: NumberFormat.compactCurrency(locale: 'id', symbol: '', decimalDigits: 0).format(user.userModel?.point),
+                        text: NumberFormat.compactCurrency(
+                                locale: 'id', symbol: '', decimalDigits: 0)
+                            .format(userProvider.userModel?.point),
                         weight: FontWeight.w600,
                       )
                     ],
@@ -203,7 +218,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       Image.asset("assets/icons/weightColor.png"),
                       CustomText(text: 'Sampah'),
                       CustomText(
-                        text: NumberFormat.compactCurrency(locale: 'id', symbol: '', decimalDigits: 0).format(user.userModel?.weight),
+                        text: NumberFormat.compactCurrency(
+                                locale: 'id', symbol: '', decimalDigits: 0)
+                            .format(userProvider.userModel?.weight),
                         weight: FontWeight.w600,
                       )
                     ],
