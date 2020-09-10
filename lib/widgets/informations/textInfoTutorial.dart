@@ -51,8 +51,11 @@ class _TextInfoTutoriaListState extends State<TextInfoTutoriaList> {
                                         offset: Offset(0.0, 0.0),
                                         blurRadius: 3.0)
                                   ])),
-                          placeholder: (context, url) =>
-                              Center(child: SpinKitThreeBounce(color: black, size: 10.0)),
+                          placeholder: (context, url) => Container(
+                            width: 110.0,
+                            height: 90.0,
+                            child: SpinKitThreeBounce(
+                              color: black, size: 10.0)),
                           errorWidget: (context, url, error) =>
                               Image.asset("assets/images/noimage.png"),
                         ),
