@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingkung/models/addressModel.dart';
-import 'package:lingkung/models/cartItemModel.dart';
+import 'package:lingkung/models/cartPoductModel.dart';
 import 'package:lingkung/models/shippingModel.dart';
 
 class OrderModel{
@@ -65,10 +65,10 @@ class OrderModel{
     _createdAt = snapshot.data[CREATED_AT];
   }
 
-  List<CartItemModel> convertListProducts(List product) {
-    List<CartItemModel> convertedProduct = [];
+  List<CartProductModel> convertListProducts(List product) {
+    List<CartProductModel> convertedProduct = [];
     for (Map productItem in product) {
-      convertedProduct.add(CartItemModel.fromMap(productItem));
+      convertedProduct.add(CartProductModel.fromMap(productItem));
     }
     return convertedProduct;
   }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lingkung/models/cartItemModel.dart';
+import 'package:lingkung/models/cartPoductModel.dart';
+import 'package:lingkung/models/cartTrashModel.dart';
 import 'package:lingkung/models/addressModel.dart';
 import 'package:lingkung/models/shippingModel.dart';
 
@@ -15,6 +16,7 @@ class UserModel {
   static const POINT = "point";
   static const WEIGHT = "weight";
   static const CART_PRODUCT = "cartProduct";
+  static const CART_TRASH = "cartTrash";
 
   String _id;
   String _name;
@@ -24,14 +26,15 @@ class UserModel {
   int _balance;
   int _point;
   int _weight;
-  int _priceSum = 0;
+  double _priceSum = 0;
 
   //  public variable
-  List<CartItemModel> cartProduct;
+  List<CartProductModel> cartProduct;
+  List<CarTrashModel> carTrash;
   List<AddressModel> addressModel;
   List<ShippingModel> shippingModel;
   // ShippingModel shippingModel;
-  int totalCartPrice;
+  int totalCartPriceTrash;
 
   //  getters
   String get id => _id;
@@ -62,25 +65,26 @@ class UserModel {
     _point = snapshot.data[POINT];
     _weight = snapshot.data[WEIGHT];
     (snapshot.data[CART_PRODUCT] != null)
-        ? cartProduct = convertCartItems(snapshot.data[CART_PRODUCT])
+        ? cartProduct = convertCartProducts(snapshot.data[CART_PRODUCT])
         : cartProduct = [];
-    totalCartPrice = snapshot.data[CART_PRODUCT] == null
+    (snapshot.data[CART_TRASH] != null)
+        ? carTrash = convertCarTrashs(snapshot.data[CART_TRASH])
+        : carTrash = [];
+    totalCartPriceTrash = snapshot.data[CART_TRASH] == null
         ? 0
-        : getTotalPrice(cart: snapshot.data[CART_PRODUCT]);
+        : getTotalPriceTrash(cart: snapshot.data[CART_TRASH]);
   }
 
-  int getTotalPrice({List cart}) {
+  int getTotalPriceTrash({List cart}) {
     if (cart == null) {
       return 0;
     }
-    for (Map cartItem in cart) {
-      _priceSum += cartItem["price"] * cartItem["quantity"];
+
+    for (Map carTrash in cart) {
+      _priceSum += carTrash["price"] * carTrash["weight"];
     }
 
-    int total = _priceSum;
-
-    // print("THE TOTAL IS $total");
-
+    int total = _priceSum.toInt();
     return total;
   }
 
@@ -100,10 +104,18 @@ class UserModel {
     return convertedShipping;
   }
 
-  List<CartItemModel> convertCartItems(List cart) {
-    List<CartItemModel> convertedCart = [];
-    for (Map cartItem in cart) {
-      convertedCart.add(CartItemModel.fromMap(cartItem));
+  List<CartProductModel> convertCartProducts(List cart) {
+    List<CartProductModel> convertedCart = [];
+    for (Map cartProduct in cart) {
+      convertedCart.add(CartProductModel.fromMap(cartProduct));
+    }
+    return convertedCart;
+  }
+  
+  List<CarTrashModel> convertCarTrashs(List cart) {
+    List<CarTrashModel> convertedCart = [];
+    for (Map carTrash in cart) {
+      convertedCart.add(CarTrashModel.fromMap(carTrash));
     }
     return convertedCart;
   }
