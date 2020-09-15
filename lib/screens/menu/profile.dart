@@ -220,7 +220,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       CustomText(
                         text: NumberFormat.compactCurrency(
                                 locale: 'id', symbol: '', decimalDigits: 0)
-                            .format(userProvider.userModel?.weight),
+                            .format(userProvider.userModel.weight.toInt()) + ' Kg',
                         weight: FontWeight.w600,
                       )
                     ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lingkung/models/cartItemModel.dart';
+import 'package:lingkung/models/cartPoductModel.dart';
 import 'package:lingkung/screens/products/checkoutProduct.dart';
 import 'package:provider/provider.dart';
 //  Providers
@@ -45,8 +45,8 @@ class _CartProductState extends State<CartProduct> {
                     padding: const EdgeInsets.all(8.0),
                     itemCount: userProvider.userModel.cartProduct.length,
                     itemBuilder: (_, index) {
-                      CartItemModel cartItem = value.userModel.cartProduct[index];
-                      value.loadUserById(cartItem.storeOwnerId);
+                      CartProductModel cartProduct = value.userModel.cartProduct[index];
+                      value.loadUserById(cartProduct.storeOwnerId);
                       return Card(
                         child: Padding(
                           padding: EdgeInsets.all(16.0),
@@ -76,10 +76,10 @@ class _CartProductState extends State<CartProduct> {
                                 children: <Widget>[
                                   Checkbox(
                                     value: 
-                                        cartItem.isCheck,
+                                        cartProduct.isCheck,
                                     onChanged: (bool value) {
                                       setState(() {
-                                        cartItem.isCheck = value;
+                                        cartProduct.isCheck = value;
                                       });
                                     },
                                     activeColor: blue,
@@ -92,7 +92,7 @@ class _CartProductState extends State<CartProduct> {
                                         decoration: BoxDecoration(
                                             image: DecorationImage(
                                                 image: NetworkImage(
-                                                    cartItem.image),
+                                                    cartProduct.image),
                                                 fit: BoxFit.cover),
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
@@ -118,7 +118,7 @@ class _CartProductState extends State<CartProduct> {
                                       children: <Widget>[
                                         CustomText(
                                           text:
-                                              "${cartItem.name}",
+                                              "${cartProduct.name}",
                                           line: 2,
                                           over: TextOverflow.ellipsis,
                                         ),
@@ -128,7 +128,7 @@ class _CartProductState extends State<CartProduct> {
                                                   locale: 'id',
                                                   symbol: 'Rp ',
                                                   decimalDigits: 0)
-                                              .format(cartItem.price),
+                                              .format(cartProduct.price),
                                           color: Colors.red,
                                           size: 16.0,
                                           weight: FontWeight.w600,
@@ -142,9 +142,8 @@ class _CartProductState extends State<CartProduct> {
                                               onTap: () async {
                                                 loading = true;
                                                 bool value = await 
-                                                    userProvider.removeFromCart(
-                                                        cartItem: 
-                                                                cartItem);
+                                                    userProvider.removeFromCartProduct(
+                                                        cartProduct: cartProduct);
                                                 if (value) {
                                                   userProvider.reloadUserModel();
                                                   print("Removed from Cart!");
@@ -171,7 +170,7 @@ class _CartProductState extends State<CartProduct> {
                                             SizedBox(width: 10.0),
                                             InkWell(
                                                 onTap: () {
-                                                    value.decreaseQuantity(cartItem.productId);
+                                                    
                                                 },
                                                 child: Container(
                                                     width: 25.0,
@@ -190,11 +189,11 @@ class _CartProductState extends State<CartProduct> {
                                             SizedBox(width: 10.0),
                                             CustomText(
                                                 text:
-                                                    '${cartItem.quantity}'),
+                                                    '${cartProduct.quantity}'),
                                             SizedBox(width: 10.0),
                                             InkWell(
                                                 onTap: () {
-                                                  value.increaseQuantity(cartItem.productId);
+                                                  
                                                 },
                                                 child: Container(
                                                     width: 25.0,
@@ -247,7 +246,7 @@ class _CartProductState extends State<CartProduct> {
                         CustomText(
                           text: NumberFormat.currency(
                                   locale: 'id', symbol: 'Rp ', decimalDigits: 0)
-                              .format(value.userModel.totalCartPrice),
+                              .format(0),
                           color: Colors.red,
                         ),
                       ],
@@ -267,13 +266,13 @@ class _CartProductState extends State<CartProduct> {
                           size: 16.0,
                           weight: FontWeight.w700),
                       onPressed: () {
-                        List<CartItemModel> convertedCart = [];
-                        for (CartItemModel cartItem
+                        List<CartProductModel> convertedCart = [];
+                        for (CartProductModel cartProduct
                             in value.userModel.cartProduct) {
-                          if (cartItem.isCheck) {
-                            print(cartItem.name);
+                          if (cartProduct.isCheck) {
+                            print(cartProduct.name);
                             convertedCart
-                                .add(CartItemModel.fromMap(cartItem.toMap()));
+                                .add(CartProductModel.fromMap(cartProduct.toMap()));
                             print(convertedCart);
                           }
                         }
@@ -281,7 +280,7 @@ class _CartProductState extends State<CartProduct> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => CheckoutProduct(
-                                cartItemModel: convertedCart,
+                                cartProductModel: convertedCart,
                               ),
                             ));
                       },

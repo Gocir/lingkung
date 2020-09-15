@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 //  Models
 import 'package:lingkung/models/addressModel.dart';
-import 'package:lingkung/models/cartItemModel.dart';
+import 'package:lingkung/models/cartPoductModel.dart';
 import 'package:lingkung/models/productModel.dart';
 import 'package:lingkung/models/shippingModel.dart';
 import 'package:lingkung/models/userModel.dart';
@@ -22,9 +22,9 @@ import 'package:lingkung/utilities/textStyle.dart';
 class CheckoutProduct extends StatefulWidget {
   final UserModel userModel;
   final ProductModel productModel;
-  final List<CartItemModel> cartItemModel;
+  final List<CartProductModel> cartProductModel;
   final int quantity;
-  CheckoutProduct({this.productModel, this.cartItemModel, this.userModel, this.quantity});
+  CheckoutProduct({this.productModel, this.cartProductModel, this.userModel, this.quantity});
 
   @override
   _CheckoutProductState createState() => _CheckoutProductState();
@@ -46,7 +46,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
   void initState() {
     super.initState();
 
-    if (widget.cartItemModel == null) {
+    if (widget.cartProductModel == null) {
       setState(() {
         subTotalSingleProduct = widget.productModel.price * widget.quantity;
       });
@@ -154,11 +154,11 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                           padding: const EdgeInsets.all(0),
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: widget.cartItemModel.length,
+                          itemCount: widget.cartProductModel.length,
                           itemBuilder: (_, index) {
                             
-                            userProvider.loadUserById(widget.cartItemModel[index].storeOwnerId);
-                            subTotalCart = widget.cartItemModel[index].price * widget.cartItemModel[index].quantity;
+                            userProvider.loadUserById(widget.cartProductModel[index].storeOwnerId);
+                            subTotalCart = widget.cartProductModel[index].price * widget.cartProductModel[index].quantity;
                             subTotaListProduct = [subTotalCart].reduce((a, b) => a + b);
                             print(subTotaListProduct);
 
@@ -184,7 +184,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                           CrossAxisAlignment.center,
                                       children: <Widget>[
                                         CustomText(
-                                          text: widget.cartItemModel[index]
+                                          text: widget.cartProductModel[index]
                                                   .quantity
                                                   .toString() +
                                               'x',
@@ -200,7 +200,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                               color: white,
                                               image: DecorationImage(
                                                   image: NetworkImage(
-                                                      "${widget.cartItemModel[index].image}"),
+                                                      "${widget.cartProductModel[index].image}"),
                                                   fit: BoxFit.cover),
                                               borderRadius:
                                                   BorderRadius.circular(
@@ -225,7 +225,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
                                               CustomText(
-                                                text: widget.cartItemModel[index].name,
+                                                text: widget.cartProductModel[index].name,
                                                 line: 2,
                                                 over: TextOverflow.ellipsis,
                                                 weight: FontWeight.w500,
@@ -237,7 +237,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                                         symbol: 'Rp',
                                                         decimalDigits: 0)
                                                     .format(widget
-                                                        .cartItemModel[index]
+                                                        .cartProductModel[index]
                                                         .price),
                                                 color: Colors.red,
                                               ),
@@ -716,7 +716,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                     itemBuilder: (_, index) {
                       (widget.productModel == null)
                           ? userProvider.loadUserById(
-                              widget.cartItemModel[index].storeOwnerId)
+                              widget.cartProductModel[index].storeOwnerId)
                           : userProvider
                               .loadUserById(widget.productModel.userId);
                       return Card(
@@ -904,7 +904,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                 address: (addressModel == null)
                                     ? userProvider.userModel.addressModel[0]
                                     : addressModel,
-                                listProduct: widget.cartItemModel,
+                                listProduct: widget.cartProductModel,
                                 note: "Some random description",
                                 shipping: shippingModel,
                                 shippingPrice: shippingPrice,
@@ -912,11 +912,11 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                 total: (subTotalSingleProduct == null) ? subTotaListProduct : subTotalSingleProduct + shippingPrice,
                                 status: "waiting",
                                 );
-                            for (CartItemModel cartItem in widget.cartItemModel) {
-                              bool value = await userProvider.removeFromCart(cartItem: cartItem);
+                            for (CartProductModel cartProduct in widget.cartProductModel) {
+                              bool value = await userProvider.removeFromCartProduct(cartProduct: cartProduct);
                               if (value) {
                                 userProvider.reloadUserModel();
-                                print("Item removed fromcart");
+                                print("Product removed fromcart");
                                 _scaffoldStateKey.currentState.showSnackBar(
                                     SnackBar(
                                         content: Text("Removed from Cart!")));

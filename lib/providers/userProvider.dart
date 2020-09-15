@@ -9,13 +9,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // Models
 import 'package:lingkung/models/addressModel.dart';
-import 'package:lingkung/models/cartItemModel.dart';
-import 'package:lingkung/models/orderModel.dart';
+import 'package:lingkung/models/cartPoductModel.dart';
+import 'package:lingkung/models/cartTrashModel.dart';
 import 'package:lingkung/models/productModel.dart';
 import 'package:lingkung/models/trashReceiveModel.dart';
 import 'package:lingkung/models/userModel.dart';
 // Services
-import 'package:lingkung/services/orderService.dart';
 import 'package:lingkung/services/userService.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
@@ -28,13 +27,15 @@ class UserProvider with ChangeNotifier {
   UserServices _userService = UserServices();
   UserModel _userModel;
   UserModel userById;
-  List<CartItemModel> _cartItems = List<CartItemModel>();
+  List<CartProductModel> _cartProducts = List<CartProductModel>();
+  List<CarTrashModel> _carTrash = List<CarTrashModel>();
 
   // getter
   FirebaseUser get user => _user;
   UserModel get userModel => _userModel;
   Status get status => _status;
-  List<CartItemModel> get cartItems => _cartItems;
+  List<CartProductModel> get cartProducts => _cartProducts;
+  List<CarTrashModel> get carTrashs => _carTrash;
 
   final formkey = GlobalKey<FormState>();
   TextEditingController email = TextEditingController();
@@ -138,6 +139,7 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /////////////////////////   ADDRESS   ////////////////////////
   Future<bool> addAddress(
       {String addressLabel,
       String recipientsName,
@@ -180,6 +182,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  /////////////////////////   SHIPPING   ////////////////////////
   Future<bool> addShipping({String id, String name, bool isCheck}) async {
     print("ID: ${id.toString()}");
 
@@ -205,6 +208,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  /////////////////////////   PRODUCT   ////////////////////////
   Future<bool> addToCartProduct({ProductModel productModel, int quantity}) async {
     print("THE PRODUCT IS: ${productModel.toString()}");
     print("THE QUANTITY IS: ${quantity.toString()}");
@@ -213,11 +217,11 @@ class UserProvider with ChangeNotifier {
       bool isExist = false;
 
       var uuid = Uuid();
-      String cartItemId = uuid.v4();
+      String cartProductId = uuid.v4();
       List cart = _userModel.cartProduct;
 
-      Map cartItem = {
-        "id": cartItemId,
+      Map cartProduct = {
+        "id": cartProductId,
         "productId": productModel.id,
         "image": productModel.image,
         "name": productModel.name,
@@ -228,21 +232,21 @@ class UserProvider with ChangeNotifier {
         "isCheck": false,
       };
 
-      CartItemModel item = CartItemModel.fromMap(cartItem);
+      CartProductModel item = CartProductModel.fromMap(cartProduct);
       
       //check if already in cart
-      cartItems.forEach((cart) {
+      cartProducts.forEach((cart) {
         if (cart.productId == productModel.id) {
           //already in cart, append qty
           // cart.quantity += 1;
-          _userService.updateCartProduct(userId: _user.uid, cartItem: item);
+          _userService.updateCartProduct(userId: _user.uid, cartProduct: item);
           isExist = true;
         }
       });
       
       if (!isExist) {
         print("CART ITEMS ARE: ${cart.toString()}");
-        _userService.addToCartProduct(userId: _user.uid, cartItem: item);
+        _userService.addToCartProduct(userId: _user.uid, cartProduct: item);
       }
       notifyListeners();
       return true;
@@ -253,42 +257,11 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  void increaseQuantity(String productId) {
-    //check if already in cart
-    cartItems.forEach((cart) {
-      if (cart.productId == productId) {
-        //already in cart, append qty
-        cart.quantity += 1;
-      }
-    });
-    //trigger listener
-    notifyListeners();
-  }
-
-  void decreaseQuantity(String productId) {
-    //check if already in cart
-    cartItems.forEach((cart) {
-      if (cart.productId == productId) {
-        //check if greater than 1, cannot be 0
-        if (cart.quantity > 1) {
-          //already in cart, append qty
-          cart.quantity -= 1;
-        }
-      }
-    });
-    //trigger listener
-    notifyListeners();
-  }
-
-  //   //trigger listener
-  //   notifyListeners();
-  // }
-
-  Future<bool> removeFromCart({CartItemModel cartItem}) async {
-    print("THE PRODUCT IS: ${cartItem.toString()}");
+  Future<bool> removeFromCartProduct({CartProductModel cartProduct}) async {
+    print("THE PRODUCT IS: ${cartProduct.toString()}");
 
     try {
-      _userService.removeFromCart(userId: _user.uid, cartItem: cartItem);
+      _userService.removeFromCartProduct(userId: _user.uid, cartProduct: cartProduct);
       return true;
     } catch (e) {
       print("THE ERROR ${e.toString()}");
@@ -296,28 +269,39 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  // Future<bool> addToCarTrash({TrashReceiveModel trashReceiveModel}) async {
-  //   print("THE PRODUCT IS: ${trashReceiveModel.toString()}");
+  /////////////////////////   TRASH   ////////////////////////
+  Future<bool> addToCarTrash({TrashReceiveModel trashReceiveModel}) async {
+    print("THE TRASH TYPE IS: ${trashReceiveModel.toString()}");
 
+    try {
+      var uuid = Uuid();
+      String carTrashId = uuid.v4();
+      double weight = 1;
+      List cart = _userModel.carTrash;
+      Map carTrash = {
+        "id": carTrashId,
+        "trashTypeId": trashReceiveModel.id,
+        "image": trashReceiveModel.image,
+        "name": trashReceiveModel.trashName,
+        "price": trashReceiveModel.price,
+        "weight": weight,
+        "partnerId": trashReceiveModel.partnerId,
+      };
+
+      CarTrashModel item = CarTrashModel.fromMap(carTrash);
+      print("CART ITEMS ARE: ${cart.toString()}");
+      _userService.addToCarTrash(userId: _user.uid, carTrash: item);
+
+      return true;
+    } catch (e) {
+      print("THE ERROR ${e.toString()}");
+      return false;
+    }
+  }
+
+  // Future<bool> updateCarTrash({Map<String, dynamic> values}) async {
   //   try {
-  //     var uuid = Uuid();
-  //     String cartItemId = uuid.v4();
-  //     List cart = _userModel.cart;
-  //     //bool itemExists = false;
-  //     Map cartItem = {
-  //       "id": cartItemId,
-  //       "trashId": trashReceiveModel.id,
-  //       "name": trashReceiveModel.trashName,
-  //       "price": trashReceiveModel.price,
-  //       "image": trashReceiveModel.image
-  //     };
-
-  //     CartItemModel item = CartItemModel.fromMap(cartItem);
-  //     //  if(!itemExists){
-  //     print("CART ITEMS ARE: ${cart.toString()}");
-  //     _userService.addToCarTrash(userId: _user.uid, cartItem: item);
-  //     //  }
-
+  //     _userService.updateCarTrash(userId: _user.uid, values: values);
   //     return true;
   //   } catch (e) {
   //     print("THE ERROR ${e.toString()}");
@@ -325,4 +309,15 @@ class UserProvider with ChangeNotifier {
   //   }
   // }
 
+  Future<bool> removeFromCarTrash({CarTrashModel carTrash}) async {
+    print("THE PRODUCT IS: ${carTrash.toString()}");
+
+    try {
+      _userService.removeFromCarTrash(userId: _user.uid, carTrash: carTrash);
+      return true;
+    } catch (e) {
+      print("THE ERROR ${e.toString()}");
+      return false;
+    }
+  }
 }

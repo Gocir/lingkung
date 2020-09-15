@@ -96,8 +96,8 @@ class _CartProductLisTileState extends State<CartProductLisTile> {
                                 onTap: () async {
                                   loading = true;
                                   bool value =
-                                      await userProvider.removeFromCart(
-                                          cartItem: userProvider
+                                      await userProvider.removeFromCartProduct(
+                                          cartProduct: userProvider
                                               .userModel.cartProduct[index]);
                                   if (value) {
                                     userProvider.reloadUserModel();

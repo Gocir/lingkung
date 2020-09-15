@@ -1,6 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lingkung/providers/userProvider.dart';
+import 'package:lingkung/screens/transporTrash/checkoutTrash.dart';
+import 'package:provider/provider.dart';
 import 'package:lingkung/models/partnerModel.dart';
-import 'package:lingkung/screens/transporTrash/orderTrash.dart';
+import 'package:lingkung/models/trashReceiveModel.dart';
+import 'package:lingkung/providers/trashReceiveProvider.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 import 'package:lingkung/widgets/trashReceiveLisTile.dart';
@@ -16,23 +22,29 @@ class TrashBankDetail extends StatefulWidget {
 class _TrashBankDetailState extends State<TrashBankDetail> {
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final trashReceiveProvider = Provider.of<TrashReceiveProvider>(context);
+    trashReceiveProvider.loadTrashReceiveByPartner(widget.partner.id);
     return Scaffold(
         body: CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
           pinned: true,
           floating: true,
-          backgroundColor: blue,
+          iconTheme: IconThemeData(color: black),
+          backgroundColor: white,
           expandedHeight: 180.0,
           flexibleSpace: FlexibleSpaceBar(
-            // title: CustomText(
-            //   text: 'BS. ${widget.partner.name}',
-            //   size: 20.0,
-            //   weight: FontWeight.w600,
-            // ),
-            background: Image.network(
-              "${widget.partner.image}",
-              fit: BoxFit.fill,
+            background: CachedNetworkImage(
+              imageUrl: widget.partner.image.toString(),
+              imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover))),
+              placeholder: (context, url) => Center(
+                  child: SpinKitThreeBounce(color: black, size: 10.0)),
+              errorWidget: (context, url, error) =>
+                  Image.asset("assets/images/noimage.png"),
             ),
           ),
         ),
@@ -51,11 +63,12 @@ class _TrashBankDetailState extends State<TrashBankDetail> {
                 SizedBox(height: 20.0),
                 Row(
                   children: <Widget>[
-                    Container(child: Icon(Icons.location_on, color: yellow)),
+                    Container(
+                        child: Icon(Icons.location_on, color: Colors.red)),
                     SizedBox(width: 5.0),
                     Expanded(
                       child: CustomText(
-                        text: '${widget.partner.address}',
+                        text: widget.partner.address,
                         line: 4,
                         size: 12,
                       ),
@@ -74,15 +87,33 @@ class _TrashBankDetailState extends State<TrashBankDetail> {
                     size: 16,
                     weight: FontWeight.w600),
                 SizedBox(height: 10.0),
-                TrashReceiveLisTile(partner: widget.partner),
-                SizedBox(height: 30.0),
+                (trashReceiveProvider.trashReceiveByPartner.isNotEmpty)
+                    ? Expanded(
+                        child: ListView.builder(
+                            padding: const EdgeInsets.all(0.0),
+                            scrollDirection: Axis.vertical,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: trashReceiveProvider
+                                .trashReceiveByPartner.length,
+                            itemBuilder: (_, index) {
+                              TrashReceiveModel trashReceiveModel =
+                                  trashReceiveProvider.trashReceiveByPartner[index];
+                              return TrashReceiveLisTile(trashReceiveModel: trashReceiveModel);
+                            }),
+                      )
+                    : Center(
+                        child: CustomText(
+                            text: 'Belum Ada Pilihan Jenis Sampah',
+                            size: 16.0,
+                            weight: FontWeight.w600)),
                 Container(
-                  height: 48.0,
+                  height: 55.0,
+                  padding: EdgeInsets.only(top: 10.0),
                   child: RaisedButton(
-                    color: green,
+                    color: (userProvider.userModel.carTrash.isEmpty) ? grey : green,
                     elevation: 2.0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                        borderRadius: BorderRadius.circular(10)),
                     child: Center(
                       child: CustomText(
                           text: 'LANJUT',
@@ -90,11 +121,11 @@ class _TrashBankDetailState extends State<TrashBankDetail> {
                           color: white,
                           weight: FontWeight.w700),
                     ),
-                    onPressed: () {
+                    onPressed: (userProvider.userModel.carTrash.isEmpty) ? null : () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => OrderTrash(),
+                            builder: (context) => CheckouTrash(partnerModel: widget.partner),
                           ));
                     },
                   ),

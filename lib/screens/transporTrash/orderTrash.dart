@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
-// Widget
-import 'package:lingkung/widgets/orderCard.dart';
+import 'package:lingkung/models/trashReceiveModel.dart';
 
 class OrderTrash extends StatefulWidget {
+  final List<TrashReceiveModel> trashReceiveModel;
+  OrderTrash({this.trashReceiveModel});
   @override
   _OrderTrashState createState() => _OrderTrashState();
 }
@@ -25,9 +25,9 @@ class _OrderTrashState extends State<OrderTrash> {
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         scrollDirection: Axis.vertical,
         children: <Widget>[
-          OrderCard(),
-          OrderCard(),
-          OrderCard(),
+          // OrderCard(),
+          // OrderCard(),
+          // OrderCard(),
         ],
       ),
       bottomNavigationBar: _buildTotalContainer(),

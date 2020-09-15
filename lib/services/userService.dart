@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lingkung/models/cartItemModel.dart';
+import 'package:lingkung/models/cartPoductModel.dart';
+import 'package:lingkung/models/cartTrashModel.dart';
 import 'package:lingkung/models/addressModel.dart';
 import 'package:lingkung/models/shippingModel.dart';
 import 'package:lingkung/models/userModel.dart';
-import 'package:lingkung/screens/products/cartProduct.dart';
 
 class UserServices {
   String collection = "users";
@@ -54,35 +54,47 @@ class UserServices {
     });
   }
 
-  void addToCartProduct({String userId, CartItemModel cartItem}) {
+  void addToCartProduct({String userId, CartProductModel cartProduct}) {
     print("THE USER ID IS: $userId");
-    print("cart items are: ${cartItem.toString()}");
+    print("cart items are: ${cartProduct.toString()}");
     _firestore.collection(collection).document(userId).updateData({
-      "cartProduct": FieldValue.arrayUnion([cartItem.toMap()])
+      "cartProduct": FieldValue.arrayUnion([cartProduct.toMap()])
     });
   }
   
-  void updateCartProduct({String userId, CartItemModel cartItem}) {
+  void updateCartProduct({String userId, CartProductModel cartProduct}) {
     print("THE USER ID IS: $userId");
-    print("cart items are: ${cartItem.toString()}");
+    print("cart items are: ${cartProduct.toString()}");
     _firestore.collection(collection).document(userId).updateData({
-      "cartProduct": FieldValue.arrayUnion([cartItem.quantity + 1])
+      "cartProduct": FieldValue.arrayUnion([cartProduct.quantity + 1])
     });
   }
 
-  void removeFromCart({String userId, CartItemModel cartItem}) {
-    print("THE USER ID IS: $userId");
-    print("cart items are: ${cartItem.toString()}");
+  void removeFromCartProduct({String userId, CartProductModel cartProduct}) {
+        print("THE USER ID IS: $userId");
+    print("cart items are: ${cartProduct.toString()}");
     _firestore.collection(collection).document(userId).updateData({
-      "cartProduct": FieldValue.arrayRemove([cartItem.toMap()])
+      "cartProduct": FieldValue.arrayRemove([cartProduct.toMap()])
     });
   }
 
-  // void addToCarTrash({String userId, CartItemModel cartItem}) {
-  //   print("THE USER ID IS: $userId");
-  //   print("cart items are: ${cartItem.toString()}");
-  //   _firestore.collection(collection).document(userId).updateData({
-  //     "carTrash": FieldValue.arrayUnion([cartItem.toMap()])
-  //   });
-  // }
+  void addToCarTrash({String userId, CarTrashModel carTrash}) {
+    print("THE USER ID IS: $userId");
+    print("cart items are: ${carTrash.toString()}");
+    _firestore.collection(collection).document(userId).updateData({
+      "cartTrash": FieldValue.arrayUnion([carTrash.toMap()])
+    });
+  }
+
+  void updateCarTrash({String userId, Map<String, dynamic> values}) {
+    _firestore.collection(collection).document(userId).updateData(values);
+  }
+
+  void removeFromCarTrash({String userId, CarTrashModel carTrash}) {
+    print("THE USER ID IS: $userId");
+    print("cart items are: ${carTrash.toString()}");
+    _firestore.collection(collection).document(userId).updateData({
+      "cartTrash": FieldValue.arrayRemove([carTrash.toMap()])
+    });
+  }
 }

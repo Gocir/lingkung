@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingkung/models/addressModel.dart';
-import 'package:lingkung/models/cartItemModel.dart';
+import 'package:lingkung/models/cartPoductModel.dart';
 import 'package:lingkung/models/orderModel.dart';
 import 'package:lingkung/models/productModel.dart';
 import 'package:lingkung/models/shippingModel.dart';
@@ -19,7 +19,7 @@ class OrderServices {
       String note,
       ProductModel productModel,
       int quantity,
-      List<CartItemModel> listProduct,
+      List<CartProductModel> listProduct,
       int subTotalProduct,
       int total,
       String status,
@@ -30,9 +30,9 @@ class OrderServices {
     List<String> storeOwnerUid = [];
       
     if (listProduct != null) {
-      for (CartItemModel cartItem in listProduct) {
-        convertedCart.add(cartItem.toMap());
-        storeOwnerUid.add(cartItem.storeOwnerId);
+      for (CartProductModel cartProduct in listProduct) {
+        convertedCart.add(cartProduct.toMap());
+        storeOwnerUid.add(cartProduct.storeOwnerId);
       }
 
       _firestore.collection(collection).document(id).setData({
@@ -51,9 +51,9 @@ class OrderServices {
       });
     } else {
       var uuid = Uuid();
-      String cartItemId = uuid.v4();
+      String cartProductId = uuid.v4();
       List<Map> convertedProduct = [{
-        "id": cartItemId,
+        "id": cartProductId,
         "productId": productModel.id,
         "image": productModel.image,
         "name": productModel.name,
