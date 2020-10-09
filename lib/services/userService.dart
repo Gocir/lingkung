@@ -78,7 +78,7 @@ class UserServices {
     });
   }
 
-  void addToCarTrash({String userId, CarTrashModel carTrash}) {
+  void addToCarTrash({String userId, CartTrashModel carTrash}) {
     print("THE USER ID IS: $userId");
     print("cart items are: ${carTrash.toString()}");
     _firestore.collection(collection).document(userId).updateData({
@@ -90,7 +90,7 @@ class UserServices {
     _firestore.collection(collection).document(userId).updateData(values);
   }
 
-  void removeFromCarTrash({String userId, CarTrashModel carTrash}) {
+  void removeFromCarTrash({String userId, CartTrashModel carTrash}) {
     print("THE USER ID IS: $userId");
     print("cart items are: ${carTrash.toString()}");
     _firestore.collection(collection).document(userId).updateData({

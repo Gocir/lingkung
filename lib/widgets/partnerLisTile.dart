@@ -86,7 +86,7 @@ class PartnerLisTile extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               CustomText(
-                                text: "BS. ${partnerModel.name}",
+                                text: "BS. ${partnerModel.businessName}",
                                 size: 16,
                                 line: 2,
                                 over: TextOverflow.fade,
@@ -94,7 +94,7 @@ class PartnerLisTile extends StatelessWidget {
                               ),
                               SizedBox(height: 5.0),
                               CustomText(
-                                  text: partnerModel.address,
+                                  text: '${partnerModel.addressModel.addressDetail}',
                                   size: 10,
                                   color: grey,
                                   weight: FontWeight.w500)

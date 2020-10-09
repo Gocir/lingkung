@@ -2,24 +2,26 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingkung/models/cartTrashModel.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/services/trashReceiveService.dart';
-import 'package:lingkung/services/userService.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 import 'package:provider/provider.dart';
 
 class CarTrashCard extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffold;
-  final CarTrashModel carTrashModel;
-  CarTrashCard({this.carTrashModel, this.scaffold});
+  final CartTrashModel carTrashModel;
+  final int index;
+  CarTrashCard({this.carTrashModel, this.scaffold, this.index});
   _CarTrashCardState createState() => _CarTrashCardState();
 }
 
 class _CarTrashCardState extends State<CarTrashCard> {
   TrashReceiveServices _trashReceiveService = TrashReceiveServices();
-  UserServices _userService = UserServices();
+  String collection = "users";
+  Firestore _firestore = Firestore.instance;
 
   bool loading = false;
   @override
@@ -136,12 +138,9 @@ class _CarTrashCardState extends State<CarTrashCard> {
                                 onTap: () {
                                   if (widget.carTrashModel.weight != 1) {
                                     setState(() {
-                                      // _userService.updateCarTrash(
-                                      //   userId: userProvider.user.uid,
-                                      //   values: {
-                                      //   "id": widget.carTrashModel.id,
-                                      //   "weight": widget.carTrashModel.weight -= 1,
-                                      // });
+                                      _firestore.collection(collection).document(userProvider.user.uid).updateData({
+                                        "cartTrash[index]": widget.carTrashModel.weight -= 1
+                                      });
                                     });
                                   }
                                 },
@@ -161,12 +160,9 @@ class _CarTrashCardState extends State<CarTrashCard> {
                             InkWell(
                                 onTap: () {
                                   setState(() {
-                                      // _userService.updateCarTrash(
-                                      //   userId: userProvider.user.uid,
-                                      //   values: {
-                                      //   "id": widget.carTrashModel.id,
-                                      //   "weight": widget.carTrashModel.weight += 1,
-                                      // });
+                                      _firestore.collection(collection).document(userProvider.user.uid).updateData({
+                                        "cartTrash[index]": widget.carTrashModel.weight += 1
+                                      });
                                     });
                                 },
                                 child: Container(

@@ -28,14 +28,14 @@ class UserProvider with ChangeNotifier {
   UserModel _userModel;
   UserModel userById;
   List<CartProductModel> _cartProducts = List<CartProductModel>();
-  List<CarTrashModel> _carTrash = List<CarTrashModel>();
+  List<CartTrashModel> _carTrash = List<CartTrashModel>();
 
   // getter
   FirebaseUser get user => _user;
   UserModel get userModel => _userModel;
   Status get status => _status;
   List<CartProductModel> get cartProducts => _cartProducts;
-  List<CarTrashModel> get carTrashs => _carTrash;
+  List<CartTrashModel> get carTrashs => _carTrash;
 
   final formkey = GlobalKey<FormState>();
   TextEditingController email = TextEditingController();
@@ -276,7 +276,7 @@ class UserProvider with ChangeNotifier {
     try {
       var uuid = Uuid();
       String carTrashId = uuid.v4();
-      double weight = 1;
+      int weight = 1;
       List cart = _userModel.carTrash;
       Map carTrash = {
         "id": carTrashId,
@@ -288,7 +288,7 @@ class UserProvider with ChangeNotifier {
         "partnerId": trashReceiveModel.partnerId,
       };
 
-      CarTrashModel item = CarTrashModel.fromMap(carTrash);
+      CartTrashModel item = CartTrashModel.fromMap(carTrash);
       print("CART ITEMS ARE: ${cart.toString()}");
       _userService.addToCarTrash(userId: _user.uid, carTrash: item);
 
@@ -309,7 +309,7 @@ class UserProvider with ChangeNotifier {
   //   }
   // }
 
-  Future<bool> removeFromCarTrash({CarTrashModel carTrash}) async {
+  Future<bool> removeFromCarTrash({CartTrashModel carTrash}) async {
     print("THE PRODUCT IS: ${carTrash.toString()}");
 
     try {

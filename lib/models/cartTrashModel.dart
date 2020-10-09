@@ -1,4 +1,4 @@
-class CarTrashModel {
+class CartTrashModel {
   static const ID = "id";
   static const TRASH_TYPE_ID = "trashTypeId";
   static const IMAGE = "image";
@@ -11,7 +11,7 @@ class CarTrashModel {
   String trashTypeUid;
   String _image;
   String _name;
-  double _weight;
+  int _weight;
   int _price;
   String _partnerId;
 
@@ -20,18 +20,18 @@ class CarTrashModel {
   String get trashTypeId => trashTypeUid;
   String get image => _image;
   String get name => _name;
-  double get weight => _weight;
+  int get weight => _weight;
   int get price => _price;
   String get partnerId => _partnerId;
 
-  set weight(double value) {
+  set weight(int value) {
     if (value == null) {
       throw new ArgumentError();
     }
     _weight = value;
   }
 
-  CarTrashModel.fromMap(Map data) {
+  CartTrashModel.fromMap(Map data) {
     _id = data[ID];
     trashTypeUid = data[TRASH_TYPE_ID];
     _image = data[IMAGE];

@@ -26,11 +26,11 @@ class UserModel {
   int _balance;
   int _point;
   int _weight;
-  double _priceSum = 0;
+  int _priceSum = 0;
 
   //  public variable
   List<CartProductModel> cartProduct;
-  List<CarTrashModel> carTrash;
+  List<CartTrashModel> carTrash;
   List<AddressModel> addressModel;
   List<ShippingModel> shippingModel;
   // ShippingModel shippingModel;
@@ -84,7 +84,7 @@ class UserModel {
       _priceSum += carTrash["price"] * carTrash["weight"];
     }
 
-    int total = _priceSum.toInt();
+    int total = _priceSum;
     return total;
   }
 
@@ -112,10 +112,10 @@ class UserModel {
     return convertedCart;
   }
   
-  List<CarTrashModel> convertCarTrashs(List cart) {
-    List<CarTrashModel> convertedCart = [];
+  List<CartTrashModel> convertCarTrashs(List cart) {
+    List<CartTrashModel> convertedCart = [];
     for (Map carTrash in cart) {
-      convertedCart.add(CarTrashModel.fromMap(carTrash));
+      convertedCart.add(CartTrashModel.fromMap(carTrash));
     }
     return convertedCart;
   }

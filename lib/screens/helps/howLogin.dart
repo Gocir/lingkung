@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:lingkung/screens/authenticate/authenticate.dart';
-import 'package:lingkung/screens/helps/lostLogin.dart';
 import 'package:lingkung/screens/helps/lostOTP.dart';
 import 'package:lingkung/screens/helps/lostPhoNumber.dart';
 import 'package:lingkung/utilities/colorStyle.dart';

@@ -34,7 +34,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   TextEditingController phoNumberController;
 
   String _name;
-  String _email;
+  String email;
   String _phoNumber;
   File _selectedImage;
 
@@ -43,7 +43,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   void initState() {
     super.initState();
     _name = widget.userModel.name;
-    _email = widget.userModel.email.toString();
+    email = widget.userModel.email.toString();
     _phoNumber = widget.userModel.phoNumber.toString();
 
     nameController = TextEditingController(text: widget.userModel.name);
@@ -172,7 +172,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 borderSide: BorderSide(color: yellow))),
                         // onChanged: (String str) {
                         //   setState(() {
-                        //     _email = str;
+                        //     email = str;
                         //   });
                         // },
                         // validator: (value) =>
@@ -256,7 +256,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                         "uid": widget.userModel.id,
                                         "image": imageUrl,
                                         "name": _name,
-                                        // "email": _email,
+                                        // "email": email,
                                         "phoneNumber": int.parse(_phoNumber),
                                       });
                                       setState(() => loading = false);
@@ -267,7 +267,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                     _userService.updateUserData({
                                       "uid": widget.userModel.id,
                                       "name": _name,
-                                      // "email": _email,
+                                      // "email": email,
                                       "phoneNumber": int.parse(_phoNumber),
                                     });
                                     setState(() => loading = false);
@@ -295,7 +295,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                       _userService.updateUserData({
                                         "uid": widget.userModel.id,
                                         "image": imageUrl,
-                                        // "email": _email,
+                                        // "email": email,
                                       });
                                       setState(() => loading = false);
                                       Navigator.pop(context);
