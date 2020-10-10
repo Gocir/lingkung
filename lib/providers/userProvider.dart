@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:lingkung/main.dart';
 import 'package:lingkung/models/shippingModel.dart';
+import 'package:lingkung/screens/authenticate/VerificationView.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 // Firebase
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 // Models
 import 'package:lingkung/models/addressModel.dart';
 import 'package:lingkung/models/cartPoductModel.dart';
@@ -18,12 +19,15 @@ import 'package:lingkung/models/userModel.dart';
 import 'package:lingkung/services/userService.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
+//  Unitialized: Memeriksa apakah pengguna masuk atau tidak. Dalam keadaan ini, kami akan menampilkan Loading.
+//  Unauthenticated: Dalam Status ini, kami akan menampilkan halaman authenticate untuk memasukkan kredensial.
+//  Authenticating: Pengguna telah menekan tombol masuk dan kami mengautentikasi pengguna. Dalam Status ini, kami akan menampilkan bilah Kemajuan.
+//  Authenticated: Pengguna diautentikasi. Dalam Status ini, kami akan menampilkan beranda.
 
 class UserProvider with ChangeNotifier {
   FirebaseAuth _auth;
   FirebaseUser _user;
   Status _status = Status.Uninitialized;
-  Firestore _firestore = Firestore.instance;
   UserServices _userService = UserServices();
   UserModel _userModel;
   UserModel userById;
@@ -37,85 +41,138 @@ class UserProvider with ChangeNotifier {
   List<CartProductModel> get cartProducts => _cartProducts;
   List<CartTrashModel> get carTrashs => _carTrash;
 
+  //  public variable
+  List<UserModel> userByPhone = [];
+
+  final scaffoldStatekey = GlobalKey<ScaffoldState>();
   final formkey = GlobalKey<FormState>();
   TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController name = TextEditingController();
+  TextEditingController phoNumberLogin = TextEditingController();
+  TextEditingController userName = TextEditingController();
+
+  String smsCode;
+  String verificationId;
+  String errorMessage;
+  String name;
+  String mail;
+  bool loading = false;
 
   UserProvider.initialize() : _auth = FirebaseAuth.instance {
     _auth.onAuthStateChanged.listen(_onStateChanged);
   }
 
-  // Login email & pass
-  Future<bool> login() async {
+  //  Code Sent
+  Future<void> verify(BuildContext context, String phoneNumber, String userName,
+      String email) async {
+    name = userName;
+    mail = email;
+    final PhoneCodeSent codeSent = (String verifId, [int forceCodeResend]) {
+      this.verificationId = verifId;
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => VerificationView(phoneNumber: phoneNumber)));
+    };
+
+    final PhoneVerificationCompleted verified =
+        (AuthCredential authCredential) {
+      // _userService.login(authCredential);
+      print(authCredential.toString() + "lets make this work");
+    };
+
+    final PhoneVerificationFailed verifailed = (AuthException authException) {
+      print(authException.message.toString());
+      errorMessage = authException.message;
+    };
+
     try {
-      _status = Status.Authenticating;
-      notifyListeners();
-      await _auth.signInWithEmailAndPassword(
-          email: email.text.trim(), password: password.text.trim());
-      return true;
+      await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: phoneNumber.trim(), // PHONE NUMBER TO SEND OTP
+          codeAutoRetrievalTimeout: (String verifId) {
+            //Starts the phone number verification process for the given phone number.
+            //Either sends an SMS with a 6 digit code to the phone number specified, or sign's the user in and [verificationCompleted] is called.
+            this.verificationId = verifId;
+          },
+          codeSent:
+              codeSent, // WHEN CODE SENT THEN WE OPEN DIALOG TO ENTER OTP.
+          timeout: const Duration(seconds: 20),
+          verificationCompleted: verified,
+          verificationFailed: verifailed);
+      clearController();
     } catch (e) {
-      _status = Status.Unauthenticated;
-      notifyListeners();
       print(e.toString());
-      return false;
+      errorMessage = e.message.toString();
+      clearController();
     }
   }
 
-  // Register email & pass
-  Future<bool> register() async {
-    try {
-      _status = Status.Authenticating;
-      notifyListeners();
-      await _auth
-          .createUserWithEmailAndPassword(
-              email: email.text.trim(), password: password.text.trim())
-          .then((result) {
-        _firestore.collection('users').document(result.user.uid).setData({
-          'uid': result.user.uid,
-          'name': name.text,
-          'phoneNumber': int.parse(''),
-          'email': email.text,
+  //  Register
+  void _register(
+      {String id, String userName, String email, String phoneNumber}) {
+    _userService.createUser({
+          'uid': id,
+          'name': userName,
+          'phoneNumber': phoneNumber,
+          'email': email,
           'image': "",
-          'balance': int.parse(''),
-          'point': int.parse(''),
-          'weight': int.parse(''),
-        });
-      });
-      return true;
-    } catch (e) {
+          'balance': 0,
+          'point': 0,
+          'weight': 0,
+    });
+  }
+
+  //  VerifyCode
+  void verifyCodeOTP(BuildContext context, String smsCode) async {
+    final AuthCredential _authCredential = PhoneAuthProvider.getCredential(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
+
+    _auth.signInWithCredential(_authCredential).then((AuthResult result) async {
+      print('Authentication successful');
+      if (result.user.uid == user.uid) {
+        _userModel =
+            await _userService.getUserById(user.uid);
+        if (_userModel == null) {
+          _register(
+              id: result.user.uid,
+              userName: name,
+              email: mail,
+              phoneNumber: result.user.phoneNumber);
+          print('register');
+        }
+        print('from result ' + result.user.uid);
+        print('phone from result ' + result.user.phoneNumber);
+        print('phone from user ' + user.phoneNumber);
+        print('from user ' + user.uid);
+      }
+        _status = Status.Authenticated;
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
+    }).catchError((e) {
       _status = Status.Unauthenticated;
-      notifyListeners();
-      print(e.toString());
-      return false;
-    }
+      print(
+          'Something has gone wrong, please try later(signInWithPhoneNumber) $e');
+    });
   }
 
   // Logout
-  // Future logout() async {
-  //   try {
-  //     _status = Status.Unauthenticated;
-  //     notifyListeners();
-  //     await _auth.signOut();
-  //     return true;
-  //   } catch (e) {
-  //     _status = Status.Authenticating;
-  //     notifyListeners();
-  //     print(e.toString());
-  //     return false;
-  //   }
-  // }
   Future logout() async {
-    _auth.signOut();
-    _status = Status.Unauthenticated;
-    notifyListeners();
-    return Future.delayed(Duration.zero);
+    try {
+      _status = Status.Unauthenticated;
+      notifyListeners();
+      await _auth.signOut();
+      print('user Logout');
+      return true;
+    } catch (e) {
+      _status = Status.Authenticating;
+      notifyListeners();
+      print(e.toString());
+      return false;
+    }
   }
 
   void clearController() {
-    name.text = "";
+    userName.text = "";
     email.text = "";
-    password.text = "";
+    phoNumberLogin.text = "";
   }
 
   Future<void> reloadUserModel() async {
@@ -126,6 +183,12 @@ class UserProvider with ChangeNotifier {
   Future<void> loadUserById(String userId) async {
     userById = await _userService.getOwnerById(id: userId);
     notifyListeners();
+  }
+
+  Future<void> loadUserByPhone(String phoNumber) async {
+    userByPhone = await _userService.getUserByPhone(
+        phoNumberLogin: phoNumber);
+    // notifyListeners();
   }
 
   Future<void> _onStateChanged(FirebaseUser firebaseUser) async {

@@ -26,6 +26,9 @@ class UserServices {
           .document(id.toString())
           .get()
           .then((doc) {
+        if (doc.data == null) {
+          return null;
+        }
         return UserModel.fromSnapshot(doc);
       });
 
@@ -35,6 +38,19 @@ class UserServices {
           .get()
           .then((doc) {
         return UserModel.fromSnapshot(doc);
+      });
+
+  Future<List<UserModel>> getUserByPhone({String phoNumberLogin}) async =>
+      _firestore
+          .collection(collection)
+          .where("phoneNumber", isEqualTo: phoNumberLogin)
+          .getDocuments()
+          .then((result) {
+        List<UserModel> userByPhones = [];
+        for (DocumentSnapshot userByPhone in result.documents) {
+          userByPhones.add(UserModel.fromSnapshot(userByPhone));
+        }
+        return userByPhones;
       });
 
   void addAddress({String userId, AddressModel addressModel}) {
@@ -61,7 +77,7 @@ class UserServices {
       "cartProduct": FieldValue.arrayUnion([cartProduct.toMap()])
     });
   }
-  
+
   void updateCartProduct({String userId, CartProductModel cartProduct}) {
     print("THE USER ID IS: $userId");
     print("cart items are: ${cartProduct.toString()}");
@@ -71,7 +87,7 @@ class UserServices {
   }
 
   void removeFromCartProduct({String userId, CartProductModel cartProduct}) {
-        print("THE USER ID IS: $userId");
+    print("THE USER ID IS: $userId");
     print("cart items are: ${cartProduct.toString()}");
     _firestore.collection(collection).document(userId).updateData({
       "cartProduct": FieldValue.arrayRemove([cartProduct.toMap()])

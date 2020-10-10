@@ -22,7 +22,7 @@ class UserModel {
   String _name;
   String _email;
   String _image;
-  int _phoNumber;
+  String _phoNumber;
   int _balance;
   int _point;
   int _weight;
@@ -41,7 +41,7 @@ class UserModel {
   String get name => _name;
   String get email => _email;
   String get image => _image;
-  int get phoNumber => _phoNumber;
+  String get phoNumber => _phoNumber;
   int get balance => _balance;
   int get point => _point;
   int get weight => _weight;

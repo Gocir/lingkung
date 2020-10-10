@@ -27,7 +27,7 @@ class _DetailMyProductState extends State<DetailMyProduct> {
         backgroundColor: white,
         appBar: AppBar(
           backgroundColor: blue,
-          elevation: 0.0,
+          elevation: 0,
           iconTheme: IconThemeData(color: white),
           actions: <Widget>[
             IconButton(
@@ -37,7 +37,7 @@ class _DetailMyProductState extends State<DetailMyProduct> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            UpdateProduct(productModel: widget.productModel),
+                            UpdateProduct(productModel: widget.productModel)
                       ));
                 }),
             IconButton(
@@ -68,7 +68,7 @@ class _DetailMyProductState extends State<DetailMyProduct> {
                         Icon(Icons.home, color: yellow),
                         SizedBox(width: 5.0),
                         CustomText(text: 'Kembali ke Halaman Utama')
-                      ]),
+                      ])
                     )),
                     PopupMenuItem(
                         child: Row(children: <Widget>[
@@ -78,7 +78,7 @@ class _DetailMyProductState extends State<DetailMyProduct> {
                     ]))
                   ];
                 })
-          ],
+          ]
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -102,10 +102,10 @@ class _DetailMyProductState extends State<DetailMyProduct> {
                                       child: Hero(
                                         tag: 'ProductImage',
                                         child: Image.network(
-                                          '${widget.productModel.image}',
-                                        ),
-                                      ),
-                                    ),
+                                          '${widget.productModel.image}'
+                                        )
+                                      )
+                                    )
                                   ))));
                 },
                 child: Hero(

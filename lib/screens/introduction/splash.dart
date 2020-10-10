@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lingkung/screens/introduction/onboarding.dart';
-import 'package:lingkung/screens/wrapper.dart';
+import 'package:lingkung/utilities/wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Splash extends StatefulWidget {

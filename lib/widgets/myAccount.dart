@@ -175,18 +175,17 @@ class MyAccount extends StatelessWidget {
               )),
           SizedBox(height: 16.0),
           Container(
-            height: 45.0,
-            child: RaisedButton(
+            width: MediaQuery.of(context).size.width,
+            height: 48.0,
+            child: FlatButton(
               color: green,
-              elevation: 2.0,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              child: Center(
-                  child: CustomText(
-                      text: 'KELUAR',
-                      size: 16.0,
-                      color: white,
-                      weight: FontWeight.w700)),
+                  borderRadius: BorderRadius.circular(50)),
+              child: CustomText(
+                  text: 'KELUAR',
+                  size: 16.0,
+                  color: white,
+                  weight: FontWeight.w700),
               onPressed: () async {
                 await user.logout();
                 Navigator.pushReplacement(

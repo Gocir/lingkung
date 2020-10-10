@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
             //BG1
             Row(children: <Widget>[
               Transform.translate(
-                  offset: Offset(-14.23, 36.85),
+                  offset: Offset(-14.23, 12.85),
                   child:
                       // Adobe XD layer: 'grass11' (shape)
                       Container(
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                             fit: BoxFit.fill,
                           )))),
               Transform.translate(
-                  offset: Offset(150, -20.93),
+                  offset: Offset(150, -44.93),
                   child:
                       // Adobe XD layer: 'grass22' (shape)
                       Container(
@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                                       child: CustomText(
                                           text: (userProvider.userModel?.name !=
                                                   null)
-                                              ? 'Hai, ${userProvider.userModel?.name}'
+                                              ? 'Hai, ${userProvider.userModel.name}'
                                               : 'Hai, Sobat Lingkung',
                                           size: 20,
                                           weight: FontWeight.w700)),
@@ -90,27 +90,21 @@ class _HomePageState extends State<HomePage> {
                                   ))
                                 ])),
                         CachedNetworkImage(
-                            imageUrl: userProvider.userModel?.image.toString(),
-                            imageBuilder: (context, imageProvider) => Container(
-                                width: 50.0,
-                                height: 50.0,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black12,
-                                          offset: Offset(0.0, 0.0),
-                                          blurRadius: 3.0)
-                                    ])),
-                            placeholder: (context, url) => Center(
-                                child: SpinKitThreeBounce(
-                                    color: black, size: 5.0)),
-                            errorWidget: (context, url, error) =>
-                                Image.asset("assets/images/user.png"))
-                      ])),
+                                            imageUrl: userProvider.userModel?.image.toString(),
+                                            imageBuilder: (context, imageProvider) => Container(
+                                                width: 50.0,
+                                                height: 50.0,
+                                                decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover),
+                                                    color: white,
+                                                    borderRadius: BorderRadius.circular(
+                                                        20.0))),
+                                            placeholder: (context, url) =>
+                                                Container(width: 50.0, height: 50.0, decoration: BoxDecoration(color: white, borderRadius: BorderRadius.circular(20.0)), child: SpinKitThreeBounce(color: black, size: 10.0)),
+                                            errorWidget: (context, url, error) => Container(width: 50.0, height: 50.0, decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/user.png"), fit: BoxFit.cover), color: white, borderRadius: BorderRadius.circular(20.0)))),
+                        ])),
               //Container White
               Container(
                   margin: EdgeInsets.only(top: 86.0),

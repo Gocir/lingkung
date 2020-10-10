@@ -9,7 +9,6 @@ import 'package:lingkung/providers/trashReceiveProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/introduction/splash.dart';
 import 'package:lingkung/screens/menu/home.dart';
-import 'package:lingkung/screens/menu/message.dart';
 import 'package:lingkung/screens/menu/order.dart';
 import 'package:lingkung/screens/menu/profile.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
@@ -59,7 +58,6 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> pages = [
     HomePage(),
     OrderPage(),
-    MessagePage(),
     ProfilePage()
   ];
 
@@ -76,7 +74,7 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: BottomNavyBar(
         selectedIndex: _currentIndex,
         showElevation: true,
-        itemCornerRadius: 10.0,
+        itemCornerRadius: 20.0,
         curve: Curves.easeInBack,
         onItemSelected: (index) {
           _incrementTab(index);
@@ -99,23 +97,15 @@ class _MainPageState extends State<MainPage> {
               inactiveColor: grey,
               textAlign: TextAlign.center),
           BottomNavyBarItem(
-              title: Text('Pesan',
-                  style: TextStyle(
-                      fontFamily: "Poppins", fontWeight: FontWeight.w700)),
-              icon: Icon(Icons.chat_bubble_outline),
-              activeColor: green,
-              inactiveColor: grey,
-              textAlign: TextAlign.center),
-          BottomNavyBarItem(
               title: Text('Saya',
                   style: TextStyle(
                       fontFamily: "Poppins", fontWeight: FontWeight.w700)),
               icon: Icon(Icons.person_outline),
               activeColor: green,
               inactiveColor: grey,
-              textAlign: TextAlign.center),
-        ],
-      ),
+              textAlign: TextAlign.center)
+        ]
+      )
     );
   }
 }
