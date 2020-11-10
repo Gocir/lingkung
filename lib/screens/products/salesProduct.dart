@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 // Widgets
-import 'package:lingkung/widgets/sales/productNotYetPaid.dart';
-import 'package:lingkung/widgets/sales/productFinish.dart';
-import 'package:lingkung/widgets/sales/productPacked.dart';
-import 'package:lingkung/widgets/sales/productSent.dart';
+import 'package:lingkung/widgets/productSales/productNotYetPaid.dart';
+import 'package:lingkung/widgets/productSales/productFinish.dart';
+import 'package:lingkung/widgets/productSales/productPacked.dart';
+import 'package:lingkung/widgets/productSales/productSent.dart';
 
 class SalesProductPage extends StatefulWidget {
   @override

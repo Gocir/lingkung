@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lingkung/providers/orderProvider.dart';
+import 'package:lingkung/providers/addressProvider.dart';
+import 'package:lingkung/providers/courierProvider.dart';
+import 'package:lingkung/providers/junkSalesProvider.dart';
+import 'package:lingkung/providers/productOrderProvider.dart';
+import 'package:lingkung/providers/trashCartProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:lingkung/providers/partnerProvider.dart';
 import 'package:lingkung/providers/productProvider.dart';
+import 'package:lingkung/providers/productCartProvider.dart';
 import 'package:lingkung/providers/trashReceiveProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/introduction/splash.dart';
@@ -28,11 +33,16 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: AddressProvider.initialize()),
         ChangeNotifierProvider.value(value: UserProvider.initialize()),
+        ChangeNotifierProvider.value(value: ProductOrderProvider.initialize()),
+        ChangeNotifierProvider.value(value: ProductCartProvider.initialize()),
         ChangeNotifierProvider.value(value: ProductProvider.initialize()),
+        ChangeNotifierProvider.value(value: CourierProvider.initialize()),
         ChangeNotifierProvider.value(value: PartnerProvider.initialize()),
         ChangeNotifierProvider.value(value: TrashReceiveProvider.initialize()),
-        ChangeNotifierProvider.value(value: OrderProvider.initialize()),
+        ChangeNotifierProvider.value(value: TrashCartProvider.initialize()),
+        ChangeNotifierProvider.value(value: JunkSalesProvider.initialize()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

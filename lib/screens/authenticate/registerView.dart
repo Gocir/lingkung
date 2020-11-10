@@ -228,13 +228,13 @@ class _RegisterViewState extends State<RegisterView> {
                                                     .isEmpty)
                                                 ? 'Masukkan Nomor Ponsel-mu'
                                                 : (value.length > 11 ||
-                                                        value.length < 11)
-                                                    ? 'Batas Maksimal Nomor Ponsel adalah 11'
+                                                        value.length < 10)
+                                                    ? 'Batas Miinimal Nomor Ponsel adalah 11'
                                                     : null))
                                   ])
                                 ])))),
                 bottomNavigationBar: Container(
-                    height: 77.0,
+                    height: 80.0,
                     color: white,
                     padding: const EdgeInsets.all(16.0),
                     child: FlatButton(

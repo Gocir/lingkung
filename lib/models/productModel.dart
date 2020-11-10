@@ -8,6 +8,7 @@ class ProductModel{
   static const DESCRIPTION = "description";
   static const IMAGE = "images";
   static const USER_ID = "userId";
+  static const USER_NAME = "userName";
 
   String _id;
   String _name;
@@ -16,6 +17,7 @@ class ProductModel{
   String _description;
   String _image;
   String _userId;
+  String _userName;
 
 //  getters
   String get id => _id;
@@ -25,6 +27,7 @@ class ProductModel{
   String get description => _description;
   String get image => _image;
   String get userId => _userId;
+  String get userName => _userName;
 
 //  named constructure
   ProductModel.fromSnapshot(DocumentSnapshot snapshot){
@@ -35,5 +38,6 @@ class ProductModel{
     _description = snapshot.data[DESCRIPTION];
     _image = snapshot.data[IMAGE];
     _userId = snapshot.data[USER_ID];
+    _userName = snapshot.data[USER_NAME];
   }
 }

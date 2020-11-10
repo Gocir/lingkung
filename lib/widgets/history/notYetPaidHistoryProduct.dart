@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:lingkung/models/orderModel.dart';
-import 'package:lingkung/providers/orderProvider.dart';
+import 'package:lingkung/models/productOrderModel.dart';
+import 'package:lingkung/providers/productOrderProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
@@ -11,7 +11,7 @@ class NotYetPaidHistoryProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    final orderProvider = Provider.of<OrderProvider>(context);
+    final orderProvider = Provider.of<ProductOrderProvider>(context);
     orderProvider.loadOrderNYP(userProvider.user.uid);
     return (orderProvider.orderNYP.isNotEmpty)
         ? ListView.builder(
@@ -19,7 +19,7 @@ class NotYetPaidHistoryProduct extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             itemCount: orderProvider.orderNYP.length,
             itemBuilder: (_, index) {
-              OrderModel _order = orderProvider.orderNYP[index];
+              ProductOrderModel _order = orderProvider.orderNYP[index];
               userProvider.loadUserById(_order.storeOwnerId[0]);
               return InkWell(
                       onTap: () {

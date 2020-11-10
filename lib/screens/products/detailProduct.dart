@@ -3,16 +3,21 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:lingkung/main.dart';
 import 'package:lingkung/models/productModel.dart';
+import 'package:lingkung/models/userModel.dart';
 import 'package:lingkung/providers/userProvider.dart';
-import 'package:lingkung/screens/products/cartProduct.dart';
+import 'package:lingkung/providers/productCartProvider.dart';
+import 'package:lingkung/screens/products/productCart.dart';
 import 'package:lingkung/screens/products/checkoutProduct.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/loading.dart';
 import 'package:lingkung/utilities/textStyle.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class DetailProduct extends StatefulWidget {
+  final UserModel userModel;
   final ProductModel productModel;
-  DetailProduct({this.productModel});
+  DetailProduct({this.userModel, this.productModel});
 
   @override
   _DetailProductState createState() => _DetailProductState();
@@ -27,351 +32,385 @@ class _DetailProductState extends State<DetailProduct> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    userProvider.loadUserById(widget.productModel.userId);
+    final productCartProvider = Provider.of<ProductCartProvider>(context);
+    productCartProvider.loadProductCartByUser(widget.userModel.id);
 
     int totalCount = 0;
-    if (userProvider.userModel.cartProduct.length > 0) {
-      totalCount = userProvider.userModel.cartProduct.length;
+    if (productCartProvider.productCartByUser.length > 0) {
+      totalCount = productCartProvider.productCartByUser.length;
     }
 
-    return loading || (userProvider.userModel.cartProduct == null)
+    return loading
         ? Loading()
-        : Scaffold(
-            key: _scaffoldStateKey,
-            appBar: AppBar(
+        : SafeArea(
+            top: false,
+            child: Scaffold(
               backgroundColor: white,
-              iconTheme: IconThemeData(color: black),
-              actions: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child:
-                      Stack(alignment: Alignment.topRight, children: <Widget>[
-                    IconButton(
-                        icon: Icon(Icons.shopping_cart),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CartProduct(),
-                              ));
-                        }),
-                    Positioned(
-                      right: 5.0,
-                      top: 5.0,
-                      child: Container(
-                        height: 16.0,
-                        width: 16.0,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: Colors.red),
-                        child: CustomText(
-                            text: '$totalCount',
-                            size: 10.0,
-                            color: white,
-                            weight: FontWeight.w500),
-                      ),
-                    )
-                  ]),
-                ),
-                PopupMenuButton(
-                    offset: Offset(0, 44),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20.0),
-                            bottomLeft: Radius.circular(20.0),
-                            bottomRight: Radius.circular(20.0))),
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        PopupMenuItem(
-                            child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MainPage(),
-                                ));
+              body: CustomScrollView(
+                // physics: BouncingScrollPhysics(),
+                slivers: <Widget>[
+                  SliverAppBar(
+                    snap: true,
+                    floating: true,
+                    iconTheme: IconThemeData(color: black),
+                    leading: Container(
+                      margin: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white.withOpacity(0.5),
+                        child: IconButton(
+                          icon: Icon(Icons.arrow_back, color: black),
+                          onPressed: () {
+                            Navigator.pop(context);
                           },
-                          child: Row(children: <Widget>[
-                            Icon(Icons.home, color: yellow),
-                            SizedBox(width: 5.0),
-                            CustomText(text: 'Kembali ke Halaman Utama')
-                          ]),
-                        )),
-                        PopupMenuItem(
-                            child: Row(children: <Widget>[
-                          Icon(Icons.help_outline, color: yellow),
-                          SizedBox(width: 5.0),
-                          CustomText(text: 'Butuh Bantuan?')
-                        ]))
-                      ];
-                    })
-              ],
-            ),
-            body: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                              opaque: false,
-                              pageBuilder: (BuildContext context, _, __) =>
-                                  GestureDetector(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        color: black.withOpacity(0.9),
-                                        child: Center(
-                                          child: Hero(
-                                            tag: 'ProductImage',
-                                            child: Image.network(
-                                              '${widget.productModel.image}',
-                                            ),
-                                          ),
-                                        ),
-                                      ))));
-                    },
-                    child: Hero(
-                      tag: 'ProductImage',
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 1.2,
-                        child: Image.network(
-                          '${widget.productModel.image}',
-                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        CustomText(
-                            text: '${widget.productModel.name}',
-                            size: 16,
-                            weight: FontWeight.w500),
-                        SizedBox(height: 20.0),
-                        CustomText(
-                            text: NumberFormat.currency(
-                                    locale: 'id',
-                                    symbol: 'Rp',
-                                    decimalDigits: 0)
-                                .format(widget.productModel.price),
-                            size: 18,
-                            color: Colors.red,
-                            weight: FontWeight.w500),
-                        SizedBox(height: 10.0),
-                        Divider(),
-                        Card(
-                          child: Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  width: 50.0,
-                                  height: 50.0,
+                    actions: <Widget>[
+                      CircleAvatar(
+                        backgroundColor: Colors.white.withOpacity(0.5),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Stack(
+                            alignment: Alignment.topRight,
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(Icons.shopping_cart, color: black),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProductCart(userModel: widget.userModel),
+                                    ),
+                                  );
+                                },
+                              ),
+                              Positioned(
+                                right: 5.0,
+                                top: 5.0,
+                                child: Container(
+                                  height: 16.0,
+                                  width: 16.0,
+                                  alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                      color: white,
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              "${userProvider.userById?.image}"),
-                                          fit: BoxFit.cover),
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.black12,
-                                            offset: Offset(0.0, 0.0),
-                                            blurRadius: 2.0),
-                                      ]),
+                                      borderRadius: BorderRadius.circular(100),
+                                      color: Colors.red),
+                                  child: CustomText(
+                                    text: '$totalCount',
+                                    size: 10.0,
+                                    color: white,
+                                    weight: FontWeight.w500,
+                                  ),
                                 ),
-                                SizedBox(
-                                  width: 15.0,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8.0),
+                      CircleAvatar(
+                        backgroundColor: Colors.white.withOpacity(0.5),
+                        child: PopupMenuButton(
+                          icon: Icon(Icons.more_vert, color: black),
+                          offset: Offset(100, 44),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20.0),
+                              bottomLeft: Radius.circular(20.0),
+                              bottomRight: Radius.circular(20.0),
+                            ),
+                          ),
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              PopupMenuItem(
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MainPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: Row(
                                     children: <Widget>[
+                                      Icon(Icons.home, color: yellow),
+                                      SizedBox(width: 5.0),
                                       CustomText(
-                                        text: userProvider.userById?.name ??
-                                            'Loading ...',
-                                        over: TextOverflow.ellipsis,
-                                      ),
-                                      SizedBox(height: 5.0),
-                                      Row(
-                                        children: <Widget>[
-                                          Icon(Icons.location_on,
-                                              size: 12.0, color: grey),
-                                          SizedBox(width: 5.0),
-                                          CustomText(
-                                            text: "Kota User",
-                                            size: 12.0,
-                                            color: grey,
-                                          ),
-                                        ],
-                                      ),
+                                          text: 'Kembali ke Halaman Utama')
                                     ],
                                   ),
                                 ),
-                                OutlineButton(
-                                  color: white,
-                                  highlightColor: white,
-                                  highlightedBorderColor: green,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  borderSide:
-                                      BorderSide(color: green, width: 2.0),
-                                  child: CustomText(
-                                    text: 'Kunjungi',
-                                    color: green,
-                                    weight: FontWeight.w700,
-                                  ),
-                                  onPressed: () {
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //       builder: (context) => OrderTrash(),
-                                    //     ));
-                                  },
+                              ),
+                              PopupMenuItem(
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.help_outline, color: yellow),
+                                    SizedBox(width: 5.0),
+                                    CustomText(text: 'Butuh Bantuan?')
+                                  ],
                                 ),
-                              ],
+                              ),
+                            ];
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 8.0),
+                    ],
+                    backgroundColor: white,
+                    expandedHeight: 200.0,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: CachedNetworkImage(
+                        imageUrl: widget.productModel.image.toString(),
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        Divider(),
-                        CustomText(
+                        placeholder: (context, url) => Center(
+                          child: SpinKitThreeBounce(
+                            color: black,
+                            size: 20.0,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/images/noimage.png"),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16.0),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          CustomText(
+                              text: '${widget.productModel.name}',
+                              size: 16,
+                              weight: FontWeight.w500),
+                          SizedBox(height: 20.0),
+                          CustomText(
+                            text: NumberFormat.currency(
+                              locale: 'id',
+                              symbol: 'Rp ',
+                              decimalDigits: 0,
+                            ).format(widget.productModel.price),
+                            size: 18,
+                            color: Colors.red,
+                            weight: FontWeight.w500,
+                          ),
+                          SizedBox(height: 10.0),
+                          Card(
+                            child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  CircleAvatar(
+                                    backgroundColor: blue,
+                                    backgroundImage:
+                                        AssetImage("assets/images/user.png"),
+                                  ),
+                                  SizedBox(
+                                    width: 15.0,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        CustomText(
+                                          text:
+                                              '${widget.productModel.userName}',
+                                          over: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(height: 5.0),
+                                        Row(
+                                          children: <Widget>[
+                                            Icon(Icons.location_on,
+                                                size: 12.0, color: grey),
+                                            SizedBox(width: 5.0),
+                                            CustomText(
+                                              text: "Kota User",
+                                              size: 12.0,
+                                              color: grey,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  OutlineButton(
+                                    color: white,
+                                    highlightColor: white,
+                                    highlightedBorderColor: green,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    borderSide:
+                                        BorderSide(color: green, width: 2.0),
+                                    child: CustomText(
+                                      text: 'Kunjungi',
+                                      color: green,
+                                      weight: FontWeight.w700,
+                                    ),
+                                    onPressed: () {
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //       builder: (context) => OrderTrash(),
+                                      //     ));
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          CustomText(
                             text: 'Informasi Produk',
                             size: 16.0,
-                            weight: FontWeight.w500),
-                        SizedBox(height: 5.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            CustomText(
-                              text: 'Stok',
-                            ),
-                            CustomText(
-                              text: '${widget.productModel.stock}',
-                              color: grey,
-                            ),
-                          ],
-                        ),
-                        Divider(),
-                        CustomText(
+                            weight: FontWeight.w500,
+                          ),
+                          SizedBox(height: 5.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              CustomText(
+                                text: 'Stok',
+                              ),
+                              CustomText(
+                                text: '${widget.productModel.stock}',
+                                color: grey,
+                                weight: FontWeight.w600,
+                              ),
+                            ],
+                          ),
+                          Divider(),
+                          CustomText(
                             text: 'Deskripsi Produk',
                             size: 16.0,
-                            weight: FontWeight.w500),
-                        SizedBox(height: 5.0),
-                        CustomText(
-                          text: '${widget.productModel.description}',
-                        ),
-                      ],
+                            weight: FontWeight.w500,
+                          ),
+                          SizedBox(height: 5.0),
+                          CustomText(
+                            text: '${widget.productModel.description}',
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
+              ),
+              bottomNavigationBar: Container(
+                height: 80.0,
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      offset: Offset(3, 0),
+                      blurRadius: 3,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        height: 48.0,
+                        child: OutlineButton(
+                          color: white,
+                          highlightColor: white,
+                          highlightedBorderColor: yellow,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          borderSide: BorderSide(color: yellow, width: 2.0),
+                          child: Icon(Icons.sms, color: yellow),
+                          onPressed: () {
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => OrderTrash(),
+                            //     ));
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10.0),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        height: 48.0,
+                        child: OutlineButton(
+                          color: white,
+                          highlightColor: white,
+                          highlightedBorderColor: green,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),),
+                          borderSide: BorderSide(color: green, width: 2.0),
+                          child: Icon(Icons.add_shopping_cart, color: green),
+                          onPressed: () async {
+                            setState(() {
+                              loading = true;
+                            });
+                            // if (widget.productModel.id == productCartProvider.productCartModel) {
+                            await productCartProvider.addProductCart(userId: widget.userModel.id, productModel: widget.productModel, quantity: _quantity);
+                            print("Item added to cart");
+                            userProvider.reloadUserModel();
+                            // productCartProvider.loadProductCart();
+                            setState(() {
+                                loading = false;
+                            });
+                            // } else {
+
+                            // }
+                          }
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10.0),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        height: 48.0,
+                        child: FlatButton(
+                          color: green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: CustomText(
+                            text: 'Beli',
+                            size: 16.0,
+                            color: white,
+                            weight: FontWeight.w700,
+                          ),
+                          onPressed: () {
+                            _settingModalBottomSheet(context);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            bottomNavigationBar: Container(
-              height: 60.0,
-              padding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 5.0),
-              decoration: BoxDecoration(color: white, boxShadow: [
-                BoxShadow(
-                    color: Colors.black12, offset: Offset(3, 0), blurRadius: 3)
-              ]),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: OutlineButton(
-                      color: white,
-                      highlightColor: white,
-                      highlightedBorderColor: yellow,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      borderSide: BorderSide(color: yellow, width: 2.0),
-                      child: Icon(Icons.sms, color: yellow),
-                      onPressed: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => OrderTrash(),
-                        //     ));
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 10.0),
-                  Expanded(
-                    flex: 1,
-                    child: OutlineButton(
-                      color: white,
-                      highlightColor: white,
-                      highlightedBorderColor: green,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      borderSide: BorderSide(color: green, width: 2.0),
-                      child: Icon(Icons.add_shopping_cart, color: green),
-                      onPressed: () async {
-                        setState(() {
-                          loading = true;
-                        });
-                        bool value = await userProvider.addToCartProduct(
-                            productModel: widget.productModel,
-                            quantity: _quantity);
-                        if (value) {
-                          print("Item added to cart");
-                          _scaffoldStateKey.currentState.showSnackBar(SnackBar(
-                              content: CustomText(
-                            text: "Added To Cart!",
-                            color: white,
-                            weight: FontWeight.w600,
-                          )));
-                          userProvider.reloadUserModel();
-                          setState(() {
-                            loading = false;
-                          });
-                          return;
-                        } else {
-                          print("Item NOT added to cart");
-                          setState(() {
-                            loading = false;
-                          });
-                        }
-                        print("lOADING SET TO FALSE");
-                        setState(() {
-                          loading = false;
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 10.0),
-                  Expanded(
-                    flex: 3,
-                    child: RaisedButton(
-                      color: green,
-                      elevation: 0.0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: CustomText(
-                          text: 'Beli', color: white, weight: FontWeight.w700),
-                      onPressed: () {
-                        _settingModalBottomSheet(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ));
+          );
   }
 
   void _settingModalBottomSheet(context) {
@@ -466,6 +505,8 @@ class _DetailProductState extends State<DetailProduct> {
                               setState(() {
                                 _quantity -= 1;
                               });
+                              Navigator.pop(context);
+                              _settingModalBottomSheet(context);
                             }
                           },
                           child: Container(
@@ -487,6 +528,8 @@ class _DetailProductState extends State<DetailProduct> {
                             setState(() {
                               _quantity += 1;
                             });
+                            Navigator.pop(context);
+                            _settingModalBottomSheet(context);
                           },
                           child: Container(
                               width: 25.0,
@@ -499,23 +542,24 @@ class _DetailProductState extends State<DetailProduct> {
                     ]),
                 SizedBox(height: 16.0),
                 Container(
+                  height: 48.0,
                   width: MediaQuery.of(context).size.width,
-                  child: RaisedButton(
+                  child: FlatButton(
                     color: green,
-                    elevation: 0.0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                        borderRadius: BorderRadius.circular(50),),
                     child: CustomText(
                         text: 'Beli Sekarang',
+                        size: 16.0,
                         color: white,
-                        weight: FontWeight.w700),
+                        weight: FontWeight.w700,),
                     onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => CheckoutProduct(
                                 productModel: widget.productModel,
-                                userModel: userProvider.userById,
+                                userModel: widget.userModel,
                                 quantity: _quantity),
                           ));
                     },

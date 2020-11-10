@@ -7,8 +7,16 @@ import 'package:lingkung/providers/partnerProvider.dart';
 import 'package:lingkung/screens/trashBank/trashBankDetail.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
+import 'package:lingkung/models/userModel.dart';
 
-class PartnerLisTile extends StatelessWidget {
+class PartnerLisTile extends StatefulWidget {
+  final UserModel userModel;
+  PartnerLisTile({this.userModel});
+  @override
+  _PartnerLisTileState createState() => _PartnerLisTileState();
+}
+
+class _PartnerLisTileState extends State<PartnerLisTile> {
   @override
   Widget build(BuildContext context) {
     final partnerProvider = Provider.of<PartnerProvider>(context);
@@ -20,86 +28,79 @@ class PartnerLisTile extends StatelessWidget {
             itemBuilder: (_, index) {
               PartnerModel partnerModel = partnerProvider.partners[index];
               return InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TrashBankDetail(
-                            partner: partnerModel),
-                      ));
-                },
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        CachedNetworkImage(
-                            imageUrl: partnerModel.image.toString(),
-                            imageBuilder: (context, imageProvider) => Container(
-                                width: 80.0,
-                                height: 80.0,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black12,
-                                          offset: Offset(0.0, 0.0),
-                                          blurRadius: 3.0)
-                                    ])),
-                            placeholder: (context, url) => Container(
-                              width: 80.0,
-                              height: 80.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black12,
-                                          offset: Offset(0.0, 0.0),
-                                          blurRadius: 3.0)
-                                    ]),
-                                child: SpinKitThreeBounce(
-                                    color: black, size: 10.0)),
-                            errorWidget: (context, url, error) => Container(
-                                width: 80.0,
-                                height: 80.0,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage("assets/images/noimage.png"), fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black12,
-                                          offset: Offset(0.0, 0.0),
-                                          blurRadius: 3.0)
-                                    ]))),
-                        SizedBox(width: 16.0),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              CustomText(
-                                text: "BS. ${partnerModel.businessName}",
-                                size: 16,
-                                line: 2,
-                                over: TextOverflow.fade,
-                                weight: FontWeight.w600,
-                              ),
-                              SizedBox(height: 5.0),
-                              CustomText(
-                                  text: '${partnerModel.addressModel.addressDetail}',
-                                  size: 10,
-                                  color: grey,
-                                  weight: FontWeight.w500)
-                            ]))
-                    ]))));
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TrashBankDetail(
+                                partner: partnerModel,
+                                userModel: widget.userModel)));
+                  },
+                  child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                CachedNetworkImage(
+                                    imageUrl: partnerModel.image.toString(),
+                                    imageBuilder: (context, imageProvider) => Container(
+                                        width: 80.0,
+                                        height: 80.0,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black12,
+                                                  offset: Offset(0.0, 0.0),
+                                                  blurRadius: 3.0)
+                                            ])),
+                                    placeholder: (context, url) => Container(
+                                        width: 80.0,
+                                        height: 80.0,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black12,
+                                                  offset: Offset(0.0, 0.0),
+                                                  blurRadius: 3.0)
+                                            ]),
+                                        child: SpinKitThreeBounce(
+                                            color: black, size: 10.0)),
+                                    errorWidget: (context, url, error) => Container(
+                                        width: 80.0,
+                                        height: 80.0,
+                                        decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/noimage.png"), fit: BoxFit.cover), borderRadius: BorderRadius.circular(10.0), boxShadow: [BoxShadow(color: Colors.black12, offset: Offset(0.0, 0.0), blurRadius: 3.0)]))),
+                                SizedBox(width: 16.0),
+                                Expanded(
+                                    child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                      CustomText(
+                                          text:
+                                              "BS. ${partnerModel.businessName}",
+                                          size: 16,
+                                          line: 2,
+                                          over: TextOverflow.fade,
+                                          weight: FontWeight.w600),
+                                      SizedBox(height: 5.0),
+                                      CustomText(
+                                          text:
+                                              '${partnerModel.addressModel.addressDetail}',
+                                          size: 12,
+                                          color: grey,
+                                          line: 3,
+                                          over: TextOverflow.fade,
+                                          weight: FontWeight.w500)
+                                    ]))
+                              ]))));
             })
         : Center(
             child: CustomText(

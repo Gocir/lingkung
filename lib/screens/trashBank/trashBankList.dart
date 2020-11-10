@@ -2,27 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 import 'package:lingkung/widgets/partnerLisTile.dart';
+import 'package:lingkung/models/userModel.dart';
 
-class TrashBankList extends StatelessWidget {
+class TrashBankList extends StatefulWidget {
+  final UserModel userModel;
+  TrashBankList({this.userModel});
+  @override
+  _TrashBankListState createState() => _TrashBankListState();
+}
+
+class _TrashBankListState extends State<TrashBankList> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
-          child: Scaffold(
-        backgroundColor: white,
+      child: Scaffold(
         appBar: AppBar(
-          backgroundColor: blue,
+          backgroundColor: white,
           elevation: 0.0,
-          iconTheme: IconThemeData(color: white),
+          iconTheme: IconThemeData(color: black),
           title: CustomText(
             text: 'Bank Sampah',
-              color: white,
-              size: 18.0,
-              weight: FontWeight.w600,
+            color: black,
+            size: 18.0,
+            weight: FontWeight.w600,
           ),
         ),
-        // extendBodyBehindAppBar: true,
-        body: PartnerLisTile()
+        body: PartnerLisTile(userModel: widget.userModel),
       ),
     );
   }

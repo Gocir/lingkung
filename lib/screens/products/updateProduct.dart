@@ -2,10 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 // Firebase
 import 'package:firebase_storage/firebase_storage.dart';
 // Models
 import 'package:lingkung/models/productModel.dart';
+//  Providers
+import 'package:lingkung/providers/productProvider.dart';
 // Services
 import 'package:lingkung/services/productService.dart';
 // Utilities
@@ -24,7 +29,7 @@ class UpdateProduct extends StatefulWidget {
 class _UpdateProductState extends State<UpdateProduct> {
   final _scaffoldStateKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-
+  final FirebaseStorage storage = FirebaseStorage.instance;
   ProductServices _productService = ProductServices();
 
   TextEditingController nameController;
@@ -64,16 +69,23 @@ class _UpdateProductState extends State<UpdateProduct> {
         ? Loading()
         : Scaffold(
             key: _scaffoldStateKey,
+            backgroundColor: white,
             appBar: AppBar(
-              backgroundColor: blue,
+              backgroundColor: white,
               elevation: 0.0,
-              iconTheme: IconThemeData(color: white),
-              title: CustomText(
-                text: 'Perbarui Produk',
-                color: white,
-                size: 18.0,
-                weight: FontWeight.w600,
-              ),
+              iconTheme: IconThemeData(color: black),
+              // title: CustomText(
+              //   text: 'Perbarui Produk',
+              //   color: white,
+              //   size: 18.0,
+              //   weight: FontWeight.w600,
+              // ),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.help_outline),
+                  onPressed: () {},
+                ),
+              ],
             ),
             body: Form(
               key: _formKey,
@@ -81,11 +93,15 @@ class _UpdateProductState extends State<UpdateProduct> {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Row(
                         children: <Widget>[
                           Expanded(
-                            child: OutlineButton(
+                            child: Container(
+                              height: 180.0,
+                              child: OutlineButton(
+                                padding: const EdgeInsets.all(0),
                                 borderSide: BorderSide(
                                     color: Colors.grey.withOpacity(0.5),
                                     width: 2.5),
@@ -95,7 +111,9 @@ class _UpdateProductState extends State<UpdateProduct> {
                                           source: ImageSource.gallery),
                                       1);
                                 },
-                                child: _displayChild1()),
+                                child: _displayChild1(),
+                              ),
+                            ),
                           ),
                           // Expanded(
                           //   child: Padding(
@@ -132,147 +150,172 @@ class _UpdateProductState extends State<UpdateProduct> {
                           // ),
                         ],
                       ),
+                      SizedBox(height: 16.0),
+                      CustomText(
+                        text: 'Nama Produk',
+                        weight: FontWeight.w600,
+                      ),
                       TextFormField(
-                          controller: nameController,
-                          textCapitalization: TextCapitalization.words,
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Apa nama produk mu?',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Nama Produk',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          // maxLength: 100,
-                          onChanged: (String str) {
-                            setState(() {
-                              name = str;
-                            });
-                          },
-                          validator: (value) => (value.isEmpty)
-                              ? 'Masukkan nama produk'
-                              : (value.length > 100)
-                                  ? 'Batas maksimal karakter 100'
-                                  : null),
+                        controller: nameController,
+                        textCapitalization: TextCapitalization.words,
+                        style: TextStyle(fontFamily: "Poppins", color: black),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.only(bottom: 8.0),
+                          counterStyle: TextStyle(
+                            fontFamily: "Poppins",
+                            color: black,
+                          ),
+                          hintText: 'Contoh: Tas Ransel Daur Ulang',
+                          hintStyle: TextStyle(fontFamily: "Poppins"),
+                          errorStyle: TextStyle(fontFamily: "Poppins"),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: blue),
+                          ),
+                        ),
+                        onChanged: (String str) {
+                          setState(() {
+                            name = str;
+                          });
+                        },
+                        validator: (value) => (value.isEmpty)
+                            ? 'Masukkan nama produkmu'
+                            : (value.length > 100)
+                                ? 'Batas maksimal karakter 100'
+                                : null,
+                      ),
+                      SizedBox(height: 16.0),
+                      CustomText(
+                        text: 'Jumlah Stok',
+                        weight: FontWeight.w600,
+                      ),
                       TextFormField(
-                          controller: stockController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Berapa jumlah stok yang tersedia?',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Jumlah Stok',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          onChanged: (String str) {
-                            setState(() {
-                              stock = str;
-                            });
-                          },
-                          validator: (value) => (value.isEmpty)
-                              ? 'Masukkan jumlah stok produk'
-                              : (value.length > 6)
-                                  ? 'Batas maksimal stok 9.999'
-                                  : null),
+                        controller: stockController,
+                        keyboardType: TextInputType.number,
+                        style: TextStyle(fontFamily: "Poppins", color: black),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.only(bottom: 8.0),
+                          counterStyle: TextStyle(
+                            fontFamily: "Poppins",
+                            color: black,
+                          ),
+                          hintText: 'Contoh: 31',
+                          hintStyle: TextStyle(fontFamily: "Poppins"),
+                          errorStyle: TextStyle(fontFamily: "Poppins"),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: blue),
+                          ),
+                        ),
+                        onChanged: (String str) {
+                          setState(() {
+                            stock = str;
+                          });
+                        },
+                        validator: (value) => (value.isEmpty)
+                            ? 'Masukkan jumlah stok produkmu'
+                            : (value.length > 6)
+                                ? 'Batas maksimal stok 9.999'
+                                : null,
+                      ),
+                      SizedBox(height: 16.0),
+                      CustomText(
+                        text: 'Harga',
+                        weight: FontWeight.w600,
+                      ),
                       TextFormField(
-                          controller: priceController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Berapa harga jual produk mu?',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Harga',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              prefixText: 'Rp',
-                              prefixStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: yellow,
-                                  fontSize: 10.0),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          onChanged: (String str) {
-                            setState(() {
-                              price = str;
-                            });
-                          },
-                          validator: (value) => (value.isEmpty)
-                              ? 'Masukkan harga produk'
-                              : (value.length > 10)
-                                  ? 'Tolong beri harga wajar'
-                                  : null),
+                        controller: priceController,
+                        keyboardType: TextInputType.number,
+                        style: TextStyle(fontFamily: "Poppins", color: black),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.only(bottom: 8.0),
+                          counterStyle: TextStyle(
+                            fontFamily: "Poppins",
+                            color: black,
+                          ),
+                          hintText: 'Contoh: 310000',
+                          hintStyle: TextStyle(fontFamily: "Poppins"),
+                          prefixText: 'Rp',
+                          prefixStyle: TextStyle(
+                            fontFamily: "Poppins",
+                            color: Colors.red,
+                          ),
+                          errorStyle: TextStyle(fontFamily: "Poppins"),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: blue),
+                          ),
+                        ),
+                        onChanged: (String str) {
+                          setState(() {
+                            price = str;
+                          });
+                        },
+                        validator: (value) => (value.isEmpty)
+                            ? 'Masukkan harga jual produkmu'
+                            : (value.length > 10)
+                                ? 'Tolong beri harga wajar'
+                                : null,
+                      ),
+                      SizedBox(height: 16.0),
+                      CustomText(
+                        text: 'Deskripsi',
+                        weight: FontWeight.w600,
+                      ),
                       TextFormField(
-                          controller: descriptionController,
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText:
-                                  'Berikan deskripsi atau keterangan produk mu!',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Deskripsi',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          // maxLength: 1000,
-                          maxLines: 5,
-                          onChanged: (String str) {
-                            setState(() {
-                              description = str;
-                            });
-                          },
-                          validator: (value) => (value.isEmpty)
-                              ? 'Berikan deskripsi produk'
-                              : (value.length > 1000)
-                                  ? 'Batas maksimal karakter 1000'
-                                  : null),
-                      Container(
-                          height: 45.0,
-                          margin: EdgeInsets.only(top: 30.0, bottom: 16.0),
-                          child: RaisedButton(
-                            color: green,
-                            elevation: 2.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)),
-                            child: Center(
-                              child: CustomText(
-                                  text: 'SIMPAN',
-                                  color: white,
-                                  weight: FontWeight.w700),
-                            ),
-                            onPressed: () {
-                              save();
-                            },
-                          )),
+                        controller: descriptionController,
+                        style: TextStyle(fontFamily: "Poppins", color: black),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.only(bottom: 8.0),
+                          counterStyle: TextStyle(
+                            fontFamily: "Poppins",
+                            color: black,
+                          ),
+                          hintText:
+                              'Contoh: Tas Ransel Daur Ulang\nBahan : Plastik Bekas Rinso\nUkuran : 30 x 30 cm',
+                          hintStyle: TextStyle(fontFamily: "Poppins"),
+                          errorStyle: TextStyle(fontFamily: "Poppins"),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: blue),
+                          ),
+                        ),
+                        maxLines: 5,
+                        onChanged: (String str) {
+                          setState(() {
+                            description = str;
+                          });
+                        },
+                        validator: (value) => (value.isEmpty)
+                            ? 'Berikan deskripsi untuk produkmu'
+                            : (value.length > 1000)
+                                ? 'Batas maksimal karakter 1000'
+                                : null,
+                      ),
                     ],
                   ),
                 ),
+              ),
+            ),
+            bottomNavigationBar: Container(
+              height: 80.0,
+              padding: const EdgeInsets.all(16.0),
+              child: FlatButton(
+                color: green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Center(
+                  child: CustomText(
+                    text: 'SIMPAN',
+                    size: 16.0,
+                    color: white,
+                    weight: FontWeight.w700,
+                  ),
+                ),
+                onPressed: () {
+                  save();
+                },
               ),
             ),
           );
@@ -296,19 +339,21 @@ class _UpdateProductState extends State<UpdateProduct> {
 
   Widget _displayChild1() {
     if (_image1 == null) {
-      return Image.network(
-        '${widget.productModel.image.toString()}',
-        fit: BoxFit.contain,
-        width: double.infinity,
-        height: 150.0,
+      return CachedNetworkImage(
+        imageUrl: widget.productModel.image.toString(),
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: imageProvider),
+            color: white,
+          ),
+        ),
+        placeholder: (context, url) =>
+            SpinKitThreeBounce(color: black, size: 10.0),
+        errorWidget: (context, url, error) =>
+            Image.asset("assets/images/user.png"),
       );
     } else {
-      return Image.file(
-        _image1,
-        fit: BoxFit.contain,
-        width: double.infinity,
-        height: 150.0,
-      );
+      return Image.file(_image1);
     }
   }
 
@@ -349,16 +394,23 @@ class _UpdateProductState extends State<UpdateProduct> {
   // }
 
   void save() async {
+    final productProvider =
+        Provider.of<ProductProvider>(context, listen: false);
     if (_formKey.currentState.validate()) {
-      setState(() => loading = true);
+      setState(() {
+        loading = true;
+      });
+
       // if (_image1 != null && _image2 != null && _image3 != null) {
-      if (stock != null && price != null && description != null) {
+      if (name != null &&
+          stock != null &&
+          price != null &&
+          description != null) {
         if (_image1 != null) {
           String imageUrl1;
           // String imageUrl2;
           // String imageUrl3;
 
-          final FirebaseStorage storage = FirebaseStorage.instance;
           final String picture1 =
               "P1${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
           StorageUploadTask task1 =
@@ -385,32 +437,119 @@ class _UpdateProductState extends State<UpdateProduct> {
 
           task1.onComplete.then((snapshot) async {
             imageUrl1 = await snapshot1.ref.getDownloadURL();
-            _productService.updateProduct({
-              "id": widget.productModel.id,
-              "images": imageUrl1,
-              "name": name,
-              "stock": int.parse(stock),
-              "price": int.parse(price),
-              "description": description,
+            productProvider.updateProduct(
+              productId: widget.productModel.id,
+              images: imageUrl1,
+              name: name,
+              stock: int.parse(stock),
+              price: int.parse(price),
+              description: description,
+              userId: widget.productModel.userId,
+              userName: widget.productModel.userName,
+            );
+            setState(() {
+              loading = false;
             });
-            setState(() => loading = false);
             Navigator.pop(context);
           });
         } else {
-          _productService.updateProduct({
-            "id": widget.productModel.id,
-            "images": widget.productModel.image.toString(),
-            "name": name,
-            "stock": int.parse(stock),
-            "price": int.parse(price),
-            "description": description,
+          productProvider.updateProduct(
+            productId: widget.productModel.id,
+            images: widget.productModel.image.toString(),
+            name: name,
+            stock: int.parse(stock),
+            price: int.parse(price),
+            description: description,
+            userId: widget.productModel.userId,
+            userName: widget.productModel.userName,
+          );
+          setState(() {
+            loading = false;
           });
-          setState(() => loading = false);
+          Navigator.pop(context);
           Navigator.pop(context);
         }
       } else {
-        setState(() => loading = false);
+        setState(() {
+          loading = false;
+        });
+        _emptyModalBottomSheet(context);
       }
+    } else {
+      setState(() {
+          loading = false;
+        });
+      _emptyModalBottomSheet(context);
     }
+  }
+
+  void _emptyModalBottomSheet(context) {
+    showModalBottomSheet<void>(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+      ),
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.width / 2.2,
+                    alignment: Alignment.center,
+                    child: Image.asset("assets/images/verifailed.png"),
+                  ),
+                  SizedBox(height: 16.0),
+                  CustomText(
+                    text: 'Tunggu! Ada data yang kosong',
+                    size: 18.0,
+                    weight: FontWeight.w700,
+                  ),
+                  SizedBox(height: 5.0),
+                  CustomText(
+                    text:
+                        'Kamu tidak dapat menyimpan bila datamu kosong. Yuk, lengkapi datamu!',
+                  ),
+                  SizedBox(height: 16.0),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 48,
+                    child: FlatButton(
+                      color: green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: CustomText(
+                        text: 'OKE',
+                        color: white,
+                        size: 16.0,
+                        weight: FontWeight.w700,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

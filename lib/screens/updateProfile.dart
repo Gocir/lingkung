@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -66,13 +66,14 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 backgroundColor: white,
                 appBar: AppBar(
                     backgroundColor: white,
-                    elevation: 0.0,
+                    elevation: 0,
                     iconTheme: IconThemeData(color: black),
                     title: CustomText(
-                        text: 'Perbarui Profil',
-                        color: black,
-                        size: 18.0,
-                        weight: FontWeight.w600),
+                      text: 'Perbarui Profil',
+                      color: black,
+                      size: 18.0,
+                      weight: FontWeight.w600,
+                    ),
                     actions: <Widget>[
                       IconButton(
                           icon: Icon(Icons.help_outline), onPressed: () {})
@@ -85,43 +86,36 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
+                                  SizedBox(height: 14.0),
+                                  Center(
+                                    child: Stack(
+                                      alignment: Alignment.bottomRight,
+                                      children: [
+                                        imageWidget(),
                                         Container(
-                                            margin: EdgeInsets.all(16),
-                                            decoration: BoxDecoration(
-                                                color: yellow,
-                                                borderRadius:
-                                                    BorderRadius.circular(100)),
-                                            child: IconButton(
-                                                icon: Icon(Icons.photo_library,
-                                                    color: black),
-                                                onPressed: () {
-                                                  _getImage(
-                                                      ImageSource.gallery);
-                                                })),
-                                        Container(
-                                            width: 150.0,
-                                            height: 150.0,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(20.0),
-                                                child: imageWidget())),
-                                        Container(
-                                            margin: EdgeInsets.all(16),
-                                            decoration: BoxDecoration(
-                                                color: yellow,
-                                                borderRadius:
-                                                    BorderRadius.circular(100)),
-                                            child: IconButton(
-                                                icon: Icon(Icons.photo_camera,
-                                                    color: black),
-                                                onPressed: () {
-                                                  _getImage(ImageSource.camera);
-                                                }))
-                                      ]),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            color: white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black12,
+                                                offset: Offset(0, 0),
+                                                blurRadius: 6,
+                                              ),
+                                            ],
+                                          ),
+                                          child: IconButton(
+                                            icon: Icon(Icons.edit, color: blue),
+                                            onPressed: () {
+                                              _getImage();
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 30.0),
                                   CustomText(
                                       text: 'Nama', weight: FontWeight.w700),
                                   TextFormField(
@@ -215,45 +209,43 @@ class _UpdateProfileState extends State<UpdateProfile> {
   Widget imageWidget() {
     if (_selectedImage != null) {
       return Container(
-          width: 150.0,
-          height: 150.0,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5.0)),
+        height: 150.0,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100.0),
           child: Image.file(
             _selectedImage,
             fit: BoxFit.cover,
-          ));
+          ),
+        ),
+      );
     } else {
       return CachedNetworkImage(
-          imageUrl: widget.userModel?.image.toString(),
-          imageBuilder: (context, imageProvider) => Container(
-              width: 150.0,
-              height: 150.0,
-              decoration: BoxDecoration(
-                  image:
-                      DecorationImage(image: imageProvider, fit: BoxFit.cover),
-                  color: white,
-                  borderRadius: BorderRadius.circular(20.0))),
-          placeholder: (context, url) => Container(
-              width: 150.0,
-              height: 150.0,
-              decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(20.0)),
-              child: SpinKitThreeBounce(color: black, size: 20.0)),
-          errorWidget: (context, url, error) => Container(
-              width: 150.0,
-              height: 150.0,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/user.png"),
-                      fit: BoxFit.cover),
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(20.0))));
+        imageUrl: widget.userModel?.image.toString(),
+        imageBuilder: (context, imageProvider) =>
+            CircleAvatar(radius: 75.0, backgroundImage: imageProvider),
+        placeholder: (context, url) => CircleAvatar(
+          radius: 75.0,
+          child: SpinKitThreeBounce(color: black, size: 20.0),
+        ),
+        errorWidget: (context, url, error) => CircleAvatar(
+          radius: 75.0,
+          backgroundImage: AssetImage("assets/images/noimage.png"),
+        ),
+      );
     }
   }
 
-  void _getImage(ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source);
+  void _getImage() async {
+    File image = await ImagePickerGC.pickImage(
+        context: context,
+        source: ImgSource.Both,
+        cameraIcon: Icon(Icons.camera_alt, color: black),
+        cameraText:
+            CustomText(text: 'Kamera', size: 18.0, weight: FontWeight.w600),
+        galleryIcon: Icon(Icons.photo_library, color: black),
+        galleryText:
+            CustomText(text: 'Galeri', size: 18.0, weight: FontWeight.w600),
+        barrierDismissible: true);
     if (image != null) {
       File cropped = await ImageCropper.cropImage(
           sourcePath: image.path,

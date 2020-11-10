@@ -6,6 +6,7 @@ class TrashReceiveProvider with ChangeNotifier{
   TrashReceiveServices _trashReceiveService = TrashReceiveServices();
   TrashReceiveModel _trashReceiveModel;
   List<TrashReceiveModel> trashReceives = [];
+  List<Map<String, dynamic>> trashReceived = [];
   List<TrashReceiveModel> trashReceiveByPartner = [];
 
   // Getter
@@ -20,15 +21,18 @@ class TrashReceiveProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  loadSingleTrashReceive({String trashReceiveId}) async{
-    _trashReceiveModel = await _trashReceiveService.getTrashReceiveById(id: trashReceiveId);
+  loadSingleTrashReceive({String trashReceiveId, String partnerId}) async{
+    _trashReceiveModel = await _trashReceiveService.getTrashReceiveById(id: trashReceiveId, partnerId: partnerId);
     notifyListeners();
   }
 
   loadTrashReceiveByPartner(String partnerId)async{
-  
     trashReceiveByPartner = await _trashReceiveService.getTrashReceiveByPartner(partnerId: partnerId);
     notifyListeners();
   }
 
+  loadTrashReceived(String partnerId)async{
+    trashReceived = await _trashReceiveService.getTrashReceived(partnerId: partnerId);
+    // notifyListeners();
+  }
 }

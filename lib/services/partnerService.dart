@@ -20,6 +20,9 @@ class PartnerServices{
           .document(id.toString())
           .get()
           .then((doc) {
+          if (doc.data == null) {
+          return null;
+        }
         return PartnerModel.fromSnapshot(doc);
       });
 

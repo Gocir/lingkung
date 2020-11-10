@@ -1,17 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lingkung/models/addressModel.dart';
+import 'package:lingkung/models/userModel.dart';
+import 'package:lingkung/providers/addressProvider.dart';
 import 'package:provider/provider.dart';
-//  Providers
-import 'package:lingkung/providers/userProvider.dart';
 //  Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/loading.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 
 class UpdateAddress extends StatefulWidget {
+  final UserModel userModel;
   final AddressModel addressModel;
-  UpdateAddress({this.addressModel});
+  UpdateAddress({this.addressModel, this.userModel});
   @override
   _UpdateAddressState createState() => _UpdateAddressState();
 }
@@ -22,20 +24,20 @@ class _UpdateAddressState extends State<UpdateAddress> {
 
   TextEditingController addressLabelCtrl;
   TextEditingController recipientsNameCtrl;
-  TextEditingController phoNumberCtrl;
+  TextEditingController phoneNumberCtrl;
   TextEditingController provinceCtrl;
   TextEditingController cityCtrl;
   TextEditingController subDistrictCtrl;
-  TextEditingController posCodeCtrl;
+  TextEditingController postalCodeCtrl;
   TextEditingController addressDetailCtrl;
 
   String addressLabel;
   String recipientsName;
-  String phoNumber;
+  String phoneNumber;
   String province;
   String city;
   String subDistrict;
-  String posCode;
+  String postalCode;
   String addressDetail;
   bool isPrimary;
   bool loading = false;
@@ -45,11 +47,11 @@ class _UpdateAddressState extends State<UpdateAddress> {
     super.initState();
     addressLabel = widget.addressModel.addressLabel;
     recipientsName = widget.addressModel.recipientsName;
-    phoNumber = widget.addressModel.phoNumber.toString();
+    phoneNumber = widget.addressModel.phoneNumber;
     province = widget.addressModel.province;
     city = widget.addressModel.city;
     subDistrict = widget.addressModel.subDistrict;
-    posCode = widget.addressModel.posCode.toString();
+    postalCode = widget.addressModel.postalCode.toString();
     addressDetail = widget.addressModel.addressDetail;
     isPrimary = widget.addressModel.isPrimary;
 
@@ -57,366 +59,434 @@ class _UpdateAddressState extends State<UpdateAddress> {
         TextEditingController(text: widget.addressModel.addressLabel);
     recipientsNameCtrl =
         TextEditingController(text: widget.addressModel.recipientsName);
-    phoNumberCtrl =
-        TextEditingController(text: widget.addressModel.phoNumber.toString());
+    phoneNumberCtrl =
+        TextEditingController(text: widget.addressModel.phoneNumber);
     provinceCtrl = TextEditingController(text: widget.addressModel.province);
     cityCtrl = TextEditingController(text: widget.addressModel.city);
     subDistrictCtrl =
         TextEditingController(text: widget.addressModel.subDistrict);
-    posCodeCtrl =
-        TextEditingController(text: widget.addressModel.posCode.toString());
+    postalCodeCtrl =
+        TextEditingController(text: widget.addressModel.postalCode.toString());
     addressDetailCtrl =
         TextEditingController(text: widget.addressModel.addressDetail);
   }
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
     return loading
         ? Loading()
-        : Scaffold(
-            key: _scaffoldStateKey,
-            appBar: AppBar(
-              backgroundColor: blue,
-              iconTheme: IconThemeData(color: white),
-              title: CustomText(
-                text: 'Perbarui Alamat',
-                color: white,
-                size: 18.0,
-                weight: FontWeight.w600,
-              ),
-            ),
-            body: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                          controller: addressLabelCtrl,
-                          textCapitalization: TextCapitalization.words,
-                          style: TextStyle(
+        : SafeArea(
+            top: false,
+            child: Scaffold(
+              key: _scaffoldStateKey,
+              backgroundColor: white,
+              appBar: AppBar(
+                  backgroundColor: white,
+                  elevation: 0,
+                  iconTheme: IconThemeData(color: black),
+                  // title: CustomText(
+                  //     text: 'Alamat Baru',
+                  //     size: 18.0,
+                  //     weight: FontWeight.w600),
+                  actions: <Widget>[
+                    IconButton(
+                        icon: Icon(Icons.help_outline_outlined, color: black),
+                        onPressed: () {})
+                  ]),
+              body: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        CustomText(
+                            text: 'Label Alamat', weight: FontWeight.w600),
+                        TextFormField(
+                            controller: addressLabelCtrl,
+                            textCapitalization: TextCapitalization.words,
+                            style:
+                                TextStyle(fontFamily: "Poppins", color: black),
+                            decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding:
+                                    const EdgeInsets.only(bottom: 8.0),
+                                counterStyle: TextStyle(
+                                    fontFamily: "Poppins", color: black),
+                                hintText: 'Contoh: Rumah, Apartement, Kos, dll',
+                                hintStyle: TextStyle(fontFamily: "Poppins"),
+                                errorStyle: TextStyle(fontFamily: "Poppins"),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: blue))),
+                            onChanged: (str) {
+                              setState(() {
+                                addressLabel = str;
+                              });
+                            },
+                            validator: (value) => (value.isEmpty)
+                                ? 'Masukkan label alamat'
+                                : null),
+                        SizedBox(height: 16.0),
+                        CustomText(
+                            text: 'Nama Penerima', weight: FontWeight.w600),
+                        TextFormField(
+                            controller: recipientsNameCtrl,
+                            textCapitalization: TextCapitalization.words,
+                            style:
+                                TextStyle(fontFamily: "Poppins", color: black),
+                            decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding:
+                                    const EdgeInsets.only(bottom: 8.0),
+                                counterStyle: TextStyle(
+                                    fontFamily: "Poppins", color: black),
+                                hintText: 'Isi dengan nama penerima',
+                                hintStyle: TextStyle(fontFamily: "Poppins"),
+                                errorStyle: TextStyle(fontFamily: "Poppins"),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: blue))),
+                            onChanged: (str) {
+                              setState(() {
+                                recipientsName = str;
+                              });
+                            },
+                            validator: (value) => (value.isEmpty)
+                                ? 'Masukkan nama penerima'
+                                : null),
+                        SizedBox(height: 16.0),
+                        CustomText(text: 'Nomor HP', weight: FontWeight.w600),
+                        TextFormField(
+                            controller: phoneNumberCtrl,
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: <TextInputFormatter>[
+                              LengthLimitingTextInputFormatter(12),
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                color: black,
+                                fontWeight: FontWeight.normal),
+                            decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding:
+                                    const EdgeInsets.only(bottom: 8.0),
+                                counterStyle: TextStyle(
+                                    fontFamily: "Poppins",
+                                    color: black,
+                                    fontWeight: FontWeight.normal),
+                                hintText: 'Contoh: 081234567890',
+                                hintStyle: TextStyle(fontFamily: "Poppins"),
+                                errorStyle: TextStyle(fontFamily: "Poppins"),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: blue))),
+                            onChanged: (str) {
+                              setState(() {
+                                phoneNumber = str;
+                              });
+                            },
+                            validator: (value) => (value.isEmpty)
+                                ? 'Masukkan Nomor Telepon Penerima'
+                                : (value.length > 12)
+                                    ? 'Batas Maksimal Nomor Telepon adalah 12'
+                                    : null),
+                        SizedBox(height: 16.0),
+                        CustomText(text: 'Provinsi', weight: FontWeight.w600),
+                        TextFormField(
+                            controller: provinceCtrl,
+                            textCapitalization: TextCapitalization.words,
+                            style:
+                                TextStyle(fontFamily: "Poppins", color: black),
+                            decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding:
+                                    const EdgeInsets.only(bottom: 8.0),
+                                counterStyle: TextStyle(
+                                    fontFamily: "Poppins", color: black),
+                                hintText: 'Contoh: Jawa Barat',
+                                hintStyle: TextStyle(fontFamily: "Poppins"),
+                                errorStyle: TextStyle(fontFamily: "Poppins"),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: blue))),
+                            onChanged: (str) {
+                              setState(() {
+                                province = str;
+                              });
+                            },
+                            validator: (value) => (value.isEmpty)
+                                ? 'Masukkan nama provinsi'
+                                : null),
+                        SizedBox(height: 16.0),
+                        CustomText(
+                            text: 'Kota/Kabupaten', weight: FontWeight.w600),
+                        TextFormField(
+                            controller: cityCtrl,
+                            textCapitalization: TextCapitalization.words,
+                            style:
+                                TextStyle(fontFamily: "Poppins", color: black),
+                            decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding:
+                                    const EdgeInsets.only(bottom: 8.0),
+                                counterStyle: TextStyle(
+                                    fontFamily: "Poppins", color: black),
+                                hintText: 'Contoh: Kabupaten Bekasi',
+                                hintStyle: TextStyle(fontFamily: "Poppins"),
+                                errorStyle: TextStyle(fontFamily: "Poppins"),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: blue))),
+                            onChanged: (str) {
+                              setState(() {
+                                city = str;
+                              });
+                            },
+                            validator: (value) => (value.isEmpty)
+                                ? 'Masukkan nama kota/kabupaten'
+                                : null),
+                        SizedBox(height: 16.0),
+                        CustomText(text: 'Kecamatan', weight: FontWeight.w600),
+                        TextFormField(
+                            controller: subDistrictCtrl,
+                            textCapitalization: TextCapitalization.words,
+                            style: TextStyle(
                               fontFamily: "Poppins",
                               color: black,
-                              fontWeight: FontWeight.normal),
-                          decoration: InputDecoration(
+                            ),
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding:
+                                  const EdgeInsets.only(bottom: 8.0),
                               counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Cth: Rumah, Apartement, Kos, dll',
+                                fontFamily: "Poppins",
+                                color: black,
+                              ),
+                              hintText: 'Contoh: Kecamatan Babelan',
                               hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Label Alamat',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
                               errorStyle: TextStyle(fontFamily: "Poppins"),
                               focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          // maxLength: 100,
-                          onChanged: (String str) {
-                            setState(() {
-                              addressLabel = str;
-                            });
-                          },
-                          validator: (value) =>
-                              (value.isEmpty) ? 'Masukkan label alamat' : null),
-                      TextFormField(
-                          controller: recipientsNameCtrl,
-                          textCapitalization: TextCapitalization.words,
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              color: black,
-                              fontWeight: FontWeight.normal),
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Isi dengan nama penerima',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Nama Penerima',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          onChanged: (String str) {
-                            setState(() {
-                              recipientsName = str;
-                            });
-                          },
-                          validator: (value) => (value.isEmpty)
-                              ? 'Masukkan nama penerima'
-                              : null),
-                      TextFormField(
-                          controller: phoNumberCtrl,
-                          keyboardType: TextInputType.phone,
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              color: black,
-                              fontWeight: FontWeight.normal),
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Cth: 81234567890',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'No. Telepon',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              prefixText: '+62 ',
-                              prefixStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: yellow,
-                                  fontWeight: FontWeight.w500),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          onChanged: (String str) {
-                            setState(() {
-                              phoNumber = str;
-                            });
-                          },
-                          validator: (value) => (value.isEmpty)
-                              ? 'Masukkan Nomor Telepon Penerima'
-                              : (value.length > 11)
-                                  ? 'Batas Maksimal Nomor Telepon adalah 11'
-                                  : null),
-                      TextFormField(
-                          controller: provinceCtrl,
-                          textCapitalization: TextCapitalization.words,
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              color: black,
-                              fontWeight: FontWeight.normal),
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Isi dengan nama provinsi',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Provinsi',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          onChanged: (String str) {
-                            setState(() {
-                              province = str;
-                            });
-                          },
-                          validator: (value) => (value.isEmpty)
-                              ? 'Masukkan nama provinsi'
-                              : null),
-                      TextFormField(
-                          controller: cityCtrl,
-                          textCapitalization: TextCapitalization.words,
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              color: black,
-                              fontWeight: FontWeight.normal),
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Isi dengan nama kota/kabupaten',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Kota/Kabupaten',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          onChanged: (String str) {
-                            setState(() {
-                              city = str;
-                            });
-                          },
-                          validator: (value) => (value.isEmpty)
-                              ? 'Masukkan nama kota/kabupaten'
-                              : null),
-                      TextFormField(
-                          controller: subDistrictCtrl,
-                          textCapitalization: TextCapitalization.words,
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              color: black,
-                              fontWeight: FontWeight.normal),
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Isi dengan nama kecamatan',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Kecamatan',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          onChanged: (String str) {
-                            setState(() {
-                              subDistrict = str;
-                            });
-                          },
-                          validator: (value) => (value.isEmpty)
-                              ? 'Masukkan nama kecamatan'
-                              : null),
-                      TextFormField(
-                          controller: posCodeCtrl,
+                                borderSide: BorderSide(color: blue),
+                              ),
+                            ),
+                            onChanged: (str) {
+                              setState(() {
+                                subDistrict = str;
+                              });
+                            },
+                            validator: (value) => (value.isEmpty)
+                                ? 'Masukkan nama kecamatan'
+                                : null),
+                        SizedBox(height: 16.0),
+                        CustomText(
+                          text: 'Kode POS',
+                          weight: FontWeight.w600,
+                        ),
+                        TextFormField(
+                          controller: postalCodeCtrl,
                           keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            LengthLimitingTextInputFormatter(5),
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           style: TextStyle(
+                            fontFamily: "Poppins",
+                            color: black,
+                          ),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.only(bottom: 8.0),
+                            counterStyle: TextStyle(
                               fontFamily: "Poppins",
                               color: black,
-                              fontWeight: FontWeight.normal),
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Isi dengan kode POS',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Kode POS',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          onChanged: (String str) {
+                            ),
+                            hintText: 'Contoh: 17510',
+                            hintStyle: TextStyle(fontFamily: "Poppins"),
+                            errorStyle: TextStyle(fontFamily: "Poppins"),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: blue),
+                            ),
+                          ),
+                          onChanged: (str) {
                             setState(() {
-                              posCode = str;
+                              postalCode = str;
                             });
                           },
                           validator: (value) => (value.isEmpty)
                               ? 'Masukkan kode POS'
                               : (value.length > 5)
                                   ? 'Batas Maksimal karakter adalah 5'
-                                  : null),
-                      TextFormField(
+                                  : null,
+                        ),
+                        SizedBox(height: 16.0),
+                        CustomText(
+                          text: 'Alamat Detail',
+                          weight: FontWeight.w600,
+                        ),
+                        TextFormField(
                           controller: addressDetailCtrl,
                           textCapitalization: TextCapitalization.words,
                           style: TextStyle(
+                            fontFamily: "Poppins",
+                            color: black,
+                          ),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.only(bottom: 8.0),
+                            counterStyle: TextStyle(
                               fontFamily: "Poppins",
                               color: black,
-                              fontWeight: FontWeight.normal),
-                          decoration: InputDecoration(
-                              counterStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.normal),
-                              hintText: 'Masukkan Jalan, Gedung, Nomor, RT/RW',
-                              hintStyle: TextStyle(fontFamily: "Poppins"),
-                              labelText: 'Alamat Detail',
-                              labelStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: black,
-                                  fontWeight: FontWeight.w500),
-                              errorStyle: TextStyle(fontFamily: "Poppins"),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: yellow))),
-                          onChanged: (String str) {
+                            ),
+                            hintText: 'Contoh: Nama gedung, jalan & lainnya...',
+                            hintStyle: TextStyle(fontFamily: "Poppins"),
+                            errorStyle: TextStyle(fontFamily: "Poppins"),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: blue),
+                            ),
+                          ),
+                          onChanged: (str) {
                             setState(() {
                               addressDetail = str;
                             });
                           },
-                          validator: (value) => (value.isEmpty)
-                              ? 'Masukkan detail alamat'
-                              : null),
-                      // Row(
-                      //   mainAxisSize: MainAxisSize.max,
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: <Widget>[
-                      //     CustomText(
-                      //       text: 'Jadikan Sebagai Alamat Utama',
-                      //     ),
-                      //     CupertinoSwitch(
-                      //         value: isPrimary,
-                      //         onChanged: (bool value) {
-                      //           setState(() {
-                      //             isPrimary = value;
-                      //           });
-                      //         },
-                      //         activeColor: blue),
-                      //   ],
-                      // ),
-                      Container(
-                          height: 45.0,
-                          margin: EdgeInsets.only(top: 30.0, bottom: 16.0),
-                          child: RaisedButton(
-                            color: green,
-                            elevation: 2.0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)),
-                            child: Center(
-                              child: CustomText(
-                                  text: 'SIMPAN',
-                                  color: white,
-                                  weight: FontWeight.w700),
-                            ),
-                            onPressed: () async {
-                              // save();
-                              if (_formKey.currentState.validate()) {
-                                setState(() => loading = true);
-                                bool value = await userProvider.addAddress(
-                                    addressLabel: addressLabel,
-                                    recipientsName: recipientsName,
-                                    phoNumber: int.parse(phoNumber),
-                                    province: province,
-                                    city: city,
-                                    subDistrict: subDistrict,
-                                    posCode: int.parse(posCode),
-                                    addressDetail: addressDetail);
-                                if (value) {
-                                  print("Address Saved!");
-                                  _scaffoldStateKey.currentState
-                                      .showSnackBar(SnackBar(
-                                          content: CustomText(
-                                    text: "Saved!",
-                                    color: white,
-                                    weight: FontWeight.w600,
-                                  )));
-                                  userProvider.reloadUserModel();
-                                  setState(() {
-                                    loading = false;
-                                  });
-                                  Navigator.pop(context);
-                                } else {
-                                  print("Address failed to Save!");
-                                  setState(() {
-                                    loading = false;
-                                  });
-                                }
-                                setState(() => loading = false);
-                              } else {
-                                setState(() => loading = false);
-                              }
-                            },
-                          )),
-                    ],
+                          validator: (value) =>
+                              (value.isEmpty) ? 'Masukkan detail alamat' : null,
+                        ),
+                        // Row(
+                        //   mainAxisSize: MainAxisSize.max,
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: <Widget>[
+                        //     CustomText(
+                        //       text: 'Jadikan Sebagai Alamat Utama',
+                        //     ),
+                        //     CupertinoSwitch(
+                        //         value: isPrimary,
+                        //         onChanged: (bool value) {
+                        //           setState(() {
+                        //             isPrimary = value;
+                        //           });
+                        //         },
+                        //         activeColor: blue),
+                        //   ],
+                        // ),
+                      ],
+                    ),
                   ),
+                ),
+              ),
+              bottomNavigationBar: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 80.0,
+                padding: EdgeInsets.all(16.0),
+                child: FlatButton(
+                  color: green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: CustomText(
+                    text: 'SIMPAN',
+                    color: white,
+                    weight: FontWeight.w700,
+                  ),
+                  onPressed: () {
+                    save();
+                  },
                 ),
               ),
             ),
           );
+  }
+
+  void save() async {
+    final addressProvider =
+        Provider.of<AddressProvider>(context, listen: false);
+    if (_formKey.currentState.validate()) {
+      setState(() => loading = true);
+      await addressProvider.updateAddress(
+          id: widget.addressModel.id,
+          userId: widget.userModel.id,
+          addressLabel: addressLabel,
+          recipientsName: recipientsName,
+          phoneNumber: phoneNumber,
+          province: province,
+          city: city,
+          subDistrict: subDistrict,
+          postalCode: int.parse(postalCode),
+          addressDetail: addressDetail);
+
+      print("Address Saved!");
+      addressProvider.loadAddress();
+      setState(() => loading = false);
+      Navigator.pop(context);
+    } else {
+      print("Address failed to Save!");
+      _emptyModalBottomSheet(context);
+      setState(() => loading = false);
+    }
+  }
+
+  void _emptyModalBottomSheet(context) {
+    showModalBottomSheet<void>(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+      ),
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      height: MediaQuery.of(context).size.width / 2.2,
+                      alignment: Alignment.center,
+                      child: Image.asset("assets/images/verifailed.png")),
+                  SizedBox(height: 16.0),
+                  CustomText(
+                    text: 'Tunggu! Ada data yang kosong',
+                    size: 18.0,
+                    weight: FontWeight.w700,
+                  ),
+                  SizedBox(height: 5.0),
+                  CustomText(
+                    text:
+                        'Kamu tidak dapat menyimpan bila datamu kosong. Yuk, lengkapi datamu!',
+                  ),
+                  SizedBox(height: 16.0),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 48,
+                    child: FlatButton(
+                      color: green,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      child: CustomText(
+                          text: 'OKE',
+                          color: white,
+                          size: 16.0,
+                          weight: FontWeight.w700),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

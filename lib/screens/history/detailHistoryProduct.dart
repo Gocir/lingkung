@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lingkung/models/orderModel.dart';
+import 'package:lingkung/models/productOrderModel.dart';
 import 'package:lingkung/screens/products/exploreProduct.dart';
 import 'package:provider/provider.dart';
 import 'package:lingkung/providers/userProvider.dart';
@@ -8,7 +8,7 @@ import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
 
 class DetailHistoryProduct extends StatefulWidget {
-  final OrderModel orderModel;
+  final ProductOrderModel orderModel;
   DetailHistoryProduct({this.orderModel});
   @override
   _DetailHistoryProductState createState() => _DetailHistoryProductState();
@@ -229,8 +229,8 @@ class _DetailHistoryProductState extends State<DetailHistoryProduct> {
                         Expanded(
                           flex: 1,
                           child: CustomText(
-                            text:
-                                '${widget.orderModel.address.addressDetail}, ${widget.orderModel.address.subDistrict}, ${widget.orderModel.address.city}, ${widget.orderModel.address.province}, ${widget.orderModel.address.posCode}',
+                            text: '',
+                                // '${widget.orderModel.address.addressDetail}, ${widget.orderModel.address.subDistrict}, ${widget.orderModel.address.city}, ${widget.orderModel.address.province}, ${widget.orderModel.address.postalCode}',
                             line: 10,
                             weight: FontWeight.w600,
                           ),

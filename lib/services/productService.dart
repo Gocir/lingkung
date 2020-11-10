@@ -6,19 +6,26 @@ class ProductServices {
   String collection = 'products';
   Firestore _firestore = Firestore.instance;
 
-  void addProduct(Map<String, dynamic> data) {
-    var id = Uuid();
-    String productId = id.v1();
-    data["id"] = productId;
-    _firestore.collection(collection).document(productId).setData(data);
+  void addProduct(
+      {Map<String, dynamic> data}) {
+    _firestore
+        .collection(collection)
+        .document(data['id'])
+        .setData(data);
   }
 
-  void updateProduct(Map<String, dynamic> values) {
-    _firestore.collection(collection).document(values['id']).updateData(values);
+  void updateProduct({Map<String, dynamic> data}) {
+    _firestore
+        .collection(collection)
+        .document(data['id'])
+        .updateData(data);
   }
 
-  Future deleteProduct(String id) async {
-    _firestore.collection(collection).document(id).delete();
+  Future<void> deleteProduct(String docId) async {
+    _firestore
+        .collection(collection)
+        .document(docId)
+        .delete();
   }
 
   Future<List<ProductModel>> getProduct() async =>

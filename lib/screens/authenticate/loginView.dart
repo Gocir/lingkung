@@ -172,8 +172,8 @@ class _LoginViewState extends State<LoginView> {
                                         validator: (value) => (value.isEmpty)
                                             ? 'Masukkan Nomor Ponsel-mu'
                                             : (value.length > 11 ||
-                                                    value.length < 11)
-                                                ? 'Batas Maksimal Nomor Ponsel adalah 11'
+                                                    value.length < 10)
+                                                ? 'Batas Minimal Nomor Ponsel adalah 11'
                                                 : null))
                               ]))
                         ])),

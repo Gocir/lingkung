@@ -11,6 +11,8 @@ import 'package:lingkung/widgets/history/notYetPaidHistoryProduct.dart';
 // Widgets
 import 'package:lingkung/widgets/history/packedHistoryProduct.dart';
 import 'package:lingkung/widgets/history/sentHistoryProduct.dart';
+import 'package:lingkung/widgets/history/trashOrderProgress.dart';
+import 'package:lingkung/widgets/history/trashOrderComplete.dart';
 
 class OrderPage extends StatefulWidget {
   @override
@@ -61,8 +63,8 @@ class _OrderPageState extends State<OrderPage> {
     ];
 
     final _kTrashPages = <Widget> [
-      Center(child: Icon(Icons.timer)),
-      Center(child: Icon(Icons.check_circle_outline)),
+      TrashOrderProgress(),
+      TrashOrderComplete(),
     ];
 
     return DefaultTabController(
@@ -71,6 +73,7 @@ class _OrderPageState extends State<OrderPage> {
         appBar: AppBar(
           backgroundColor: blue,
           centerTitle: true,
+          automaticallyImplyLeading: false,
           title: CustomText(
             text: 'Riwayat Pesanan',
             size: 18.0,

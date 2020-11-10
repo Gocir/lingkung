@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lingkung/models/orderModel.dart';
-import 'package:lingkung/providers/orderProvider.dart';
+import 'package:lingkung/models/productOrderModel.dart';
+import 'package:lingkung/providers/productOrderProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
 import 'package:lingkung/screens/history/detailHistoryProduct.dart';
 import 'package:lingkung/utilities/colorStyle.dart';
@@ -13,7 +13,7 @@ class FinishHistoryProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    final orderProvider = Provider.of<OrderProvider>(context);
+    final orderProvider = Provider.of<ProductOrderProvider>(context);
     orderProvider.loadOrderFinish(userProvider.user.uid);
     return (orderProvider.orderFinish.isNotEmpty)
         ? ListView.builder(
@@ -21,7 +21,7 @@ class FinishHistoryProduct extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             itemCount: orderProvider.orderFinish.length,
             itemBuilder: (_, index) {
-              OrderModel _order = orderProvider.orderFinish[index];
+              ProductOrderModel _order = orderProvider.orderFinish[index];
               userProvider.loadUserById(_order.storeOwnerId[0]);
               return (_order.listProduct.length == 0)
                   ? Loading()
