@@ -1,86 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lingkung/models/addressModel.dart';
-import 'package:lingkung/models/productCartModel.dart';
 import 'package:lingkung/models/productOrderModel.dart';
-import 'package:lingkung/models/productModel.dart';
-import 'package:lingkung/models/shippingModel.dart';
-import 'package:uuid/uuid.dart';
 
 class ProductOrderServices {
   String collection = "productOrders";
   Firestore _firestore = Firestore.instance;
 
-  // void createOrder(
-  //     {String userId,
-  //     String id,
-  //     AddressModel address,
-  //     ShippingModel shipping,
-  //     int shippingPrice,
-  //     String note,
-  //     ProductModel productModel,
-  //     int quantity,
-  //     List<CartProductModel> listProduct,
-  //     int subTotalProduct,
-  //     int total,
-  //     String status,
-  //     }) {
-  //   List<Map> convertedCart = [];
-  //   Map convertedShipping = (shipping.toMap());
-  //   List<String> storeOwnerUid = [];
-      
-  //   if (listProduct != null) {
-  //     for (CartProductModel cartProduct in listProduct) {
-  //       convertedCart.add(cartProduct.toMap());
-  //       storeOwnerUid.add(cartProduct.storeOwnerId);
-  //     }
+  void addProductOrder(
+      {Map<String, dynamic> data}) {
+    _firestore
+        .collection(collection)
+        .document(data['id'])
+        .setData(data);
+  }
 
-  //     _firestore.collection(collection).document(id).setData({
-  //       "id": id,
-  //       "userId": userId,
-  //       "storeOwnerId": storeOwnerUid,
-  //       "address": null,
-  //       "listProduct": convertedCart,
-  //       "shipping": convertedShipping,
-  //       "shippingPrice": shippingPrice,
-  //       "subTotalProduct": subTotalProduct,
-  //       "total": total,
-  //       "note": note,
-  //       "status": status,
-  //       "createdAt": DateTime.now().millisecondsSinceEpoch
-  //     });
-  //   } else {
-  //     var uuid = Uuid();
-  //     String cartProductId = uuid.v4();
-  //     List<Map> convertedProduct = [{
-  //       "id": cartProductId,
-  //       "productId": productModel.id,
-  //       "image": productModel.image,
-  //       "name": productModel.name,
-  //       "price": productModel.price,
-  //       "quantity": quantity,
-  //       "storeOwnerId": productModel.userId,
-  //       "totalSaleProduct": productModel.price * quantity,
-  //       "isCheck": false,
-  //     }];
-      
-  //     storeOwnerUid = [productModel.userId];
-  //     _firestore.collection(collection).document(id).setData({
-  //       "id": id,
-  //       "userId": userId,
-  //       "storeOwnerId": storeOwnerUid,
-  //       "address": null,
-  //       "listProduct": convertedProduct,
-  //       "shipping": convertedShipping,
-  //       "shippingPrice": shippingPrice,
-  //       "subTotalProduct": subTotalProduct,
-  //       "total": total,
-  //       "note": note,
-  //       "status": status,
-  //       "createdAt": DateTime.now().millisecondsSinceEpoch
-  //     });
-  //   }
-  //   print(id + " is saved!");
-  // }
+  void updateProductOrder({Map<String, dynamic> data}) {
+    _firestore
+        .collection(collection)
+        .document(data['id'])
+        .updateData(data);
+  }
+
+  Future<void> deleteProductOrder(String docId) async {
+    _firestore
+        .collection(collection)
+        .document(docId)
+        .delete();
+  }
 
    Future<List<ProductOrderModel>> getOrder() async =>
       _firestore.collection(collection).getDocuments().then((result) {
@@ -101,7 +46,7 @@ class ProductOrderServices {
       
   Future<List<ProductOrderModel>> getOrderByOwners({String userId, String status}) async => _firestore
           .collection(collection)
-          .where("storeOwnerId", arrayContains: userId)
+          .where("storeOwnerId", isEqualTo: userId)
           .where("status", isEqualTo: status)
           .getDocuments()
           .then((result) {

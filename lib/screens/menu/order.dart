@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 // Firebase
 import 'package:firebase_storage/firebase_storage.dart';
-// Providers
 // Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
@@ -36,76 +35,88 @@ class _OrderPageState extends State<OrderPage> {
       0: Padding(
         padding: EdgeInsets.all(6.0),
         child: CustomText(
-          text: 'Sampah', color: (_selectedIndexValue == 0) ? white : black.withOpacity(0.5))),
+          text: 'Sampah',
+          color: (_selectedIndexValue == 0) ? white : black.withOpacity(0.5),
+        ),
+      ),
       1: Padding(
         padding: EdgeInsets.all(6.0),
         child: CustomText(
-          text: 'Produk', color: (_selectedIndexValue == 1) ? white : black.withOpacity(0.5))),
+          text: 'Produk',
+          color: (_selectedIndexValue == 1) ? white : black.withOpacity(0.5),
+        ),
+      ),
     };
-    
-    final _kProducTabs = <Tab> [
+
+    final _kProducTabs = <Tab>[
       Tab(text: 'Belum Bayar'),
       Tab(text: 'Dikemas'),
       Tab(text: 'Dikirim'),
       Tab(text: 'Selesai'),
     ];
-    
-    final _kTrashTabs = <Tab> [
+
+    final _kTrashTabs = <Tab>[
       Tab(text: 'Dalam Proses'),
       Tab(text: 'Selesai'),
     ];
 
-    final _kProductPages = <Widget> [
+    final _kProductPages = <Widget>[
       NotYetPaidHistoryProduct(),
       PackedHistoryProduct(),
       SentHistoryProduct(),
       FinishHistoryProduct()
     ];
 
-    final _kTrashPages = <Widget> [
+    final _kTrashPages = <Widget>[
       TrashOrderProgress(),
       TrashOrderComplete(),
     ];
 
     return DefaultTabController(
-        length: (_selectedIndexValue == 0) ? _kTrashTabs.length : _kProducTabs.length,
-        child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: blue,
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          title: CustomText(
-            text: 'Riwayat Pesanan',
-            size: 18.0,
-            weight: FontWeight.w600,
-          ),
-          bottom: PreferredSize(
-            preferredSize: Size(MediaQuery.of(context).size.width, 100),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: CupertinoSlidingSegmentedControl(
-                    children: _history,
-                    thumbColor: green,
-                    groupValue: _selectedIndexValue,
-                    onValueChanged: onValueChanged),
-                ),
-                TabBar(
-                  indicatorColor: yellow,
-                  labelColor: yellow,
-                  labelStyle: TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.w500),
-                  unselectedLabelColor: white.withOpacity(0.8),
-                  unselectedLabelStyle: TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.normal),
-                  isScrollable: (_selectedIndexValue == 0) ? false : true,
-                  tabs: (_selectedIndexValue == 0) ? _kTrashTabs : _kProducTabs)
-              ],
-            )),
+      length:
+          (_selectedIndexValue == 0) ? _kTrashTabs.length : _kProducTabs.length,
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: blue,
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+            title: CustomText(
+              text: 'Riwayat Pesanan',
+              size: 18.0,
+              weight: FontWeight.w600,
+            ),
+            bottom: PreferredSize(
+                preferredSize: Size(MediaQuery.of(context).size.width, 100),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: CupertinoSlidingSegmentedControl(
+                          children: _history,
+                          thumbColor: green,
+                          groupValue: _selectedIndexValue,
+                          onValueChanged: onValueChanged),
+                    ),
+                    TabBar(
+                        indicatorColor: yellow,
+                        labelColor: yellow,
+                        labelStyle: TextStyle(
+                            fontFamily: "Poppins", fontWeight: FontWeight.w500),
+                        unselectedLabelColor: white.withOpacity(0.8),
+                        unselectedLabelStyle: TextStyle(
+                            fontFamily: "Poppins",
+                            fontWeight: FontWeight.normal),
+                        isScrollable: (_selectedIndexValue == 0) ? false : true,
+                        tabs: (_selectedIndexValue == 0)
+                            ? _kTrashTabs
+                            : _kProducTabs)
+                  ],
+                )),
             flexibleSpace: Row(
               children: <Widget>[
                 Transform.translate(
-                  offset: Offset(-14.23, 36.85),
+                  offset: Offset(-14.23, 40.85),
                   child:
                       // Adobe XD layer: 'grass1' (shape)
                       Container(
@@ -120,7 +131,7 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                 ),
                 Transform.translate(
-                  offset: Offset(150, -20.93),
+                  offset: Offset(150, -16.93),
                   child:
                       // Adobe XD layer: 'grass2' (shape)
                       Container(
@@ -136,9 +147,10 @@ class _OrderPageState extends State<OrderPage> {
                 ),
               ],
             ),
-        ),
-        body: (_selectedIndexValue == 0) ? TabBarView(children: _kTrashPages) : TabBarView(children: _kProductPages)
-      ),
+          ),
+          body: (_selectedIndexValue == 0)
+              ? TabBarView(children: _kTrashPages)
+              : TabBarView(children: _kProductPages)),
     );
   }
 }

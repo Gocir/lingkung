@@ -1,17 +1,15 @@
 import 'dart:async';
 
 import 'package:lingkung/main.dart';
-import 'package:lingkung/models/shippingModel.dart';
-import 'package:lingkung/screens/authenticate/VerificationView.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 // Firebase
 import 'package:firebase_auth/firebase_auth.dart';
 // Models
-import 'package:lingkung/models/productCartModel.dart';
-import 'package:lingkung/models/productModel.dart';
+import 'package:lingkung/models/shippingModel.dart';
 import 'package:lingkung/models/userModel.dart';
+//  Screens
+import 'package:lingkung/screens/authenticate/VerificationView.dart';
 // Services
 import 'package:lingkung/services/userService.dart';
 
@@ -176,7 +174,7 @@ class UserProvider with ChangeNotifier {
 
   Future<void> loadUserById(String userId) async {
     userById = await _userService.getOwnerById(id: userId);
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> loadUserByPhone(String phoNumber) async {
@@ -196,24 +194,28 @@ class UserProvider with ChangeNotifier {
   }
 
   /////////////////////////   SHIPPING   ////////////////////////
-  Future<bool> addShipping({String id, String name, bool isCheck}) async {
-    print("ID: ${id.toString()}");
+  Future<void> manipulateShipping({String id, String name, String duration, String type, int price, String status, String userId}) async {
+    print("Name: ${name.toString()}");
 
     try {
-      var uuid = Uuid();
-      String shippingId = uuid.v4();
-      List shippingList = _userModel.shippingModel;
-      Map shippingModel = {"id": shippingId, "name": name, "isCheck": isCheck};
+      Map shippingMap = {
+        "id": id,
+        "name": name,
+        "duration": duration,
+        "type": type,
+        "price": price,
+      };
 
-      ShippingModel shipping = ShippingModel.fromMap(shippingModel);
-      print("ADDRESS ARE: ${shippingList.toString()}");
-      _userService.addShipping(userId: _user.uid, shippingModel: shipping);
+      ShippingModel shippingModel = ShippingModel.fromMap(shippingMap);
+      if (status == "add") {
+        _userService.addShipping(userId: userId, shippingModel: shippingModel);
+      } else {
+        _userService.deleteShipping(userId: userId, shippingModel: shippingModel);
+      }
       notifyListeners();
-      return true;
     } catch (e) {
       print("THE ERROR ${e.toString()}");
       notifyListeners();
-      return false;
     }
   }
 

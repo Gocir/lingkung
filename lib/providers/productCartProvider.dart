@@ -9,6 +9,7 @@ class ProductCartProvider with ChangeNotifier {
   ProductCartModel _productCartModel;
   List<ProductCartModel> productCarts = [];
   List<ProductCartModel> productCartByUser = [];
+  List<ProductCartModel> productCartUserByOwner = [];
   List<ProductCartModel> productCartByCart = [];
   List<String> documents = [];
   int _total;
@@ -37,15 +38,16 @@ class ProductCartProvider with ChangeNotifier {
     _productCartModel =
         await _productCartService.getProductCartByDoc(userId: userId, docId: docId);
   }
-
-  // loadProductByCart(String userId, String productTypeId) async {
-  //   productCartByCart =
-  //       await _productCartService.getProductCartByCart(productTypeId: productTypeId);
-  // }
   
   loadProductCartByUser(String userId) async {
     productCartByUser =
         await _productCartService.getProductCartByUser(userId: userId);
+        notifyListeners();
+  }
+  
+  loadProductCartUserByOwner(String userId, String storeOwnerId) async {
+    productCartUserByOwner =
+        await _productCartService.getProductCartUserByOwner(userId: userId, storeOwnerId: storeOwnerId);
         notifyListeners();
   }
 

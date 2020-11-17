@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lingkung/models/productCartModel.dart';
 import 'package:lingkung/models/shippingModel.dart';
 
 class UserModel {

@@ -35,78 +35,84 @@ class _MyStoreState extends State<MyStore> {
           CustomText(text: 'Toko', weight: FontWeight.w700),
           SizedBox(height: 5.0),
           Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: white,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black12,
-                      offset: Offset(0, 0),
-                      blurRadius: 3)
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: white,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black12, offset: Offset(0, 0), blurRadius: 3)
+              ],
+            ),
+            child: Column(
+              children: ListTile.divideTiles(
+                context: context,
+                tiles: [
+                  ListTile(
+                    leading: Image.asset("assets/icons/add.png"),
+                    title: CustomText(
+                      text: 'Tambah Produk Baru',
+                      weight: FontWeight.w500,
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: grey,
+                    ),
+                    dense: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AddProduct(userModel: widget.userModel),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Image.asset("assets/icons/shipping.png"),
+                    title: CustomText(
+                      text: 'Jasa Pengiriman',
+                      weight: FontWeight.w500,
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: grey,
+                    ),
+                    dense: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ManipulateShipping(userModel: widget.userModel),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Image.asset("assets/icons/sales.png"),
+                    title: CustomText(
+                      text: 'Penjualan Saya',
+                      weight: FontWeight.w500,
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: grey,
+                    ),
+                    dense: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SalesProductPage(userModel: widget.userModel),
+                        ),
+                      );
+                    },
+                  ),
                 ],
-              ),
-              child: Column(
-                children: ListTile.divideTiles(
-                  context: context,
-                  tiles: [
-                    ListTile(
-                      leading: Image.asset("assets/icons/add.png"),
-                      title: CustomText(
-                          text: 'Tambah Produk Baru', weight: FontWeight.w500),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: grey,
-                      ),
-                      dense: true,
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddProduct(userModel: widget.userModel),
-                            ));
-                      },
-                    ),
-                    ListTile(
-                      leading: Image.asset("assets/icons/shipping.png"),
-                      title: CustomText(
-                        text: 'Jasa Pengiriman',
-                        weight: FontWeight.w500,
-                      ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: grey,
-                      ),
-                      dense: true,
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ManipulateShipping(),
-                            ));
-                      },
-                    ),
-                    ListTile(
-                      leading: Image.asset("assets/icons/sales.png"),
-                      title: CustomText(
-                        text: 'Penjualan Saya',
-                        weight: FontWeight.w500,
-                      ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: grey,
-                      ),
-                      dense: true,
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SalesProductPage(),
-                            ));
-                      },
-                    ),
-                  ],
-                ).toList(),
-              )),
+              ).toList(),
+            ),
+          ),
           SizedBox(
             height: 16.0,
           ),
@@ -116,10 +122,19 @@ class _MyStoreState extends State<MyStore> {
               CustomText(text: 'Produk', weight: FontWeight.w700),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyProductPage()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyProductPage(),
+                    ),
+                  );
                 },
-                child: CustomText(text: 'Lihat lainnya', size: 12, color: blue, weight: FontWeight.w600),
+                child: CustomText(
+                  text: 'Lihat lainnya',
+                  size: 12,
+                  color: blue,
+                  weight: FontWeight.w600,
+                ),
               ),
             ],
           ),
@@ -145,29 +160,33 @@ class _MyStoreState extends State<MyStore> {
                               child: InkWell(
                                 onTap: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => DetailMyProduct(
-                                              productModel: productProvider
-                                                  .productByUser[index])));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailMyProduct(
+                                          productModel: productProvider
+                                              .productByUser[index]),
+                                    ),
+                                  );
                                 },
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height:
-                                            MediaQuery.of(context).size.width *
-                                                0.35,
-                                        child: ClipRRect(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10.0),
-                                              topRight: Radius.circular(10.0),
-                                            ),
-                                            child: Image.network(
-                                                '${productProvider.productByUser[index].image.toString()}',
-                                                fit: BoxFit.cover))),
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              0.35,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10.0),
+                                          topRight: Radius.circular(10.0),
+                                        ),
+                                        child: Image.network(
+                                          '${productProvider.productByUser[index].image.toString()}',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
                                     Container(
                                       height: 38.0,
                                       padding: EdgeInsets.only(

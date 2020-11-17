@@ -11,8 +11,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lingkung/models/productModel.dart';
 //  Providers
 import 'package:lingkung/providers/productProvider.dart';
-// Services
-import 'package:lingkung/services/productService.dart';
 // Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/loading.dart';
@@ -30,7 +28,6 @@ class _UpdateProductState extends State<UpdateProduct> {
   final _scaffoldStateKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   final FirebaseStorage storage = FirebaseStorage.instance;
-  ProductServices _productService = ProductServices();
 
   TextEditingController nameController;
   TextEditingController stockController;

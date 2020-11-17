@@ -75,19 +75,20 @@ class _VerificationViewState extends State<VerificationView> {
                             getPinField(key: "5", focusNode: focusNode5),
                             SizedBox(width: 5.0),
                             getPinField(key: "6", focusNode: focusNode6),
-                            Spacer(),
-                            CustomText(text: '4:20', weight: FontWeight.w600)
+                            // Spacer(),
+                            // CustomText(text: '4:20', weight: FontWeight.w600)
                           ]))
                     ])),
             bottomNavigationBar: Container(
-                height: 77.0,
+                height: 80.0,
                 padding: const EdgeInsets.all(16.0),
                 child: FlatButton(
                     color: green,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                        borderRadius: BorderRadius.circular(50)),
                     child: CustomText(
                         text: 'KONFIRMASI',
+                        size: 16.0,
                         color: white,
                         weight: FontWeight.w700),
                     onPressed: () {

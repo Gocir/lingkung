@@ -243,6 +243,7 @@ class _RegisterViewState extends State<RegisterView> {
                             borderRadius: BorderRadius.circular(50)),
                         child: CustomText(
                             text: 'BUAT AKUN',
+                            size: 16.0,
                             color: white,
                             weight: FontWeight.w700),
                         onPressed: () async {

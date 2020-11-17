@@ -103,7 +103,6 @@ class _ReceiveOrdersState extends State<ReceiveOrders> {
                                   ),
                                   TextSpan(
                                     text: 'Scavanger ditemukan! Tunggu kedatangan scavanger ditempatmu ya...',
-                                        // ? 'Scavanger ditemukan! Sampahmu akan segera diambil oleh Scavanger...',
                                     style: TextStyle(
                                       color: black,
                                       fontFamily: 'Poppins',

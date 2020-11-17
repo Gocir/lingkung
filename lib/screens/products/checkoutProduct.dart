@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:lingkung/main.dart';
 //  Models
 import 'package:lingkung/models/addressModel.dart';
 import 'package:lingkung/models/productCartModel.dart';
@@ -9,9 +10,12 @@ import 'package:lingkung/models/shippingModel.dart';
 import 'package:lingkung/models/userModel.dart';
 //  Screens
 import 'package:lingkung/screens/address/addressList.dart';
+//  Services
+import 'package:lingkung/services/userService.dart';
 //  Providers
 import 'package:lingkung/providers/addressProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
+import 'package:lingkung/providers/productOrderProvider.dart';
 //  Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/loading.dart';
@@ -34,13 +38,14 @@ class CheckoutProduct extends StatefulWidget {
 
 class _CheckoutProductState extends State<CheckoutProduct> {
   final _scaffoldStateKey = GlobalKey<ScaffoldState>();
+  UserServices _userService = UserServices();
 
   AddressModel addressModel;
   ShippingModel shippingModel;
   int subTotalSingleProduct;
   int subTotalCart;
   int subTotaListProduct;
-  int shippingPrice;
+  int total = 0;
   bool loading = false;
 
   @override
@@ -59,6 +64,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
     final userProvider = Provider.of<UserProvider>(context);
     final addressProvider = Provider.of<AddressProvider>(context);
     addressProvider.loadUserAddress(widget.userModel.id);
+    userProvider.loadUserById(widget.productModel.userId);
 
     return loading
         ? Loading()
@@ -96,6 +102,7 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                           },
                           child: CustomText(
                             text: 'Ganti alamat',
+                            size: 12.0,
                             color: blue,
                             weight: FontWeight.w600,
                           ),
@@ -165,8 +172,6 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                             physics: NeverScrollableScrollPhysics(),
                             itemCount: widget.productCartModel.length,
                             itemBuilder: (_, index) {
-                              userProvider.loadUserById(
-                                  widget.productCartModel[index].storeOwnerId);
                               subTotalCart =
                                   widget.productCartModel[index].price *
                                       widget.productCartModel[index].quantity;
@@ -185,7 +190,8 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                         Icon(Icons.store, color: grey),
                                         SizedBox(width: 5.0),
                                         CustomText(
-                                            text: userProvider.userById.name,
+                                            text: widget.productCartModel[index]
+                                                .storeOwnerName,
                                             weight: FontWeight.w600)
                                       ]),
                                       Divider(),
@@ -263,74 +269,63 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                       Divider(),
                                       SizedBox(height: 5.0),
                                       Card(
-                                          margin: const EdgeInsets.all(0),
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              side: BorderSide(
-                                                  color: green, width: 1.0)),
-                                          child: (shippingModel == null)
-                                              ? ListTile(
-                                                  onTap: () {
-                                                    _shippingModalBottomSheet(
-                                                        context);
-                                                  },
-                                                  dense: true,
-                                                  title: CustomText(
-                                                      text: 'Jasa Pengiriman',
-                                                      weight: FontWeight.w600),
-                                                  trailing:
-                                                      Icon(Icons.chevron_right))
-                                              : ListTile(
-                                                  onTap: () {
-                                                    _shippingModalBottomSheet(
-                                                        context);
-                                                  },
-                                                  dense: true,
-                                                  leading: Icon(
-                                                      Icons.local_shipping),
-                                                  title: CustomText(
-                                                    text:
-                                                        '${shippingModel.type} (${shippingModel.duration})',
-                                                    weight: FontWeight.w600,
-                                                  ),
-                                                  subtitle: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: <Widget>[
-                                                      CustomText(
-                                                          text: shippingModel
-                                                              .name),
-                                                      CustomText(
-                                                          text: NumberFormat.currency(locale: 'id', symbol: 'Rp', decimalDigits: 0).format((shippingModel.name ==
-                                                                      'AnterAja' &&
-                                                                  shippingModel.type ==
-                                                                      'Reguler')
-                                                              ? shippingPrice =
-                                                                  12000
-                                                              : (shippingModel.name ==
-                                                                          'Si Cepat' &&
-                                                                      shippingModel
-                                                                              .type ==
-                                                                          'Reguler')
-                                                                  ? shippingPrice =
-                                                                      15000
-                                                                  : (shippingModel.name ==
-                                                                              'Si Cepat' &&
-                                                                          shippingModel.type ==
-                                                                              'BEST')
-                                                                      ? shippingPrice =
-                                                                          20000
-                                                                      : shippingPrice =
-                                                                          34000),
-                                                          color: Colors.red)
-                                                    ],
-                                                  ),
-                                                  trailing:
-                                                      Icon(Icons.chevron_right),
-                                                )),
+                                        margin: const EdgeInsets.all(0),
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          side: BorderSide(
+                                              color: green, width: 1.0),
+                                        ),
+                                        child: (shippingModel == null)
+                                            ? ListTile(
+                                                onTap: () {
+                                                  _shippingModalBottomSheet(
+                                                      context);
+                                                },
+                                                dense: true,
+                                                title: CustomText(
+                                                    text: 'Jasa Pengiriman',
+                                                    weight: FontWeight.w600),
+                                                trailing:
+                                                    Icon(Icons.chevron_right))
+                                            : ListTile(
+                                                onTap: () {
+                                                  _shippingModalBottomSheet(
+                                                      context);
+                                                },
+                                                dense: true,
+                                                leading:
+                                                    Icon(Icons.local_shipping),
+                                                title: CustomText(
+                                                  text:
+                                                      '${shippingModel.type} (${shippingModel.duration})',
+                                                  weight: FontWeight.w600,
+                                                ),
+                                                subtitle: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    CustomText(
+                                                        text:
+                                                            shippingModel.name),
+                                                    CustomText(
+                                                        text: NumberFormat
+                                                                .currency(
+                                                                    locale:
+                                                                        'id',
+                                                                    symbol:
+                                                                        'Rp',
+                                                                    decimalDigits:
+                                                                        0)
+                                                            .format(0),
+                                                        color: Colors.red)
+                                                  ],
+                                                ),
+                                                trailing:
+                                                    Icon(Icons.chevron_right),
+                                              ),
+                                      ),
                                       SizedBox(height: 5.0),
                                       Divider(),
                                       SizedBox(height: 5.0),
@@ -424,11 +419,11 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                             SizedBox(height: 5.0),
                                             CustomText(
                                               text: NumberFormat.currency(
-                                                      locale: 'id',
-                                                      symbol: 'Rp',
-                                                      decimalDigits: 0)
-                                                  .format(widget
-                                                      .productModel.price),
+                                                locale: 'id',
+                                                symbol: 'Rp',
+                                                decimalDigits: 0,
+                                              ).format(
+                                                  widget.productModel.price),
                                               color: Colors.red,
                                             ),
                                           ],
@@ -440,100 +435,82 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                   Divider(),
                                   SizedBox(height: 5.0),
                                   Card(
-                                      margin: const EdgeInsets.all(0),
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          side: BorderSide(
-                                              color: green, width: 1.0)),
-                                      child: (shippingModel == null)
-                                          ? ListTile(
-                                              onTap: () {
-                                                _shippingModalBottomSheet(
-                                                    context);
-                                              },
-                                              dense: true,
-                                              title: CustomText(
-                                                  text: 'Jasa Pengiriman',
-                                                  weight: FontWeight.w600),
-                                              trailing:
-                                                  Icon(Icons.chevron_right))
-                                          : ListTile(
-                                              onTap: () {
-                                                _shippingModalBottomSheet(
-                                                    context);
-                                              },
-                                              dense: true,
-                                              isThreeLine: true,
-                                              leading:
-                                                  Icon(Icons.local_shipping),
-                                              title: CustomText(
-                                                text:
-                                                    '${shippingModel.type} (${shippingModel.duration})',
-                                                weight: FontWeight.w600,
-                                              ),
-                                              subtitle: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  CustomText(
-                                                      text: shippingModel.name),
-                                                  CustomText(
-                                                      text: NumberFormat
-                                                              .currency(
-                                                                  locale: 'id',
-                                                                  symbol: 'Rp',
-                                                                  decimalDigits:
-                                                                      0)
-                                                          .format((shippingModel.name ==
-                                                                      'AnterAja' &&
-                                                                  shippingModel.type ==
-                                                                      'Reguler')
-                                                              ? shippingPrice =
-                                                                  12000
-                                                              : (shippingModel.name ==
-                                                                          'Si Cepat' &&
-                                                                      shippingModel
-                                                                              .type ==
-                                                                          'Reguler')
-                                                                  ? shippingPrice =
-                                                                      15000
-                                                                  : (shippingModel.name ==
-                                                                              'Si Cepat' &&
-                                                                          shippingModel.type ==
-                                                                              'BEST')
-                                                                      ? shippingPrice =
-                                                                          20000
-                                                                      : shippingPrice =
-                                                                          34000),
-                                                      color: Colors.red)
-                                                ],
-                                              ),
-                                              trailing:
-                                                  Icon(Icons.chevron_right),
-                                            )),
+                                    margin: const EdgeInsets.all(0),
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      side:
+                                          BorderSide(color: green, width: 1.0),
+                                    ),
+                                    child: (shippingModel == null)
+                                        ? ListTile(
+                                            onTap: () {
+                                              _shippingModalBottomSheet(
+                                                  context);
+                                              print(
+                                                  "${userProvider.userById.shippingModel.length}");
+                                            },
+                                            dense: true,
+                                            title: CustomText(
+                                                text: 'Jasa Pengiriman',
+                                                weight: FontWeight.w600),
+                                            trailing: Icon(Icons.chevron_right))
+                                        : ListTile(
+                                            onTap: () {
+                                              _shippingModalBottomSheet(
+                                                  context);
+                                              print(
+                                                  "${userProvider.userById.shippingModel.length}");
+                                            },
+                                            dense: true,
+                                            isThreeLine: true,
+                                            leading: Icon(Icons.local_shipping),
+                                            title: CustomText(
+                                              text:
+                                                  '${shippingModel.type} (${shippingModel.duration})',
+                                              weight: FontWeight.w600,
+                                            ),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                CustomText(
+                                                    text: shippingModel.name),
+                                                CustomText(
+                                                    text: NumberFormat.currency(
+                                                      locale: 'id',
+                                                      symbol: 'Rp',
+                                                      decimalDigits: 0,
+                                                    ).format(
+                                                        shippingModel.price),
+                                                    color: Colors.red)
+                                              ],
+                                            ),
+                                            trailing: Icon(Icons.chevron_right),
+                                          ),
+                                  ),
                                   SizedBox(height: 5.0),
                                   Divider(),
                                   SizedBox(height: 5.0),
                                   ButtonBar(
-                                      mainAxisSize: MainAxisSize.max,
-                                      alignment: MainAxisAlignment.spaceBetween,
-                                      buttonPadding: EdgeInsets.all(0),
-                                      children: <Widget>[
-                                        CustomText(
-                                          text: 'Subtotal untuk Produk',
-                                          weight: FontWeight.w500,
-                                        ),
-                                        CustomText(
-                                          text: NumberFormat.currency(
-                                                  locale: 'id',
-                                                  symbol: 'Rp',
-                                                  decimalDigits: 0)
-                                              .format(subTotalSingleProduct),
-                                          color: Colors.red,
-                                        )
-                                      ]),
+                                    mainAxisSize: MainAxisSize.max,
+                                    alignment: MainAxisAlignment.spaceBetween,
+                                    buttonPadding: EdgeInsets.all(0),
+                                    children: <Widget>[
+                                      CustomText(
+                                        text: 'Subtotal untuk Produk',
+                                        weight: FontWeight.w500,
+                                      ),
+                                      CustomText(
+                                        text: NumberFormat.currency(
+                                          locale: 'id',
+                                          symbol: 'Rp',
+                                          decimalDigits: 0,
+                                        ).format(subTotalSingleProduct),
+                                        color: Colors.red,
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
@@ -591,13 +568,13 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                                     symbol: 'Rp',
                                     decimalDigits: 0)
                                 .format((widget.productModel == null)
-                                    ? (shippingPrice == null)
-                                        ? 0
-                                        : 0 + shippingPrice
-                                    : (shippingPrice == null)
-                                        ? subTotalSingleProduct
-                                        : subTotalSingleProduct +
-                                            shippingPrice),
+                                    ? (shippingModel == null)
+                                        ? total
+                                        : total + shippingModel.price
+                                    : (shippingModel == null)
+                                        ? total = subTotalSingleProduct
+                                        : total = subTotalSingleProduct +
+                                            shippingModel.price),
                             size: 16.0,
                             color: Colors.red,
                             weight: FontWeight.w700,
@@ -620,43 +597,11 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                               color: white,
                               size: 16.0,
                               weight: FontWeight.w700),
-                          onPressed: () async {
-                            if (widget.productModel.price == 0) {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              20.0)), //this right here
-                                      child: Container(
-                                        height: 200,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Text(
-                                                    'Produkmu Kosong',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  });
+                          onPressed: () {
+                            if (userProvider.userModel.point < total) {
+                              _sorryModalBottomSheet(context);
                             } else {
-                              _buyModalBottomSheet(context);
+                              save();
                             }
                           },
                         ),
@@ -722,7 +667,8 @@ class _CheckoutProductState extends State<CheckoutProduct> {
                 itemBuilder: (_, index) {
                   return Card(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                     child: ListTile(
                       isThreeLine: true,
                       onTap: () {
@@ -776,296 +722,218 @@ class _CheckoutProductState extends State<CheckoutProduct> {
 
   void _shippingModalBottomSheet(context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    // (widget.productModel == null)
+    //     ? userProvider.loadUserById(widget.productCartModel[0].storeOwnerId)
+    //     : userProvider.loadUserById(widget.productModel.userId);
     showModalBottomSheet<void>(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0))),
-        context: context,
-        builder: (BuildContext context) {
-          return Column(
-            children: <Widget>[
-              ListTile(
-                  leading: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.close, color: black)),
-                  title: CustomText(
-                    text: 'Jasa Pengiriman',
-                    color: black,
-                    size: 18.0,
-                    weight: FontWeight.w600,
-                  )),
-              Divider(),
-              Expanded(
-                child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    padding: const EdgeInsets.all(8.0),
-                    itemCount: userProvider.userById.shippingModel.length,
-                    itemBuilder: (_, index) {
-                      (widget.productModel == null)
-                          ? userProvider.loadUserById(
-                              widget.productCartModel[index].storeOwnerId)
-                          : userProvider
-                              .loadUserById(widget.productModel.userId);
-                      return Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: ListTile(
-                              dense: true,
-                              onTap: () {
-                                Navigator.pop(context);
-                                setState(() {
-                                  shippingModel = userProvider
-                                      .userById.shippingModel[index];
-                                });
-                              },
-                              title: CustomText(
-                                text:
-                                    '${userProvider.userById.shippingModel[index].type} (${userProvider.userById.shippingModel[index].duration})',
-                                weight: FontWeight.w600,
-                              ),
-                              subtitle: CustomText(
-                                text: userProvider
-                                    .userById.shippingModel[index].name,
-                              ),
-                              trailing: CustomText(
-                                text: NumberFormat.currency(
-                                        locale: 'id',
-                                        symbol: 'Rp',
-                                        decimalDigits: 0)
-                                    .format((userProvider
-                                                    .userById
-                                                    .shippingModel[index]
-                                                    .name ==
-                                                'AnterAja' &&
-                                            userProvider
-                                                    .userById
-                                                    .shippingModel[index]
-                                                    .type ==
-                                                'Reguler')
-                                        ? 12000
-                                        : (userProvider.userById.shippingModel[index].name ==
-                                                    'Si Cepat' &&
-                                                userProvider
-                                                        .userById
-                                                        .shippingModel[index]
-                                                        .type ==
-                                                    'Reguler')
-                                            ? 15000
-                                            : (userProvider.userById.shippingModel[index].name ==
-                                                        'Si Cepat' &&
-                                                    userProvider
-                                                            .userById
-                                                            .shippingModel[index]
-                                                            .type ==
-                                                        'BEST')
-                                                ? 20000
-                                                : 34000),
-                                color: Colors.red,
-                              )));
-                    }),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+      ),
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          children: <Widget>[
+            ListTile(
+              leading: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.close, color: black),
               ),
-            ],
-          );
-        });
+              title: CustomText(
+                text: 'Jasa Pengiriman',
+                color: black,
+                size: 18.0,
+                weight: FontWeight.w600,
+              ),
+            ),
+            Divider(),
+            Expanded(
+              child: (userProvider.userById?.shippingModel != null)
+                  ? ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      padding: const EdgeInsets.all(8.0),
+                      itemCount: userProvider.userById?.shippingModel?.length,
+                      itemBuilder: (_, index) {
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: ListTile(
+                            dense: true,
+                            onTap: () {
+                              Navigator.pop(context);
+                              setState(() {
+                                shippingModel =
+                                    userProvider.userById.shippingModel[index];
+                              });
+                            },
+                            title: CustomText(
+                              text:
+                                  '${userProvider.userById?.shippingModel[index].type} (${userProvider.userById?.shippingModel[index].duration})',
+                              weight: FontWeight.w600,
+                            ),
+                            subtitle: CustomText(
+                              text: userProvider
+                                  .userById?.shippingModel[index].name,
+                            ),
+                            trailing: CustomText(
+                              text: NumberFormat.currency(
+                                locale: 'id',
+                                symbol: 'Rp',
+                                decimalDigits: 0,
+                              ).format(userProvider
+                                  .userById?.shippingModel[index].price),
+                              color: Colors.red,
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : Center(
+                      child: CustomText(
+                        text: "Tidak Ada Pilihan Pengiriman",
+                      ),
+                    ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  // void _paymentModalBottomSheet(context) {
-  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
-  //   showModalBottomSheet<void>(
-  //       shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.only(
-  //               topLeft: Radius.circular(20.0),
-  //               topRight: Radius.circular(20.0))),
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return Column(
-  //           children: <Widget>[
-  //             ListTile(
-  //                 leading: InkWell(
-  //                     onTap: () {
-  //                       Navigator.pop(context);
-  //                     },
-  //                     child: Icon(Icons.close, color: black)),
-  //                 title: CustomText(
-  //                   text: 'Metode Pembayaran',
-  //                   color: black,
-  //                   size: 18.0,
-  //                   weight: FontWeight.w600,
-  //                 )),
-  //             Divider(),
-  //             Expanded(
-  //               child: ListView.builder(
-  //                   scrollDirection: Axis.vertical,
-  //                   padding: const EdgeInsets.all(8.0),
-  //                   itemCount: userProvider.userModel.addressModel.length,
-  //                   itemBuilder: (_, index) {
-  //                     return Card(
-  //                         shape: RoundedRectangleBorder(
-  //                             borderRadius: BorderRadius.circular(10.0)),
-  //                         child: ListTile(
-  //                             isThreeLine: true,
-  //                             onTap: () {
-  //                               // Navigator.pop(context);
-  //                               // setState(() {
-  //                               //   addressModel = userProvider
-  //                               //       .userModel.addressModel[index];
-  //                               // });
-  //                             },
-  //                             title: CustomText(
-  //                               text: userProvider
-  //                                   .userModel.addressModel[index].addressLabel,
-  //                               size: 12.0,
-  //                               weight: FontWeight.w600,
-  //                             ),
-  //                             subtitle: Column(
-  //                               crossAxisAlignment: CrossAxisAlignment.start,
-  //                               children: <Widget>[
-  //                                 CustomText(
-  //                                   text: userProvider.userModel
-  //                                       .addressModel[index].recipientsName,
-  //                                   weight: FontWeight.w700,
-  //                                 ),
-  //                                 SizedBox(
-  //                                   height: 5.0,
-  //                                 ),
-  //                                 CustomText(
-  //                                   text: '62' +
-  //                                       userProvider.userModel
-  //                                           .addressModel[index].phoNumber
-  //                                           .toString(),
-  //                                   size: 12.0,
-  //                                 ),
-  //                                 SizedBox(
-  //                                   height: 5.0,
-  //                                 ),
-  //                                 CustomText(
-  //                                   text:
-  //                                       '${userProvider.userModel.addressModel[index].addressDetail}, ${userProvider.userModel.addressModel[index].subDistrict}, ${userProvider.userModel.addressModel[index].city}, ${userProvider.userModel.addressModel[index].province}, ${userProvider.userModel.addressModel[index].posCode}',
-  //                                   size: 12.0,
-  //                                 ),
-  //                               ],
-  //                             )));
-  //                   }),
-  //             ),
-  //           ],
-  //         );
-  //       });
-  // }
-
-  void _buyModalBottomSheet(context) {
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0))),
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-              height: 125.0,
-              padding: const EdgeInsets.all(16.0),
+  void _sorryModalBottomSheet(context) {
+    showModalBottomSheet<void>(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+      ),
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
               child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Icons.close)),
-                    SizedBox(height: 16.0),
-                    Container(
-                        height: 50.0,
-                        child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Expanded(
-                                child: OutlineButton(
-                                  color: white,
-                                  highlightColor: white,
-                                  highlightedBorderColor: green,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  borderSide:
-                                      BorderSide(color: green, width: 2.0),
-                                  child: CustomText(
-                                      text: 'TIDAK',
-                                      color: green,
-                                      weight: FontWeight.w700),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ),
-                              SizedBox(width: 10.0),
-                              Expanded(
-                                  child: RaisedButton(
-                                      color: green,
-                                      elevation: 0.0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: CustomText(
-                                          text: 'YA, LANJUT',
-                                          color: white,
-                                          weight: FontWeight.w700),
-                                      onPressed: () async {
-                                        // var uuid = Uuid();
-                                        // String id = uuid.v4();
-                                        // if (widget.productModel == null && widget.quantity == null) {
-                                        // _orderService.createOrder(
-                                        //     id: id,
-                                        //     userId: userProvider.user.uid,
-                                        //     address: (addressModel == null)
-                                        //         ? userProvider.userModel.addressModel[0]
-                                        //         : addressModel,
-                                        //     listProduct: widget.cartProductModel,
-                                        //     note: "Some random description",
-                                        //     shipping: shippingModel,
-                                        //     shippingPrice: shippingPrice,
-                                        //     subTotalProduct: (subTotalSingleProduct == null) ? subTotaListProduct : subTotalSingleProduct,
-                                        //     total: (subTotalSingleProduct == null) ? subTotaListProduct : subTotalSingleProduct + shippingPrice,
-                                        //     status: "waiting",
-                                        //     );
-                                        // for (CartProductModel cartProduct in widget.cartProductModel) {
-                                        //   bool value = await userProvider.removeFromCartProduct(cartProduct: cartProduct);
-                                        //   if (value) {
-                                        //     userProvider.reloadUserModel();
-                                        //     print("Product removed fromcart");
-                                        //     _scaffoldStateKey.currentState.showSnackBar(
-                                        //         SnackBar(
-                                        //             content: Text("Removed from Cart!")));
-                                        //   } else {
-                                        //     print("ITEM WAS NOT REMOVED");
-                                        //   }
-                                        // }
-                                        // Navigator.pop(context);
-                                        // } else {
-                                        //   _orderService.createOrder(
-                                        //     id: id,
-                                        //     userId: userProvider.user.uid,
-                                        //     address: (addressModel == null)
-                                        //         ? userProvider.userModel.addressModel[0]
-                                        //         : addressModel,
-                                        //     productModel: widget.productModel,
-                                        //     quantity: widget.quantity,
-                                        //     note: "Some random description",
-                                        //     shipping: shippingModel,
-                                        //     shippingPrice: shippingPrice,
-                                        //     subTotalProduct: (subTotalSingleProduct == null) ? subTotaListProduct : subTotalSingleProduct,
-                                        //     total: (subTotalSingleProduct == null) ? subTotaListProduct : subTotalSingleProduct + shippingPrice,
-                                        //     status: "waiting",
-                                        //     );
-                                        // Navigator.pop(context);
-                                        // }
-                                        // _scaffoldStateKey.currentState.showSnackBar(
-                                        //     SnackBar(content: Text("Order created!")));
-                                        // Navigator.pop(context);
-                                      }))
-                            ]))
-                  ]));
-        });
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.width / 2.2,
+                    alignment: Alignment.center,
+                    child: Image.asset("assets/images/verifailed.png"),
+                  ),
+                  SizedBox(height: 16.0),
+                  CustomText(
+                    text: 'Yahh! Poinmu kurang nih',
+                    size: 18.0,
+                    weight: FontWeight.w700,
+                  ),
+                  SizedBox(height: 5.0),
+                  CustomText(
+                    text:
+                        'Kamu tidak dapat melanjutkan pembelian karena Poinmu tidak mencukupi.',
+                  ),
+                  SizedBox(height: 16.0),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 48,
+                    child: FlatButton(
+                      color: green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: CustomText(
+                        text: 'OKE',
+                        color: white,
+                        size: 16.0,
+                        weight: FontWeight.w700,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void save() async {
+    final addressProvider = Provider.of<AddressProvider>(
+      context,
+      listen: false,
+    );
+    final userProvider = Provider.of<UserProvider>(
+      context,
+      listen: false,
+    );
+    final productOrdersProvider = Provider.of<ProductOrderProvider>(
+      context,
+      listen: false,
+    );
+    setState(() {
+      loading = true;
+    });
+    if (addressProvider.userAddress.isEmpty) {
+      _addressModalBottomSheet(context);
+      setState(() {
+        loading = false;
+      });
+    } else if (shippingModel == null) {
+      _shippingModalBottomSheet(context);
+      setState(() {
+        loading = false;
+      });
+    } else if (userProvider.userModel.point < total) {
+      _sorryModalBottomSheet(context);
+      setState(() {
+        loading = false;
+      });
+    } else {
+      productOrdersProvider.addProductOrders(
+        userId: widget.userModel.id,
+        address: (addressModel == null)
+            ? '${addressProvider.userAddress[0].addressDetail}, ${addressProvider.userAddress[0].subDistrict}, ${addressProvider.userAddress[0].city}, ${addressProvider.userAddress[0].province} ${addressProvider.userAddress[0].postalCode}'
+            : '${addressModel.addressDetail}, ${addressModel.subDistrict}, ${addressModel.city}, ${addressModel.province} ${addressModel.postalCode}',
+        shipping: shippingModel.name + " - " + shippingModel.type,
+        shippingPrice: shippingModel.price,
+        productModel: widget.productModel,
+        quantity: widget.quantity,
+        subTotalProduct: subTotalSingleProduct,
+        total: total,
+        note: "",
+        status: "Dikemas",
+      );
+      _userService.updateUserData({
+        "uid": widget.userModel.id,
+        "point": userProvider.userModel.point - total});
+      print('Saved!');
+      setState(() {
+        loading = false;
+      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainPage(),
+        ),
+      );
+    }
   }
 }

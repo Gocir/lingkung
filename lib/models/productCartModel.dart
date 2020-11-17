@@ -62,5 +62,32 @@ class ProductCartModel {
     _isCheck = snapshot.data[IS_CHECK];
     _userId = snapshot.data[USER_ID];
   }
+  
+  ProductCartModel.fromMap(Map data) {
+    _id = data[ID];
+    _productId = data[PRODUCT_ID];
+    _image = data[IMAGE];
+    _name = data[NAME];
+    _price = data[PRICE];
+    _quantity = data[QUANTITY];
+    _storeOwnerId = data[STORE_OWNER_ID];
+    _storeOwnerName = data[STORE_OWNER_NAME];
+    _totalSaleProduct = data[TOTAL_SALE_PRODUCT];
+    _isCheck = data[IS_CHECK];
+    _userId = data[USER_ID];
+  }
 
+  Map toMap() => {
+    ID: _id,
+    PRODUCT_ID: _productId,
+    IMAGE: _image,
+    NAME: _name,
+    PRICE: _price,
+    QUANTITY: _quantity,
+    STORE_OWNER_ID: _storeOwnerId,
+    STORE_OWNER_NAME: _storeOwnerName,
+    TOTAL_SALE_PRODUCT: _totalSaleProduct,
+    IS_CHECK: _isCheck,
+    USER_ID: _userId,
+  };
 }

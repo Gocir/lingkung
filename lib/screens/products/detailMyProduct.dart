@@ -3,11 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lingkung/main.dart';
-import 'package:provider/provider.dart';
 //  Models
 import 'package:lingkung/models/productModel.dart';
-//  Provider
-import 'package:lingkung/providers/productProvider.dart';
 //  Screens
 import 'package:lingkung/screens/products/updateProduct.dart';
 //  Services

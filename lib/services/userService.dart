@@ -53,10 +53,17 @@ class UserServices {
 
   void addShipping({String userId, ShippingModel shippingModel}) {
     print("THE USER ID IS: $userId");
-    print("shipping are: ${shippingModel.toString()}");
+    print("Shipping are: ${shippingModel.toString()}");
     _firestore.collection(collection).document(userId).updateData({
-      // "shipping": shippingModel.toMap()
       "shipping": FieldValue.arrayUnion([shippingModel.toMap()])
+    });
+  }
+  
+  void deleteShipping({String userId, ShippingModel shippingModel}) {
+    print("THE USER ID IS: $userId");
+    print("Shipping are: ${shippingModel.toString()}");
+    _firestore.collection(collection).document(userId).updateData({
+      "shipping": FieldValue.arrayRemove([shippingModel.toMap()])
     });
   }
 

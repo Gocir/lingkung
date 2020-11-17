@@ -24,10 +24,8 @@ class DetailProduct extends StatefulWidget {
 }
 
 class _DetailProductState extends State<DetailProduct> {
-  final _scaffoldStateKey = GlobalKey<ScaffoldState>();
-
-  bool loading = false;
   int _quantity = 1;
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +77,8 @@ class _DetailProductState extends State<DetailProduct> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ProductCart(userModel: widget.userModel),
+                                      builder: (context) => ProductCart(
+                                          userModel: widget.userModel),
                                     ),
                                   );
                                 },
@@ -362,25 +361,25 @@ class _DetailProductState extends State<DetailProduct> {
                           highlightColor: white,
                           highlightedBorderColor: green,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           borderSide: BorderSide(color: green, width: 2.0),
                           child: Icon(Icons.add_shopping_cart, color: green),
                           onPressed: () async {
                             setState(() {
                               loading = true;
                             });
-                            // if (widget.productModel.id == productCartProvider.productCartModel) {
-                            await productCartProvider.addProductCart(userId: widget.userModel.id, productModel: widget.productModel, quantity: _quantity);
+                            await productCartProvider.addProductCart(
+                              userId: widget.userModel.id,
+                              productModel: widget.productModel,
+                              quantity: _quantity,
+                            );
                             print("Item added to cart");
                             userProvider.reloadUserModel();
-                            // productCartProvider.loadProductCart();
                             setState(() {
-                                loading = false;
+                              loading = false;
                             });
-                            // } else {
-
-                            // }
-                          }
+                          },
                         ),
                       ),
                     ),
@@ -414,160 +413,175 @@ class _DetailProductState extends State<DetailProduct> {
   }
 
   void _settingModalBottomSheet(context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
     showModalBottomSheet<void>(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0))),
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 285.0,
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(Icons.close)),
-                SizedBox(height: 16.0),
-                Card(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 15.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: 80.0,
-                          height: 80.0,
-                          decoration: BoxDecoration(
-                              color: white,
-                              image: DecorationImage(
-                                  image:
-                                      NetworkImage(widget.productModel.image),
-                                  fit: BoxFit.cover),
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black12,
-                                    offset: Offset(0.0, 0.0),
-                                    blurRadius: 2.0),
-                              ]),
-                        ),
-                        SizedBox(
-                          width: 15.0,
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            CustomText(
-                              text: NumberFormat.currency(
-                                      locale: 'id',
-                                      symbol: 'Rp',
-                                      decimalDigits: 0)
-                                  .format(widget.productModel.price),
-                              size: 16.0,
-                              weight: FontWeight.w600,
-                            ),
-                            SizedBox(height: 5.0),
-                            Row(
-                              children: <Widget>[
-                                CustomText(
-                                  text: 'Stok : ',
-                                  color: Colors.red,
-                                ),
-                                CustomText(
-                                  text: widget.productModel.stock.toString(),
-                                  color: Colors.red,
-                                ),
-                              ],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+      ),
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 285.0,
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.close),
+              ),
+              SizedBox(height: 16.0),
+              Card(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 16.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: 80.0,
+                        height: 80.0,
+                        decoration: BoxDecoration(
+                          color: white,
+                          image: DecorationImage(
+                              image: NetworkImage(widget.productModel.image),
+                              fit: BoxFit.cover),
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 2.0,
                             ),
                           ],
                         ),
-                      ],
+                      ),
+                      SizedBox(
+                        width: 16.0,
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          CustomText(
+                            text: NumberFormat.currency(
+                              locale: 'id',
+                              symbol: 'Rp',
+                              decimalDigits: 0,
+                            ).format(widget.productModel.price),
+                            size: 16.0,
+                            weight: FontWeight.w600,
+                          ),
+                          SizedBox(height: 5.0),
+                          CustomText(
+                            text: 'Stok : ${widget.productModel.stock}',
+                            color: Colors.red,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: CustomText(text: 'Jumlah'),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_quantity != 1) {
+                        setState(() {
+                          _quantity -= 1;
+                        });
+                        Navigator.pop(context);
+                        _settingModalBottomSheet(context);
+                      }
+                    },
+                    child: Container(
+                      width: 25.0,
+                      height: 25.0,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: (_quantity != 1) ? yellow : grey,
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Icon(
+                        Icons.remove,
+                        color: (_quantity != 1) ? yellow : grey,
+                        size: 14.0,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 10.0),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(child: CustomText(text: 'Jumlah')),
-                      InkWell(
-                          onTap: () {
-                            if (_quantity != 1) {
-                              setState(() {
-                                _quantity -= 1;
-                              });
-                              Navigator.pop(context);
-                              _settingModalBottomSheet(context);
-                            }
-                          },
-                          child: Container(
-                              width: 25.0,
-                              height: 25.0,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: (_quantity != 1) ? yellow : grey,
-                                      width: 2.0),
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              child: Icon(Icons.remove,
-                                  color: (_quantity != 1) ? yellow : grey,
-                                  size: 14.0))),
-                      SizedBox(width: 10.0),
-                      CustomText(text: '$_quantity'),
-                      SizedBox(width: 10.0),
-                      InkWell(
-                          onTap: () {
-                            setState(() {
-                              _quantity += 1;
-                            });
-                            Navigator.pop(context);
-                            _settingModalBottomSheet(context);
-                          },
-                          child: Container(
-                              width: 25.0,
-                              height: 25.0,
-                              decoration: BoxDecoration(
-                                  color: yellow,
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              child:
-                                  Icon(Icons.add, color: white, size: 14.0))),
-                    ]),
-                SizedBox(height: 16.0),
-                Container(
-                  height: 48.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: FlatButton(
-                    color: green,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),),
-                    child: CustomText(
-                        text: 'Beli Sekarang',
-                        size: 16.0,
-                        color: white,
-                        weight: FontWeight.w700,),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CheckoutProduct(
-                                productModel: widget.productModel,
-                                userModel: widget.userModel,
-                                quantity: _quantity),
-                          ));
+                  SizedBox(width: 10.0),
+                  CustomText(text: '$_quantity'),
+                  SizedBox(width: 10.0),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _quantity += 1;
+                      });
+                      Navigator.pop(context);
+                      _settingModalBottomSheet(context);
                     },
+                    child: Container(
+                      width: 25.0,
+                      height: 25.0,
+                      decoration: BoxDecoration(
+                        color: yellow,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Icon(
+                        Icons.add,
+                        color: white,
+                        size: 14.0,
+                      ),
+                    ),
                   ),
+                ],
+              ),
+              SizedBox(height: 16.0),
+              Container(
+                height: 48.0,
+                width: MediaQuery.of(context).size.width,
+                child: FlatButton(
+                  color: green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: CustomText(
+                    text: 'Beli Sekarang',
+                    size: 16.0,
+                    color: white,
+                    weight: FontWeight.w700,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CheckoutProduct(
+                          productModel: widget.productModel,
+                          userModel: widget.userModel,
+                          quantity: _quantity,
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              ],
-            ),
-          );
-        });
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

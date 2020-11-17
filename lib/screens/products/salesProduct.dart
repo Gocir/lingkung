@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+//  Models
+import 'package:lingkung/models/userModel.dart';
 // Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/textStyle.dart';
@@ -9,13 +11,16 @@ import 'package:lingkung/widgets/productSales/productPacked.dart';
 import 'package:lingkung/widgets/productSales/productSent.dart';
 
 class SalesProductPage extends StatefulWidget {
+  final UserModel userModel;
+  SalesProductPage({this.userModel});
   @override
   _SalesProductPageState createState() => _SalesProductPageState();
 }
 
 class _SalesProductPageState extends State<SalesProductPage> {
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
+
     final _kProducTabs = <Tab> [
       Tab(text: 'Belum Bayar'),
       Tab(text: 'Dikemas'),
@@ -24,10 +29,10 @@ class _SalesProductPageState extends State<SalesProductPage> {
     ];
 
     final _kProductPages = <Widget> [
-      ProductNotYetPaid(),
-      ProductPacked(),
-      ProductSent(),
-      ProductFinish()
+      ProductNotYetPaid(userModel: widget.userModel),
+      ProductPacked(userModel: widget.userModel),
+      ProductSent(userModel: widget.userModel),
+      ProductFinish(userModel: widget.userModel)
     ];
     return DefaultTabController(
         length: _kProducTabs.length,
@@ -38,6 +43,7 @@ class _SalesProductPageState extends State<SalesProductPage> {
           title: CustomText(
             text: 'Penjualan Saya',
             size: 18.0,
+            color: white,
             weight: FontWeight.w600,
           ),
           bottom: TabBar(

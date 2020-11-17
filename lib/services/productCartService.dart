@@ -102,6 +102,21 @@ class ProductCartServices {
         return productCartByUser;
       });
 
+  Future<List<ProductCartModel>> getProductCartUserByOwner({String userId, String storeOwnerId}) async =>
+      _firestore
+          .collection(collection)
+          .document(userId)
+          .collection(subCollection)
+          .where("storeOwnerId", isEqualTo: storeOwnerId)
+          .getDocuments()
+          .then((result) {
+        List<ProductCartModel> productCartByUser = [];
+        for (DocumentSnapshot productCart in result.documents) {
+          productCartByUser.add(ProductCartModel.fromSnapshot(productCart));
+        }
+        return productCartByUser;
+      });
+
   Future<ProductCartModel> getProductCartByDoc(
           {String userId, String docId}) async =>
       _firestore

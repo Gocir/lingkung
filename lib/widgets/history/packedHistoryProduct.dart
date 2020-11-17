@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+//  Models
 import 'package:lingkung/models/productOrderModel.dart';
+//  Providers
 import 'package:lingkung/providers/productOrderProvider.dart';
 import 'package:lingkung/providers/userProvider.dart';
+//  Screens
 import 'package:lingkung/screens/history/detailHistoryProduct.dart';
+//  Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
-import 'package:lingkung/utilities/loading.dart';
 import 'package:lingkung/utilities/textStyle.dart';
-import 'package:provider/provider.dart';
 
 class PackedHistoryProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
     final orderProvider = Provider.of<ProductOrderProvider>(context);
-    orderProvider.loadOrderPacked(userProvider.user.uid);
+    orderProvider.loadOrderPacked(userProvider.userModel.id);
     return (orderProvider.orderPacked.isNotEmpty)
         ? ListView.builder(
             scrollDirection: Axis.vertical,
@@ -22,46 +25,45 @@ class PackedHistoryProduct extends StatelessWidget {
             itemCount: orderProvider.orderPacked.length,
             itemBuilder: (_, index) {
               ProductOrderModel _order = orderProvider.orderPacked[index];
-              userProvider.loadUserById(_order.storeOwnerId[0]);
-              return (_order.listProduct.length == 0)
-                  ? Loading()
-                  : InkWell(
+              return InkWell(
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailHistoryProduct(orderModel: _order),
-                            ));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailHistoryProduct(
+                                orderModel: _order),
+                          ),
+                        );
                       },
                       child: Card(
                         child: Column(
                           children: <Widget>[
                             Container(
-                                color: yellow.withOpacity(0.6),
-                                padding: EdgeInsets.all(8.0),
-                                child: Center(
-                                    child: CustomText(
-                                        text: _order.status,
-                                        size: 12,
-                                        color: black.withOpacity(0.6)))),
+                              color: yellow.withOpacity(0.6),
+                              padding: EdgeInsets.all(8.0),
+                              child: Center(
+                                child: CustomText(
+                                  text: _order.status,
+                                  size: 12,
+                                  color: black.withOpacity(0.6),
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding: EdgeInsets.all(10.0),
                               child: Column(
                                 children: <Widget>[
                                   Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Icon(Icons.store, color: grey),
-                                        SizedBox(width: 5.0),
-                                        CustomText(
-                                            text: (userProvider
-                                                        .userById?.name !=
-                                                    null)
-                                                ? '${userProvider.userById?.name}'
-                                                : 'Loading ...',
-                                            weight: FontWeight.w600)
-                                      ]),
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Icon(Icons.store, color: grey),
+                                      SizedBox(width: 5.0),
+                                      CustomText(
+                                        text: _order.storeOwnerName,
+                                        weight: FontWeight.w600,
+                                      ),
+                                    ],
+                                  ),
                                   Divider(),
                                   SizedBox(height: 10.0),
                                   Row(
@@ -70,25 +72,29 @@ class PackedHistoryProduct extends StatelessWidget {
                                         width: 70.0,
                                         height: 70.0,
                                         decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: NetworkImage(_order
-                                                    .listProduct[0].image),
-                                                fit: BoxFit.cover),
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.black12,
-                                                  offset: Offset(0.0, 0.0),
-                                                  blurRadius: 3.0),
-                                            ]),
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                  _order.listProduct[0].image),
+                                              fit: BoxFit.cover),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              offset: Offset(0.0, 0.0),
+                                              blurRadius: 3.0,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       SizedBox(width: 10.0),
-                                      CustomText(
-                                        text: _order.listProduct[0].name,
-                                        line: 2,
-                                        over: TextOverflow.ellipsis,
-                                        weight: FontWeight.w600,
+                                      Expanded(
+                                        child: CustomText(
+                                          text: _order.listProduct[0].name,
+                                          line: 2,
+                                          over: TextOverflow.ellipsis,
+                                          weight: FontWeight.w600,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -100,33 +106,34 @@ class PackedHistoryProduct extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       CustomText(
-                                          text: _order.listProduct.length
-                                                  .toString() +
-                                              '  Produk',
+                                          text: '${_order.listProduct.length}  Produk',
                                           size: 10.0),
                                       RichText(
-                                          text: TextSpan(children: [
-                                        TextSpan(
-                                          text: 'Total Pembayaran: ',
-                                          style: TextStyle(
-                                            color: black,
-                                            fontFamily: 'Poppins',
-                                            fontSize: 12.0,
-                                          ),
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'Total Pembayaran: ',
+                                              style: TextStyle(
+                                                color: black,
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12.0,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: NumberFormat.currency(
+                                                locale: 'id',
+                                                symbol: 'Rp ',
+                                                decimalDigits: 0,
+                                              ).format(_order.total),
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                                fontFamily: 'Poppins',
+                                                fontSize: 14.0,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        TextSpan(
-                                          text: NumberFormat.currency(
-                                                  locale: 'id',
-                                                  symbol: 'Rp ',
-                                                  decimalDigits: 0)
-                                              .format(_order.total),
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                            fontFamily: 'Poppins',
-                                            fontSize: 14.0,
-                                          ),
-                                        ),
-                                      ])),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -136,11 +143,14 @@ class PackedHistoryProduct extends StatelessWidget {
                         ),
                       ),
                     );
-            })
+            },
+          )
         : Center(
             child: CustomText(
-                text: 'Belanja dulu, yuk!',
-                size: 16.0,
-                weight: FontWeight.w600));
+              text: 'Belanja dulu, yuk!',
+              size: 16.0,
+              weight: FontWeight.w600,
+            ),
+          );
   }
 }

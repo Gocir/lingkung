@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-// Firebase
-import 'package:firebase_storage/firebase_storage.dart';
 // Providers
 import 'package:lingkung/providers/userProvider.dart';
 // Utilities
@@ -214,7 +212,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             locale: 'id',
                             symbol: 'Rp ',
                             decimalDigits: 0,
-                          ).format(userProvider.userModel?.balance),
+                          ).format((userProvider.userModel?.balance == null)
+                              ? 0
+                              : userProvider.userModel?.balance),
                           weight: FontWeight.w600,
                         ),
                       ],
@@ -230,7 +230,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             locale: 'id',
                             symbol: '',
                             decimalDigits: 0,
-                          ).format(userProvider.userModel?.point),
+                          ).format((userProvider.userModel?.point == null)
+                              ? 0
+                              : userProvider.userModel?.point),
                           weight: FontWeight.w600,
                         ),
                       ],
@@ -246,7 +248,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 locale: 'id',
                                 symbol: '',
                                 decimalDigits: 0,
-                              ).format(userProvider.userModel.weight.toInt()) +
+                              ).format((userProvider.userModel?.weight
+                                          ?.toInt() ==
+                                      null)
+                                  ? 0
+                                  : userProvider.userModel?.weight?.toInt()) +
                               ' Kg',
                           weight: FontWeight.w600,
                         ),

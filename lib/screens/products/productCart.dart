@@ -27,7 +27,6 @@ class _ProductCartState extends State<ProductCart> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
     final productCartProvider = Provider.of<ProductCartProvider>(context);
     productCartProvider.loadProductCartByUser(widget.userModel.id);
     productCartProvider.getTotal(widget.userModel.id);

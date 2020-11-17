@@ -59,7 +59,7 @@ class _AuthenticateState extends State<Authenticate> {
                                   children: <Widget>[
                                     Expanded(
                                         child: Container(
-                                            height: 45.0,
+                                            height: 48.0,
                                             child: RaisedButton(
                                                 color: green,
                                                 shape: RoundedRectangleBorder(
@@ -82,7 +82,7 @@ class _AuthenticateState extends State<Authenticate> {
                                     SizedBox(width: 15.0),
                                     Expanded(
                                         child: Container(
-                                            height: 45.0,
+                                            height: 48.0,
                                             child: OutlineButton(
                                                 color: white,
                                                 highlightedBorderColor: green,

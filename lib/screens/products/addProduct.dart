@@ -5,13 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 //  Model
 import 'package:lingkung/models/userModel.dart';
-//  Firebase
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 //  Provider
 import 'package:lingkung/providers/productProvider.dart';
-//  Services
-import 'package:lingkung/services/productService.dart';
 //  Utilities
 import 'package:lingkung/utilities/colorStyle.dart';
 import 'package:lingkung/utilities/loading.dart';
@@ -36,8 +32,8 @@ class _AddProductState extends State<AddProduct> {
 
   bool loading = false;
   File _image1;
-  File _image2;
-  File _image3;
+  // File _image2;
+  // File _image3;
 
   @override
   Widget build(BuildContext context) {
